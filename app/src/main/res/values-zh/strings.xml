@@ -189,7 +189,7 @@
     <string name="oobe_main_adv_setting_title">进阶设定</string>
     <string name="oobe_main_adv_setting_content">这里可以打开进阶设定\n包含新增主题、应用程式设定、密码锁、备份和关于</string>
     <string name="oobe_main_mydiary_title">日记</string>
-    <string name="oobe_main_mydiary_content">希望这个应都能给你一些感动\n快点开始写下专属于你的故事吧!</string>
+    <string name="oobe_main_mydiary_content">希望这个应用能给你一些感动\n快点开始写下专属于你的故事吧!</string>
 
     <!--Photo viewer-->
     <string name="photo_viewer_topic_fail">取得日记资料错误</string>
