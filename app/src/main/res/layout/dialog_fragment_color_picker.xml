@@ -26,14 +26,14 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.chotix.mydiary1.shared.gui.MyDiaryButton
+        <meow.softer.mydiary.shared.gui.MyDiaryButton
             android:id="@+id/But_setting_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/dialog_button_cancel" />
 
-        <com.chotix.mydiary1.shared.gui.MyDiaryButton
+        <meow.softer.mydiary.shared.gui.MyDiaryButton
             android:id="@+id/But_setting_change_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

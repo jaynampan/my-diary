@@ -52,7 +52,7 @@
             android:textColor="@color/backup_hint_text_color"
             android:textSize="20sp" />
 
-        <com.chotix.mydiary1.shared.gui.MyDiaryButton
+        <meow.softer.mydiary.shared.gui.MyDiaryButton
             android:id="@+id/But_backup_export"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
             android:textSize="20sp" />
 
 
-        <com.chotix.mydiary1.shared.gui.MyDiaryButton
+        <meow.softer.mydiary.shared.gui.MyDiaryButton
             android:id="@+id/But_backup_import"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

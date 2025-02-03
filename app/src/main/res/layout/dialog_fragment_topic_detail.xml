@@ -82,7 +82,7 @@
                     android:layout_height="match_parent"
                     android:visibility="gone">
 
-                    <com.chotix.mydiary1.shared.gui.BoardImageView
+                    <meow.softer.mydiary.shared.gui.BoardImageView
                         android:id="@+id/IV_topic_detail_topic_bg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -122,7 +122,7 @@
                 android:orientation="horizontal"
                 android:visibility="gone">
 
-                <com.chotix.mydiary1.shared.gui.MyDiaryButton
+                <meow.softer.mydiary.shared.gui.MyDiaryButton
                     android:id="@+id/But_topic_detail_default_bg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center">
 
-            <com.chotix.mydiary1.shared.gui.MyDiaryButton
+            <meow.softer.mydiary.shared.gui.MyDiaryButton
                 android:id="@+id/But_topic_detail_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
                 android:text="@string/dialog_button_cancel"
                 android:textAllCaps="false" />
 
-            <com.chotix.mydiary1.shared.gui.MyDiaryButton
+            <meow.softer.mydiary.shared.gui.MyDiaryButton
                 android:id="@+id/But_topic_detail_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

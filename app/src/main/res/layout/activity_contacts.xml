@@ -63,7 +63,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/LL_contacts_topbar_content">
 
-        <com.chotix.mydiary1.contacts.LetterSortLayout
+        <meow.softer.mydiary.contacts.LetterSortLayout
             android:id="@+id/STL_contacts"
             android:layout_width="30dp"
             android:layout_height="match_parent"

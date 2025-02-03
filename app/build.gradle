@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace 'com.chotix.mydiary1'
-    compileSdk 33
+    namespace 'meow.softer.mydiary'
+    compileSdk 35
 
     defaultConfig {
-        applicationId "com.chotix.mydiary1"
+        applicationId 'meow.softer.mydiary'
         minSdk 26
-        targetSdk 33
+        targetSdk 35
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -37,39 +37,29 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    //lib
-    implementation 'commons-io:commons-io:2.13.0'
+    //libs
+    implementation 'commons-io:commons-io:2.18.0'
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     implementation 'info.hoang8f:android-segmented:1.0.6'
-    implementation 'com.facebook.fresco:fresco:3.0.0'
-    //implementation 'com.jakewharton:butterknife:10.2.3'
-    //annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    implementation 'com.facebook.fresco:fresco:3.6.0'
     implementation 'com.larswerkman:HoloColorPicker:1.5'
     implementation 'com.nononsenseapps:filepicker:4.2.1'
     implementation 'com.github.amlcurran.showcaseview:library:5.4.3'
     implementation 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:1.0.0'
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.yalantis:ucrop:2.2.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.marshalchen.ultimaterecyclerview:library:0.7.2'
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'me.relex:photodraweeview:2.1.0'
-
-
-
-
-
-
-
-
 
 
 }

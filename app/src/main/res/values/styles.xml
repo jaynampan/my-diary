@@ -16,24 +16,6 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-<!--    &lt;!&ndash; Start OOBE &ndash;&gt;-->
-<!--    <style name="OOBEShowcaseTheme" parent="ShowcaseView">-->
-<!--        <item name="sv_backgroundColor">@color/OOBE_bg_color</item>-->
-<!--        <item name="sv_showcaseColor">@android:color/white</item>-->
-<!--        <item name="sv_titleTextAppearance">@style/CustomTitle</item>-->
-<!--        <item name="sv_detailTextAppearance">@style/CustomText</item>-->
-<!--    </style>-->
-
-<!--    <style name="CustomTitle" parent="TextAppearance.ShowcaseView.Title.Light">-->
-<!--        <item name="android:textColor">#ffffffff</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
-<!--    <style name="CustomText" parent="TextAppearance.ShowcaseView.Detail.Light">-->
-<!--        <item name="android:textColor">#deffffff</item>-->
-<!--    </style>-->
-<!--    &lt;!&ndash; End OOBE &ndash;&gt;-->
-
 
     <!--For photo overview full screen dialog-->
     <style name="TransparentDialog" parent="@android:style/Theme">
@@ -48,20 +30,6 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
-
-    <!--Start For NoNonsense-FilePicker-->
-<!--    &lt;!&ndash;It must set the theme or lib will crash.&ndash;&gt;-->
-<!--    <style name="FilePickerTheme" parent="NNF_BaseTheme">-->
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-<!--        <item name="colorAccent">@color/colorAccent</item>-->
-<!--        <item name="android:textAllCaps">false</item>-->
-
-<!--        <item name="android:textAppearanceLarge">@style/FilePickerTextAppearanceLarge</item>-->
-<!--        <item name="android:textColorSecondary">@color/colorAccent</item>-->
-<!--        <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>-->
-
-<!--    </style>-->
 
     <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="colorPrimary">@color/colorPrimary</item>

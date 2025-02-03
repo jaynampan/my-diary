@@ -71,7 +71,7 @@
         android:layout_marginTop="10dp">
 
 
-        <com.chotix.mydiary1.shared.gui.MyDiaryButton
+        <meow.softer.mydiary.shared.gui.MyDiaryButton
             android:id="@+id/But_contacts_detail_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             android:text="@string/dialog_button_delete"
             android:textAllCaps="false" />
 
-        <com.chotix.mydiary1.shared.gui.MyDiaryButton
+        <meow.softer.mydiary.shared.gui.MyDiaryButton
             android:id="@+id/But_contacts_detail_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             android:text="@string/dialog_button_ok"
             android:textAllCaps="false" />
 
-        <com.chotix.mydiary1.shared.gui.MyDiaryButton
+        <meow.softer.mydiary.shared.gui.MyDiaryButton
             android:id="@+id/But_contacts_detail_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
