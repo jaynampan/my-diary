@@ -3,7 +3,8 @@ This is a Diary app with a theme matching the diary app in popular movie *Your N
 ### Features
 - Diary Writing
 - Simple Memos
-- Custom Themes 
+- Custom Themes  
+
 ![Example Photo 1](screenshot/Screenshot_main.jpg) 
 ![Example Photo 2](screenshot/Screenshot_diary.jpg) 
 ### Notes
