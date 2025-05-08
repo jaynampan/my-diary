@@ -22,6 +22,8 @@ recyclerviewAnimators = "4.0.2"
 playServicesPlaces = "17.0.0"
 photodraweeview = "2.1.0"
 ucrop = "2.2.0"
+kotlin = "2.1.20"
+coreKtx = "1.16.0"
 [libraries]
 advrecyclerview = { module = "com.h6ah4i.android.widget.advrecyclerview:advrecyclerview", version.ref = "advrecyclerview" }
 android-segmented = { module = "info.hoang8f:android-segmented", version.ref = "androidSegmented" }
@@ -45,6 +47,8 @@ play-services-places = { module = "com.google.android.gms:play-services-places",
 recyclerview-animators = { module = "jp.wasabeef:recyclerview-animators", version.ref = "recyclerviewAnimators" }
 ucrop = { module = "com.yalantis:ucrop", version.ref = "ucrop" }
 ultimaterecyclerview-library = { module = "com.marshalchen.ultimaterecyclerview:library", version.ref = "libraryVersion" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
