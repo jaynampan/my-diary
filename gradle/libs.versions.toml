@@ -1,0 +1,50 @@
+[versions]
+advrecyclerview = "1.0.0"
+androidGradlePlugin = "8.10.0"
+androidSegmented = "1.0.6"
+appcompat = "1.7.0"
+circleimageview = "3.1.0"
+commonsIo = "2.18.0"
+constraintlayout = "2.1.4"
+desugar_jdk_libs = "2.1.5"
+fresco = "3.6.0"
+gson = "2.11.0"
+holocolorpicker = "1.5"
+filepicker = "4.2.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+library = "5.4.3"
+libraryVersion = "0.7.2"
+material = "1.12.0"
+materialCalendarview = "1.4.3"
+recyclerviewAnimators = "4.0.2"
+playServicesPlaces = "17.0.0"
+photodraweeview = "2.1.0"
+ucrop = "2.2.0"
+[libraries]
+advrecyclerview = { module = "com.h6ah4i.android.widget.advrecyclerview:advrecyclerview", version.ref = "advrecyclerview" }
+android-segmented = { module = "info.hoang8f:android-segmented", version.ref = "androidSegmented" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+filepicker = { module = "com.nononsenseapps:filepicker", version.ref = "filepicker" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+holocolorpicker = { module = "com.larswerkman:HoloColorPicker", version.ref = "holocolorpicker" }
+fresco = { module = "com.facebook.fresco:fresco", version.ref = "fresco" }
+junit = { module = "junit:junit", version.ref = "junit" }
+library = { module = "com.github.amlcurran.showcaseview:library", version.ref = "library" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+material-calendarview = { module = "com.prolificinteractive:material-calendarview", version.ref = "materialCalendarview" }
+photodraweeview = { module = "me.relex:photodraweeview", version.ref = "photodraweeview" }
+play-services-places = { module = "com.google.android.gms:play-services-places", version.ref = "playServicesPlaces" }
+recyclerview-animators = { module = "jp.wasabeef:recyclerview-animators", version.ref = "recyclerviewAnimators" }
+ucrop = { module = "com.yalantis:ucrop", version.ref = "ucrop" }
+ultimaterecyclerview-library = { module = "com.marshalchen.ultimaterecyclerview:library", version.ref = "libraryVersion" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

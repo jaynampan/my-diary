@@ -150,15 +150,12 @@ public class SPFManager {
         PE.putInt(THEME_SEC_COLOR, colorCode);
         PE.apply();
     }
-    /**
-     * System method
-     */
 
     /**
-     * @param firstRun
      * @deprecated it after version 33
      * now use ShowcaseView - singleShot to run OOBE onve.
      */
+    @Deprecated
     public static void setFirstRun(Context context, boolean firstRun) {
         SharedPreferences settings = context.getSharedPreferences(SPF_SYSTEM, 0);
         SharedPreferences.Editor PE = settings.edit();
@@ -172,6 +169,7 @@ public class SPFManager {
      * @deprecated it after version 33
      * now use ShowcaseView - singleShot to run OOBE once.
      */
+    @Deprecated
     public static boolean getFirstRun(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_SYSTEM, 0);
         return settings.getBoolean(FIRST_RUN, true);

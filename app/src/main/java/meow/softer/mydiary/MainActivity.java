@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initProfile() {
         String YourNameIs = SPFManager.getYourName(MainActivity.this);
-        if (YourNameIs == null || "".equals(YourNameIs)) {
+        if (YourNameIs == null || YourNameIs.isEmpty()) {
             YourNameIs = themeManager.getThemeUserName(MainActivity.this);
         }
         TV_main_profile_username.setText(YourNameIs);

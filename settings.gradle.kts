@@ -1,6 +1,6 @@
 pluginManagement {
     repositories {
-        // Use Aliyun mirrors if you have network issues
+        // Use AliYun mirrors if you have network issues
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://maven.aliyun.com/repository/jcenter") }
@@ -14,7 +14,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        // Use Aliyun mirrors if you have network issues
+        // Use AliYun mirrors if you have network issues
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://maven.aliyun.com/repository/jcenter") }
@@ -25,6 +25,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "MyDiary"
-include ':app'
+include(":app")
 
 
