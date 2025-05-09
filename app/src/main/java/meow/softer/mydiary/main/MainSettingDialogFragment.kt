@@ -43,7 +43,7 @@ class MainSettingDialogFragment : BottomSheetDialogFragment(), View.OnClickListe
 
         RL_main_setting_dialog = rootView.findViewById<RelativeLayout?>(R.id.RL_main_setting_dialog)
         RL_main_setting_dialog!!.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
         IV_main_setting_setting_page =
             rootView.findViewById<ImageView?>(R.id.IV_main_setting_setting_page)

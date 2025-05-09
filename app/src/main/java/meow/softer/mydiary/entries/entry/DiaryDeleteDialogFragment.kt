@@ -31,7 +31,7 @@ class DiaryDeleteDialogFragment : CommonDialogFragment() {
         dbManager.closeDB()
         //Delete photo data
         try {
-            FileUtils.deleteDirectory(FileManager(activity, topicId, diaryId).dir)
+            FileUtils.deleteDirectory(FileManager(requireContext(), topicId, diaryId).dir)
         } catch (e: IOException) {
             //just do nothing
             e.printStackTrace()
@@ -45,7 +45,7 @@ class DiaryDeleteDialogFragment : CommonDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         topicId = requireArguments().getLong("topicId", -1L)
         diaryId = requireArguments().getLong("diaryId", -1L)
-        this.TV_common_content.text = getString(R.string.entries_edit_dialog_delete_content)
+        this.TV_common_content?.text = getString(R.string.entries_edit_dialog_delete_content)
     }
 
     override fun okButtonEvent() {

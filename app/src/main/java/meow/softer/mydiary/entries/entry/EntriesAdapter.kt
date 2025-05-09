@@ -26,7 +26,7 @@ class EntriesAdapter(
 ) : RecyclerView.Adapter<EntriesViewHolder?>() {
     private val dateFormat: DateFormat = SimpleDateFormat("HH:mm")
     private val daysSimpleName: Array<String?> = mFragment.resources.getStringArray(R.array.days_simple_name)
-    private val themeManager: ThemeManager = ThemeManager.getInstance()
+    private val themeManager: ThemeManager = ThemeManager.instance!!
 
     @JvmField
     var isEditMode: Boolean = false
@@ -34,7 +34,7 @@ class EntriesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntriesViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.rv_entries_item, parent, false)
-        return EntriesViewHolder(view, themeManager.getThemeDarkColor(mFragment.activity))
+        return EntriesViewHolder(view, themeManager.getThemeDarkColor(mFragment.requireContext()))
     }
 
     override fun getItemCount(): Int {

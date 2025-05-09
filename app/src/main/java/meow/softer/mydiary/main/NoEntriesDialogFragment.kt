@@ -42,7 +42,7 @@ class NoEntriesDialogFragment : DialogFragment(), View.OnClickListener {
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         TV_no_entries_create!!.text = content
         TV_no_entries_create!!.setTextColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         return rootView

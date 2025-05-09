@@ -28,7 +28,7 @@ class ClearDialogFragment : CommonDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         this.dialog!!.setCanceledOnTouchOutside(true)
         super.onViewCreated(view, savedInstanceState)
-        this.TV_common_content.text = getString(R.string.diary_clear_message)
+        this.TV_common_content?.text = getString(R.string.diary_clear_message)
     }
 
     override fun okButtonEvent() {

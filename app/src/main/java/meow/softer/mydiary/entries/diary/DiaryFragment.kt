@@ -120,7 +120,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
         calendar = Calendar.getInstance()
         timeTools = TimeTools.getInstance(requireActivity().applicationContext)
         noLocation = getString(R.string.diary_no_location)
-        diaryTempFileManager = FileManager(activity, topicId)
+        diaryTempFileManager = FileManager(requireContext(), topicId)
     }
 
     override fun onCreateView(
@@ -135,16 +135,16 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
          */
         val scrollView_diary_content =
             rootView.findViewById<ScrollView?>(R.id.ScrollView_diary_content)
-        ViewTools.setScrollBarColor(activity, scrollView_diary_content)
+        ViewTools.setScrollBarColor(requireContext(), scrollView_diary_content)
 
         val RL_diary_info = rootView.findViewById<RelativeLayout>(R.id.RL_diary_info)
         RL_diary_info.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         val LL_diary_edit_bar = rootView.findViewById<LinearLayout>(R.id.LL_diary_edit_bar)
         LL_diary_edit_bar.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         val LL_diary_time_information =
@@ -164,7 +164,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
 
         EDT_diary_title = rootView.findViewById<EditText>(R.id.EDT_diary_title)
         EDT_diary_title!!.background.mutate().setColorFilter(
-            ThemeManager.getInstance().getThemeMainColor(activity),
+            ThemeManager.instance!!.getThemeMainColor(requireContext()),
             PorterDuff.Mode.SRC_ATOP
         )
 
@@ -283,7 +283,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
             ) {
                 firstAllowLocationPermission = true
             } else {
-                PermissionHelper.showAccessDialog(activity)
+                PermissionHelper.showAccessDialog(requireContext())
             }
 
             PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION -> if (grantResults.isNotEmpty()
@@ -291,7 +291,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
             ) {
                 firstAllowCameraPermission = true
             } else {
-                PermissionHelper.showAddPhotoDialog(activity)
+                PermissionHelper.showAddPhotoDialog(requireContext())
             }
         }
     }
@@ -348,9 +348,10 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
         if (updateCurrentTime) {
             calendar!!.setTimeInMillis(System.currentTimeMillis())
         }
-        TV_diary_month!!.text = timeTools!!.monthsFullName[calendar!!.get(Calendar.MONTH)]
+        TV_diary_month!!.text = timeTools!!.monthsFullName?.get(calendar!!.get(Calendar.MONTH))
         TV_diary_date!!.text = calendar!!.get(Calendar.DAY_OF_MONTH).toString()
-        TV_diary_day!!.text = timeTools!!.daysFullName[calendar!!.get(Calendar.DAY_OF_WEEK) - 1]
+        TV_diary_day!!.text =
+            timeTools!!.daysFullName?.get(calendar!!.get(Calendar.DAY_OF_WEEK) - 1)
         TV_diary_time!!.text = sdf.format(calendar!!.getTime())
     }
 
@@ -382,7 +383,8 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
     }
 
     private fun initMoodSpinner() {
-        val moodArrayAdapter = ImageArrayAdapter(requireActivity().baseContext, DiaryInfoHelper.moodArray)
+        val moodArrayAdapter =
+            ImageArrayAdapter(requireActivity().baseContext, DiaryInfoHelper.moodArray)
         SP_diary_mood!!.setAdapter(moodArrayAdapter)
     }
 
@@ -403,7 +405,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
      */
     private fun clearDiaryTemp() {
         diaryTempFileManager!!.clearDir()
-        SPFManager.clearDiaryAutoSave(activity, topicId)
+        SPFManager.clearDiaryAutoSave(requireContext(), topicId)
     }
 
     private fun autoSaveDiary() {
@@ -430,7 +432,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
                 diaryItemHelper!!.nowPhotoCount > 0,
                 locationName, diaryItemItemList
             )
-            SPFManager.setDiaryAutoSave(activity, topicId, Gson().toJson(autoSaveDiary))
+            SPFManager.setDiaryAutoSave(requireContext(), topicId, Gson().toJson(autoSaveDiary))
         }
     }
 
@@ -438,10 +440,10 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
      * Revert diray from SPF
      */
     private fun revertAutoSaveDiary() {
-        if (SPFManager.getDiaryAutoSave(activity, topicId) != null) {
+        if (SPFManager.getDiaryAutoSave(requireContext(), topicId) != null) {
             try {
                 val autoSaveDiary = Gson().fromJson<BUDiaryEntries>(
-                    SPFManager.getDiaryAutoSave(activity, topicId),
+                    SPFManager.getDiaryAutoSave(requireContext(), topicId),
                     BUDiaryEntries::class.java
                 )
                 //Title
@@ -621,7 +623,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
     override fun selectPhoto(uri: Uri?) {
         Log.e("Mytest", "diaryfragment selectphoto invoked")
         if (FileManager.isImage(
-                FileManager.getFileNameByUri(activity, uri)
+                FileManager.getFileNameByUri(requireContext(), uri!!).toString()
             )
         ) {
             //1.Copy bitmap to temp for rotating & resize
@@ -749,7 +751,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
                 initLocationIcon()
             } else {
                 if (PermissionHelper.checkPermission(
-                        this.activity,
+                        requireActivity(),
                         PermissionHelper.REQUEST_ACCESS_FINE_LOCATION_PERMISSION
                     )
                 ) {
@@ -768,9 +770,9 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
                 }
             }
 
-            R.id.IV_diary_photo -> if (FileManager.getSDCardFreeSize() > FileManager.MIN_FREE_SPACE) {
+            R.id.IV_diary_photo -> if (FileManager.sDCardFreeSize > FileManager.MIN_FREE_SPACE) {
                 if (PermissionHelper.checkPermission(
-                        this.activity,
+                        requireActivity(),
                         PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION
                     )
                 ) {

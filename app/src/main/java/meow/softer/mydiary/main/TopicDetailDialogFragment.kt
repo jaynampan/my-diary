@@ -109,7 +109,7 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
         val rootView = inflater.inflate(R.layout.dialog_fragment_topic_detail, container)
         LL_topic_detail_content = rootView.findViewById<LinearLayout?>(R.id.LL_topic_detail_content)
         LL_topic_detail_content!!.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(context)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         EDT_topic_detail_title = rootView.findViewById<EditText?>(R.id.EDT_topic_detail_title)
@@ -135,7 +135,7 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
             IV_topic_detail_topic_bg =
                 rootView.findViewById<ImageView?>(R.id.IV_topic_detail_topic_bg)
             IV_topic_detail_topic_bg!!.setImageDrawable(
-                ThemeManager.getInstance().getTopicBgDrawable(context, topicId, topicType)
+                ThemeManager.instance!!.getTopicBgDrawable(requireContext(), topicId, topicType)
             )
             IV_topic_detail_topic_bg!!.setOnClickListener(this)
 
@@ -166,9 +166,9 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
             if (grantResults.isNotEmpty()
                 && PermissionHelper.checkAllPermissionResult(grantResults)
             ) {
-                FileManager.startBrowseImageFile(this.activity, SELECT_TOPIC_BG)
+                FileManager.startBrowseImageFile(this.requireActivity(), SELECT_TOPIC_BG)
             } else {
-                PermissionHelper.showAddPhotoDialog(activity)
+                PermissionHelper.showAddPhotoDialog(requireContext())
             }
         }
     }
@@ -178,22 +178,22 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
         if (requestCode == SELECT_TOPIC_BG) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null && data.data != null) {
-                    val topicBgWidth = ThemeManager.getInstance().getTopicBgWidth(activity)
+                    val topicBgWidth = ThemeManager.instance!!.getTopicBgWidth(requireContext())
 
                     val topicBgHeight: Int = if (topicType == ITopic.TYPE_DIARY) {
-                        ThemeManager.getInstance().getTopicBgHeight(activity)
+                        ThemeManager.instance!!.getTopicBgHeight(requireContext())
                     } else {
-                        ThemeManager.getInstance().getTopicBgWithoutEditBarHeight(activity)
+                        ThemeManager.instance!!.getTopicBgWithoutEditBarHeight(requireContext())
                     }
-                    val tempFileManager = FileManager(context, FileManager.TEMP_DIR)
+                    val tempFileManager = FileManager(requireContext(), FileManager.TEMP_DIR)
                     //Clear the old photo file
                     tempFileManager.clearDir()
                     val options = UCrop.Options()
                     options.setToolbarColor(
-                        ThemeManager.getInstance().getThemeMainColor(activity)
+                        ThemeManager.instance!!.getThemeMainColor(requireContext())
                     )
                     options.setStatusBarColor(
-                        ThemeManager.getInstance().getThemeDarkColor(activity)
+                        ThemeManager.instance!!.getThemeDarkColor(requireContext())
                     )
                     UCrop.of(
                         data.data!!,
@@ -221,7 +221,7 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
                 if (data != null) {
                     val resultUri = UCrop.getOutput(data)
                     IV_topic_detail_topic_bg!!.setImageBitmap(BitmapFactory.decodeFile(resultUri!!.path))
-                    newTopicBgFileName = FileManager.getFileNameByUri(activity, resultUri)
+                    newTopicBgFileName = FileManager.getFileNameByUri(requireContext(), resultUri)
                     But_topic_detail_default_bg!!.setEnabled(true)
                     topicBgStatus = TOPIC_BG_ADD_PHOTO
                 } else {
@@ -239,8 +239,8 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
 
     private val isTopicHaveCustomBg: Boolean
         get() {
-            val topicBgFile = ThemeManager.getInstance().getTopicBgSavePathFile(
-                activity, topicId, topicType
+            val topicBgFile = ThemeManager.instance!!.getTopicBgSavePathFile(
+                requireContext(), topicId, topicType
             )
             return topicBgFile.exists()
         }
@@ -273,18 +273,18 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
             }
 
             R.id.IV_topic_detail_topic_bg -> if (PermissionHelper.checkPermission(
-                    this.activity,
+                    this.requireActivity(),
                     PermissionHelper.REQUEST_WRITE_ES_PERMISSION
                 )
             ) {
-                FileManager.startBrowseImageFile(this.activity, SELECT_TOPIC_BG)
+                FileManager.startBrowseImageFile(this.requireActivity(), SELECT_TOPIC_BG)
             }
 
             R.id.But_topic_detail_default_bg -> {
                 topicBgStatus = TOPIC_BG_REVERT_DEFAULT
                 newTopicBgFileName = ""
                 IV_topic_detail_topic_bg!!.setImageDrawable(
-                    ThemeManager.getInstance().getTopicBgDefaultDrawable(activity, topicType)
+                    ThemeManager.instance!!.getTopicBgDefaultDrawable(requireContext(), topicType)
                 )
                 But_topic_detail_default_bg!!.setEnabled(false)
             }

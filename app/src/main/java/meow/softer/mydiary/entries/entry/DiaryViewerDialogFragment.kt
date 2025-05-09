@@ -73,6 +73,7 @@ import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.TimeTools
 import meow.softer.mydiary.shared.ViewTools
 import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
+import meow.softer.mydiary.shared.statusbar.PhoneModel
 import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
@@ -208,13 +209,13 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
          */
         val scrollView_diary_content =
             rootView.findViewById<ScrollView?>(R.id.ScrollView_diary_content)
-        ViewTools.setScrollBarColor(activity, scrollView_diary_content)
+        ViewTools.setScrollBarColor(requireContext(), scrollView_diary_content)
 
         val RL_diary_info = rootView.findViewById<RelativeLayout>(R.id.RL_diary_info)
-        RL_diary_info.background = ThemeManager.getInstance().createDiaryViewerInfoBg(activity)
+        RL_diary_info.background = ThemeManager.instance!!.createDiaryViewerInfoBg(requireContext())
 
         val LL_diary_edit_bar = rootView.findViewById<LinearLayout>(R.id.LL_diary_edit_bar)
-        LL_diary_edit_bar.background = ThemeManager.getInstance().createDiaryViewerEditBarBg(activity)
+        LL_diary_edit_bar.background = ThemeManager.instance!!.createDiaryViewerEditBarBg(requireContext())
 
         PB_diary_item_content_hint =
             rootView.findViewById<ProgressBar>(R.id.PB_diary_item_content_hint)
@@ -258,7 +259,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         if (diaryId != -1L) {
             if (isEditMode) {
                 diaryViewerHandler = DiaryViewerHandler(this)
-                diaryFileManager = FileManager(activity, FileManager.DIARY_EDIT_CACHE_DIR)
+                diaryFileManager = FileManager(requireContext(), FileManager.DIARY_EDIT_CACHE_DIR)
                 diaryFileManager!!.clearDir()
                 PB_diary_item_content_hint!!.visibility = View.VISIBLE
                 mTask = CopyDiaryToEditCacheTask(requireActivity(), diaryFileManager!!, this)
@@ -273,7 +274,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
                 }, 700)
             } else {
                 diaryFileManager = FileManager(
-                    activity,
+                    requireContext(),
                     (activity as DiaryActivity).topicId,
                     diaryId
                 )
@@ -341,15 +342,15 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         val dialog = getDialog()
         if (dialog != null) {
             val dialogHeight: Int
-            if (ChinaPhoneHelper.getDeviceStatusBarType() == ChinaPhoneHelper.OTHER) {
-                dialogHeight = (ScreenHelper.getScreenHeight(activity)
-                        - ScreenHelper.getStatusBarHeight(activity)
+            if (ChinaPhoneHelper.deviceStatusBarType== PhoneModel.OTHER) {
+                dialogHeight = (ScreenHelper.getScreenHeight(requireContext())
+                        - ScreenHelper.getStatusBarHeight(requireContext())
                         - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 10))
             } else {
-                dialogHeight = (ScreenHelper.getScreenHeight(activity)
+                dialogHeight = (ScreenHelper.getScreenHeight(requireContext())
                         - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 10))
             }
-            val dialogWidth = (ScreenHelper.getScreenWidth(activity)
+            val dialogWidth = (ScreenHelper.getScreenWidth(requireContext())
                     - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 5))
             dialog.window!!.setLayout(dialogWidth, dialogHeight)
         }
@@ -439,7 +440,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
             //For hidden hint
             EDT_diary_title!!.setText(" ")
             EDT_diary_title!!.background.mutate().setColorFilter(
-                ThemeManager.getInstance().getThemeMainColor(activity),
+                ThemeManager.instance!!.getThemeMainColor(requireContext()),
                 PorterDuff.Mode.SRC_ATOP
             )
 
@@ -469,7 +470,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
             TV_diary_title_content = rootView.findViewById<TextView>(R.id.TV_diary_title_content)
             TV_diary_title_content!!.visibility = View.VISIBLE
             TV_diary_title_content!!.setTextColor(
-                ThemeManager.getInstance().getThemeMainColor(activity)
+                ThemeManager.instance!!.getThemeMainColor(requireContext())
             )
 
             IV_diary_delete!!.setOnClickListener(this)
@@ -625,9 +626,9 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
 
 
     private fun setDiaryTime() {
-        TV_diary_month!!.text = timeTools!!.monthsFullName[calendar!!.get(Calendar.MONTH)]
+        TV_diary_month!!.text = timeTools!!.monthsFullName?.get(calendar!!.get(Calendar.MONTH))
         TV_diary_date!!.text = calendar!!.get(Calendar.DAY_OF_MONTH).toString()
-        TV_diary_day!!.text = timeTools!!.daysFullName[calendar!!.get(Calendar.DAY_OF_WEEK) - 1]
+        TV_diary_day!!.text = timeTools!!.daysFullName?.get(calendar!!.get(Calendar.DAY_OF_WEEK) - 1)
         TV_diary_time!!.text = sdf!!.format(calendar!!.getTime())
     }
 
@@ -746,7 +747,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
     override fun selectPhoto(uri: Uri?) {
         Log.e("Mytest", "diaryviewerdialogfragment selectphoto invoked")
         if (FileManager.isImage(
-                FileManager.getFileNameByUri(activity, uri)
+                FileManager.getFileNameByUri(requireContext(), uri!!).toString()
             )
         ) {
             //1.Copy bitmap to temp for rotating & resize
@@ -839,7 +840,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
                 initLocationIcon()
             } else {
                 if (PermissionHelper.checkPermission(
-                        this.activity,
+                        this.requireActivity(),
                         PermissionHelper.REQUEST_ACCESS_FINE_LOCATION_PERMISSION
                     )
                 ) {
@@ -883,9 +884,9 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
 
             R.id.IV_diary_photo -> if (isEditMode) {
                 //Allow add photo
-                if (FileManager.getSDCardFreeSize() > FileManager.MIN_FREE_SPACE) {
+                if (FileManager.sDCardFreeSize > FileManager.MIN_FREE_SPACE) {
                     if (PermissionHelper.checkPermission(
-                            this.activity,
+                            this.requireActivity(),
                             PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION
                         )
                     ) {
@@ -1022,7 +1023,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
                     e.printStackTrace()
                 }
                 theFrag.progressDialog!!.dismiss()
-                if (returnLocation.length == 0) {
+                if (returnLocation.isEmpty()) {
                     returnLocation.append(theFrag.noLocation)
                     theFrag.haveLocation = false
                 }

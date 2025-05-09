@@ -26,6 +26,7 @@ import kotlin.math.hypot
 import kotlin.math.min
 import kotlin.math.sin
 import androidx.core.graphics.createBitmap
+import meow.softer.mydiary.shared.statusbar.PhoneModel
 
 class PageEffectView(context: Context, calendar: Calendar) : View(context) {
     private var calendarFactory: CalendarFactory? = null
@@ -128,7 +129,7 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
 
     private fun setScreen(context: Context) {
         mWidth = ScreenHelper.getScreenWidth(context)
-        if (ChinaPhoneHelper.getDeviceStatusBarType() == ChinaPhoneHelper.OTHER) {
+        if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
             mHeight =
                 ((ScreenHelper.getScreenHeight(context) - ScreenHelper.getStatusBarHeight(context)
                         - context.resources.getDimension(R.dimen.top_bar_height))

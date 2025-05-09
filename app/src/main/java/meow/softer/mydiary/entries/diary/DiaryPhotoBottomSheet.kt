@@ -51,9 +51,9 @@ class DiaryPhotoBottomSheet : BottomSheetDialogFragment(), View.OnClickListener 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         if (requireArguments().getBoolean("isEditMode", false)) {
-            fileManager = FileManager(activity, FileManager.DIARY_EDIT_CACHE_DIR)
+            fileManager = FileManager(requireContext(), FileManager.DIARY_EDIT_CACHE_DIR)
         } else {
-            fileManager = FileManager(activity, (activity as DiaryActivity).topicId)
+            fileManager = FileManager(requireContext(), (activity as DiaryActivity).topicId)
         }
         try {
             callBack = targetFragment as PhotoCallBack?
@@ -81,7 +81,7 @@ class DiaryPhotoBottomSheet : BottomSheetDialogFragment(), View.OnClickListener 
         val rootView = inflater.inflate(R.layout.bottom_sheet_diary_photo, container)
         RL_diary_photo_dialog = rootView.findViewById<RelativeLayout>(R.id.RL_diary_photo_dialog)
         RL_diary_photo_dialog!!.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         IV_diary_photo_add_a_photo =

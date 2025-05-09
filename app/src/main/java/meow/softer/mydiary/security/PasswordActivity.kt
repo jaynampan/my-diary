@@ -192,7 +192,7 @@ class PasswordActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun isPasswordCorrect(password: String?): Boolean {
-        return Encryption.SHA256(password) == SPFManager.getPassword(this)
+        return Encryption.SHA256(password.toString()) == SPFManager.getPassword(this)
     }
 
     private fun savePassword(password: String?) {
@@ -205,7 +205,7 @@ class PasswordActivity : AppCompatActivity(), View.OnClickListener {
             0 -> {
                 IV_password_number_1!!.setImageResource(R.drawable.ic_password_dot_48dp)
                 IV_password_number_1!!.setColorFilter(
-                    ThemeManager.getInstance().getThemeMainColor(this),
+                    ThemeManager.instance!!.getThemeMainColor(this),
                     PorterDuff.Mode.SRC_ATOP
                 )
             }
@@ -213,7 +213,7 @@ class PasswordActivity : AppCompatActivity(), View.OnClickListener {
             1 -> {
                 IV_password_number_2!!.setImageResource(R.drawable.ic_password_dot_48dp)
                 IV_password_number_2!!.setColorFilter(
-                    ThemeManager.getInstance().getThemeMainColor(this),
+                    ThemeManager.instance!!.getThemeMainColor(this),
                     PorterDuff.Mode.SRC_ATOP
                 )
             }
@@ -221,7 +221,7 @@ class PasswordActivity : AppCompatActivity(), View.OnClickListener {
             2 -> {
                 IV_password_number_3!!.setImageResource(R.drawable.ic_password_dot_48dp)
                 IV_password_number_3!!.setColorFilter(
-                    ThemeManager.getInstance().getThemeMainColor(this),
+                    ThemeManager.instance!!.getThemeMainColor(this),
                     PorterDuff.Mode.SRC_ATOP
                 )
             }
@@ -229,7 +229,7 @@ class PasswordActivity : AppCompatActivity(), View.OnClickListener {
             3 -> {
                 IV_password_number_4!!.setImageResource(R.drawable.ic_password_dot_48dp)
                 IV_password_number_4!!.setColorFilter(
-                    ThemeManager.getInstance().getThemeMainColor(this),
+                    ThemeManager.instance!!.getThemeMainColor(this),
                     PorterDuff.Mode.SRC_ATOP
                 )
             }

@@ -84,7 +84,7 @@ public class ContactsDetailDialogFragment extends DialogFragment implements View
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog dialog= super.onCreateDialog(savedInstanceState);
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
         // request a window without the title
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
@@ -131,6 +131,7 @@ public class ContactsDetailDialogFragment extends DialogFragment implements View
             EDT_contacts_detail_phone_number.setText(contactsPhoneNumber);
         }
     }
+
     private void addContacts() {
         DBManager dbManager = new DBManager(getActivity());
         dbManager.openDB();

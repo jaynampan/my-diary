@@ -92,7 +92,7 @@ class UpdateDiaryTask(
                 )
             }
             //Delete all dir if it is no file.
-            if (diaryFileManager!!.dir.listFiles().size == 0) {
+            if (diaryFileManager!!.dir!!.listFiles().size == 0) {
                 FileUtils.deleteDirectory(diaryFileManager!!.dir)
             }
         } catch (e: Exception) {

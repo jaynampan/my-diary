@@ -31,7 +31,7 @@ class MemoAdapter(
     private val dbManager: DBManager, private val callback: MemoCallback?,
     private val dragStartListener: OnStartDragListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(), EditMode, ItemTouchHelperAdapter {
-    private var isEditMode = false
+    override var isEditMode = false
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -73,13 +73,6 @@ class MemoAdapter(
         }
     }
 
-    override fun isEditMode(): Boolean {
-        return isEditMode
-    }
-
-    override fun setEditMode(editMode: Boolean) {
-        isEditMode = editMode
-    }
 
     override fun onItemSwap(position: Int) {
         //Do nothing
@@ -118,7 +111,7 @@ class MemoAdapter(
             IV_memo_item_dot = rootView.findViewById<ImageView>(R.id.IV_memo_item_dot)
             this.tVContent = rootView.findViewById<TextView>(R.id.TV_memo_item_content)
             IV_memo_item_delete = rootView.findViewById<ImageView>(R.id.IV_memo_item_delete)
-            tVContent.setTextColor(ThemeManager.getInstance().getThemeDarkColor(mActivity))
+            tVContent.setTextColor(ThemeManager.instance!!.getThemeDarkColor(mActivity))
         }
 
 
@@ -185,7 +178,7 @@ class MemoAdapter(
 
         override fun onItemSelected() {
             RL_memo_item_root_view.setBackgroundColor(
-                ThemeManager.getInstance().getThemeMainColor(mActivity)
+                ThemeManager.instance!!.getThemeMainColor(mActivity)
             )
         }
 

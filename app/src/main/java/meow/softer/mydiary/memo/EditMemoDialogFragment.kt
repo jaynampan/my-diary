@@ -77,10 +77,10 @@ class EditMemoDialogFragment : DialogFragment(), View.OnClickListener {
         But_edit_memo_cancel = rootView.findViewById<MyDiaryButton>(R.id.But_edit_memo_cancel)
 
         EDT_edit_memo_content!!.background.mutate().setColorFilter(
-            ThemeManager.getInstance().getThemeMainColor(activity), PorterDuff.Mode.SRC_ATOP
+            ThemeManager.instance!!.getThemeMainColor(requireContext()), PorterDuff.Mode.SRC_ATOP
         )
         EDT_edit_memo_content!!.setTextColor(
-            ThemeManager.getInstance().getThemeDarkColor(activity)
+            ThemeManager.instance!!.getThemeDarkColor(requireContext())
         )
         But_edit_memo_ok!!.setOnClickListener(this@EditMemoDialogFragment)
         But_edit_memo_cancel!!.setOnClickListener(this@EditMemoDialogFragment)

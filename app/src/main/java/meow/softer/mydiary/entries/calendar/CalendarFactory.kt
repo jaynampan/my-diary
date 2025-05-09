@@ -42,18 +42,18 @@ class CalendarFactory(
         //init Color
         monthPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         setPrintTextSize(monthPaint, 40f)
-        monthPaint.setColor(ThemeManager.getInstance().getThemeDarkColor(mContext))
+        monthPaint.setColor(ThemeManager.instance!!.getThemeDarkColor(mContext))
         monthPaint.textAlign = Paint.Align.CENTER
 
         datePaint = Paint(Paint.ANTI_ALIAS_FLAG)
         setPrintTextSize(datePaint, 130f)
-        datePaint.setColor(ThemeManager.getInstance().getThemeDarkColor(mContext))
+        datePaint.setColor(ThemeManager.instance!!.getThemeDarkColor(mContext))
         datePaint.textAlign = Paint.Align.CENTER
         datePaint.setTypeface(Typeface.DEFAULT_BOLD)
 
         dayPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         setPrintTextSize(dayPaint, 25f)
-        dayPaint.setColor(ThemeManager.getInstance().getThemeDarkColor(mContext))
+        dayPaint.setColor(ThemeManager.instance!!.getThemeDarkColor(mContext))
         dayPaint.textAlign = Paint.Align.CENTER
 
         textBaseX = width / 2
@@ -104,12 +104,12 @@ class CalendarFactory(
         )
 
         canvas.drawText(
-            timeTools.monthsFullName[calendar.get(Calendar.MONTH)],
+            timeTools.monthsFullName?.get(calendar.get(Calendar.MONTH)).toString(),
             textBaseX.toFloat(), monthBaseLine, monthPaint
         )
 
         canvas.drawText(
-            timeTools.daysFullName[calendar.get(Calendar.DAY_OF_WEEK) - 1],
+            timeTools.daysFullName?.get(calendar.get(Calendar.DAY_OF_WEEK) - 1).toString(),
             textBaseX.toFloat(), dayBaseLine, dayPaint
         )
     }

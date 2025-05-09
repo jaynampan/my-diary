@@ -115,7 +115,7 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
         val rootView: View = inflater.inflate(R.layout.dialog_fragment_your_name, container)
         LL_your_name_content = rootView.findViewById<LinearLayout?>(R.id.LL_your_name_content)
         LL_your_name_content!!.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         IV_your_name_profile_picture =
@@ -126,7 +126,7 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
         IV_your_name_profile_picture_cancel!!.setOnClickListener(this)
 
         EDT_your_name_name = rootView.findViewById<EditText?>(R.id.EDT_your_name_name)
-        EDT_your_name_name!!.setText(SPFManager.getYourName(activity))
+        EDT_your_name_name!!.setText(SPFManager.getYourName(requireContext()))
 
         But_your_name_ok = rootView.findViewById<MyDiaryButton?>(R.id.But_your_name_ok)
         But_your_name_ok!!.setOnClickListener(this)
@@ -146,7 +146,7 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
                 if (data != null) {
                     val resultUri = UCrop.getOutput(data)
                     IV_your_name_profile_picture!!.setImageBitmap(BitmapFactory.decodeFile(resultUri!!.path))
-                    profilePictureFileName = FileManager.getFileNameByUri(activity, resultUri)
+                    profilePictureFileName = FileManager.getFileNameByUri(requireContext(), resultUri)
                     isAddNewProfilePicture = true
                 } else {
                     Toast.makeText(
@@ -163,18 +163,18 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
 
     private fun loadProfilePicture() {
         IV_your_name_profile_picture!!.setImageDrawable(
-            ThemeManager.getInstance().getProfilePictureDrawable(activity)
+            ThemeManager.instance!!.getProfilePictureDrawable(requireContext())
         )
     }
 
 
     private fun saveYourName() {
         //Save name
-        SPFManager.setYourName(activity, EDT_your_name_name!!.getText().toString())
+        SPFManager.setYourName(requireContext(), EDT_your_name_name!!.getText().toString())
         //Save profile picture
         if (isAddNewProfilePicture) {
             //Remove the old file
-            val bgFM = FileManager(activity, FileManager.SETTING_DIR)
+            val bgFM = FileManager(requireContext(), FileManager.SETTING_DIR)
             val oldProfilePictureFile = File(
                 (bgFM.dirAbsolutePath
                         + "/" + ThemeManager.CUSTOM_PROFILE_PICTURE_FILENAME)
@@ -216,7 +216,7 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
                 isAddNewProfilePicture = true
                 profilePictureFileName = ""
                 IV_your_name_profile_picture!!.setImageDrawable(
-                    ViewTools.getDrawable(activity, R.drawable.ic_person_picture_default)
+                    ViewTools.getDrawable(requireContext(), R.drawable.ic_person_picture_default)
                 )
                 Toast.makeText(this.context, "Pic set to default", Toast.LENGTH_SHORT).show()
                 Log.e("Mytest", "yournamedialogfragment set profile image to default")
@@ -258,17 +258,17 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
                 if (selectedImgUri != null) {
                     Log.e("Mytest", "yourname selectedImgUri data not null")
                     //Create fileManager for get temp folder
-                    tempFileManager = FileManager(activity, FileManager.TEMP_DIR)
+                    tempFileManager = FileManager(requireContext(), FileManager.TEMP_DIR)
                     tempFileManager!!.clearDir()
                     //Compute the bg size
                     val photoSize = ScreenHelper.dpToPixel(resources, 50)
                     Log.e("Mytest", "yournamedialogfragment  photosize$photoSize")
                     val options = UCrop.Options()
                     options.setToolbarColor(
-                        ThemeManager.getInstance().getThemeMainColor(activity)
+                        ThemeManager.instance!!.getThemeMainColor(requireContext())
                     )
                     options.setStatusBarColor(
-                        ThemeManager.getInstance().getThemeDarkColor(activity)
+                        ThemeManager.instance!!.getThemeDarkColor(requireContext())
                     )
                     UCrop.of(
                         data.data!!, Uri.fromFile(

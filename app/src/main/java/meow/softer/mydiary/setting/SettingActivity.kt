@@ -75,7 +75,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
         ChinaPhoneHelper.setStatusBar(this, true)
 
 
-        themeManager = ThemeManager.getInstance()
+        themeManager = ThemeManager.instance!!
         //Create fileManager for get temp folder
         tempFileManager = FileManager(this, FileManager.TEMP_DIR)
         tempFileManager!!.clearDir()
@@ -96,7 +96,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
 
 
         initSpinner()
-        initTheme(themeManager!!.getCurrentTheme())
+        initTheme(themeManager!!.currentTheme)
         initLanguage()
     }
 
@@ -109,8 +109,8 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
                     val bgWidth = ScreenHelper.getScreenWidth(this)
                     val bgHeight = getResources().getDimensionPixelOffset(R.dimen.top_bar_height)
                     val options = UCrop.Options()
-                    options.setToolbarColor(ThemeManager.getInstance().getThemeMainColor(this))
-                    options.setStatusBarColor(ThemeManager.getInstance().getThemeDarkColor(this))
+                    options.setToolbarColor(ThemeManager.instance!!.getThemeMainColor(this))
+                    options.setStatusBarColor(ThemeManager.instance!!.getThemeDarkColor(this))
                     UCrop.of(
                         data.data!!,
                         Uri.fromFile(
@@ -172,7 +172,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
     override fun onDestroy() {
         super.onDestroy()
         //Revert current theme
-        themeManager!!.setCurrentTheme(SPFManager.getTheme(this))
+        themeManager!!.currentTheme = SPFManager.getTheme(this)
     }
 
     private fun initLanguage() {
@@ -225,7 +225,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
             getResources().getStringArray(R.array.theme_list)
         )
         SP_setting_theme!!.setAdapter(themeAdapter)
-        SP_setting_theme!!.setSelection(themeManager!!.getCurrentTheme())
+        SP_setting_theme!!.setSelection(themeManager!!.currentTheme)
         SP_setting_theme!!.onItemSelectedListener = this
 
         //Language spinner
@@ -310,7 +310,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
 
             R.id.But_setting_theme_apply -> {
                 //Save custom theme value
-                if (themeManager!!.getCurrentTheme() == ThemeManager.CUSTOM) {
+                if (themeManager!!.currentTheme == ThemeManager.CUSTOM) {
                     //Check is add new profile
                     if (isAddNewProfileBg) {
                         //For checking new profile bg is image or color.
@@ -382,7 +382,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
             R.id.SP_setting_theme -> if (!isThemeFirstRun) {
                 //Temp set currentTheme .
                 //If it doesn't apply , revert it on onDestroy .
-                themeManager!!.setCurrentTheme(position)
+                themeManager!!.currentTheme = position
                 initTheme(position)
             } else {
                 //First time do nothing

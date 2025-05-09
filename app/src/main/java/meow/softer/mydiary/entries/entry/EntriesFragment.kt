@@ -47,14 +47,14 @@ class EntriesFragment : BaseDiaryFragment(), DiaryViewerCallback, View.OnClickLi
         IV_entries_photo!!.setOnClickListener(this)
         TV_entries_edit_msg = rootView.findViewById<TextView>(R.id.TV_entries_edit_msg)
         TV_entries_edit_msg!!.setTextColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         RecyclerView_entries = rootView.findViewById<RecyclerView>(R.id.RecyclerView_entries)
         TV_entries_count = rootView.findViewById<TextView>(R.id.TV_entries_count)
         RL_entries_edit_bar = rootView.findViewById<RelativeLayout>(R.id.RL_entries_edit_bar)
         RL_entries_edit_bar!!.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
         return rootView
     }
@@ -92,7 +92,7 @@ class EntriesFragment : BaseDiaryFragment(), DiaryViewerCallback, View.OnClickLi
             TV_entries_edit_msg!!.visibility = View.GONE
             IV_entries_edit!!.setImageDrawable(
                 ViewTools.getDrawable(
-                    activity,
+                    requireContext(),
                     R.drawable.ic_mode_edit_white_24dp
                 )
             )
@@ -101,7 +101,7 @@ class EntriesFragment : BaseDiaryFragment(), DiaryViewerCallback, View.OnClickLi
             TV_entries_edit_msg!!.visibility = View.VISIBLE
             IV_entries_edit!!.setImageDrawable(
                 ViewTools.getDrawable(
-                    activity,
+                    requireContext(),
                     R.drawable.ic_mode_edit_cancel_white_24dp
                 )
             )

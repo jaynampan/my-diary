@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter
@@ -85,9 +86,9 @@ class MainTopicAdapter(
     override fun onBindViewHolder(holder: TopicViewHolder, pos: Int) {
         val position: Int = holder.getAdapterPosition()
         holder.swipeableContainerView.background =
-            ThemeManager.getInstance().getTopicItemSelectDrawable(activity)
+            ThemeManager.instance!!.getTopicItemSelectDrawable(activity)
         holder.LL_topic_left_setting?.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(activity)
         )
         holder.iconView?.setImageResource(filteredTopicList[position]!!.icon)
         holder.iconView?.setColorFilter(filteredTopicList[position]!!.color)

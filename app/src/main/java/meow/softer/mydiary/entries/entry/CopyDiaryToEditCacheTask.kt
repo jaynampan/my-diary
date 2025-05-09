@@ -21,8 +21,8 @@ class CopyDiaryToEditCacheTask(
         val diaryId: Long = params[1]!!
         try {
             val diaryFileManager = FileManager(mContext, topicId, diaryId)
-            val childrenPhoto = diaryFileManager.dir.listFiles()
-            for (i in diaryFileManager.dir.listFiles().indices) {
+            val childrenPhoto = diaryFileManager.dir?.listFiles()
+            for (i in diaryFileManager.dir?.listFiles()!!.indices) {
                 copyPhoto(childrenPhoto!![i]!!.getName(), diaryFileManager)
             }
         } catch (e: Exception) {

@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
 
         //set status bar
         ChinaPhoneHelper.setStatusBar(this, true)
-        themeManager = ThemeManager.getInstance()
+        themeManager = ThemeManager.instance
         LL_main_profile = findViewById<LinearLayout?>(R.id.LL_main_profile)
         LL_main_profile!!.setOnClickListener(this)
 

@@ -29,7 +29,7 @@ class TimePickerFragment : DialogFragment() {
         //Error/TimePickerDelegate: Unable to find keycodes for AM and PM.
         //The bug was triggered only on Chinese.
         return TimePickerDialog(
-            activity, ThemeManager.getInstance().getPickerStyle(),
+            activity, ThemeManager.instance!!.pickerStyle,
             onTimeSetListener, hour, minute, true
         )
     }

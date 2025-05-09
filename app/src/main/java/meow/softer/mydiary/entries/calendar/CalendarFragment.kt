@@ -52,7 +52,7 @@ class CalendarFragment : BaseDiaryFragment(), View.OnClickListener, OnDateSelect
         calendar = Calendar.getInstance()
         currentDate = Date()
         calendar!!.setTime(currentDate)
-        themeManager = ThemeManager.getInstance()
+        themeManager = ThemeManager.instance!!
     }
 
     override fun onCreateView(
@@ -63,7 +63,7 @@ class CalendarFragment : BaseDiaryFragment(), View.OnClickListener, OnDateSelect
         val rootView = inflater.inflate(R.layout.fragment_calendar, container, false)
 
         RL_calendar_edit_bar = rootView.findViewById<RelativeLayout>(R.id.RL_calendar_edit_bar)
-        RL_calendar_edit_bar!!.setBackgroundColor(themeManager!!.getThemeMainColor(activity))
+        RL_calendar_edit_bar!!.setBackgroundColor(themeManager!!.getThemeMainColor(requireContext()))
 
         RL_calendar_content = rootView.findViewById<RelativeLayout>(R.id.RL_calendar_content)
 
@@ -72,7 +72,7 @@ class CalendarFragment : BaseDiaryFragment(), View.OnClickListener, OnDateSelect
         //Set the color
         FAB_calendar_change_mode!!.getDrawable()
             .setColorFilter(
-                themeManager!!.getThemeMainColor(activity),
+                themeManager!!.getThemeMainColor(requireContext()),
                 PorterDuff.Mode.SRC_ATOP
             )
         FAB_calendar_change_mode!!.setOnClickListener(this)
@@ -131,7 +131,7 @@ class CalendarFragment : BaseDiaryFragment(), View.OnClickListener, OnDateSelect
                 materialCalendarView!!.setLayoutParams(calendarViewParams)
                 materialCalendarView!!.showOtherDates = MaterialCalendarView.SHOW_ALL
                 materialCalendarView!!.setSelectionColor(
-                    ThemeManager.getInstance().getThemeMainColor(activity)
+                    ThemeManager.instance!!.getThemeMainColor(requireContext())
                 )
                 materialCalendarView!!.state().edit()
                     .setFirstDayOfWeek(Calendar.MONDAY)
@@ -152,7 +152,7 @@ class CalendarFragment : BaseDiaryFragment(), View.OnClickListener, OnDateSelect
     }
 
     override fun decorate(view: DayViewFacade) {
-        view.addSpan(DotSpan(5f, ThemeManager.getInstance().getThemeDarkColor(activity)))
+        view.addSpan(DotSpan(5f, ThemeManager.instance!!.getThemeDarkColor(requireContext())))
     }
 
     override fun onDateSelected(

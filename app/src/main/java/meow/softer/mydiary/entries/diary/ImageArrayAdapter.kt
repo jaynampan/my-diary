@@ -35,7 +35,7 @@ class ImageArrayAdapter(context: Context, private val images: Array<Int?>) : Arr
     private fun getImageForPosition(position: Int, rootView: View): View {
         val imageView = rootView.findViewById<ImageView>(R.id.IV_spinner)
         imageView.setImageResource(images[position]!!)
-        imageView.setColorFilter(ThemeManager.getInstance().getThemeDarkColor(mContext))
+        imageView.setColorFilter(ThemeManager.instance!!.getThemeDarkColor(mContext!!))
         return rootView
     }
 }

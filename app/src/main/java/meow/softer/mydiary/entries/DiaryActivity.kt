@@ -84,12 +84,12 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
         LL_diary_topbar_content = findViewById<LinearLayout?>(R.id.LL_diary_topbar_content)
         SG_diary_topbar = findViewById<SegmentedGroup>(R.id.SG_diary_topbar)
         SG_diary_topbar!!.setOnCheckedChangeListener(this)
-        SG_diary_topbar!!.setTintColor(ThemeManager.getInstance().getThemeDarkColor(this))
+        SG_diary_topbar!!.setTintColor(ThemeManager.instance!!.getThemeDarkColor(this))
         But_diary_topbar_entries = findViewById<RadioButton>(R.id.But_diary_topbar_entries)
         But_diary_topbar_calendar = findViewById<RadioButton>(R.id.But_diary_topbar_calendar)
         But_diary_topbar_diary = findViewById<RadioButton>(R.id.But_diary_topbar_diary)
         TV_diary_topbar_title = findViewById<TextView>(R.id.TV_diary_topbar_title)
-        TV_diary_topbar_title!!.setTextColor(ThemeManager.getInstance().getThemeDarkColor(this))
+        TV_diary_topbar_title!!.setTextColor(ThemeManager.instance!!.getThemeDarkColor(this))
 
         var diaryTitle = intent.getStringExtra("diaryTitle")
         if (diaryTitle == null) {
@@ -167,7 +167,7 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
         ViewPager_diary_content!!.setAdapter(mPagerAdapter)
         ViewPager_diary_content!!.addOnPageChangeListener(onPageChangeListener)
         ViewPager_diary_content!!.background =
-            ThemeManager.getInstance().getEntriesBgDrawable(this, this.topicId)
+            ThemeManager.instance!!.getEntriesBgDrawable(this, this.topicId)
         if (!hasEntries) {
             ViewPager_diary_content!!.setCurrentItem(2)
             //Set Default Checked Item

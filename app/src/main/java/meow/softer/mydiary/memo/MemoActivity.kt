@@ -75,11 +75,11 @@ class MemoActivity : FragmentActivity(), View.OnClickListener, MemoCallback, OnS
          */
         RL_memo_topbar_content = findViewById<RelativeLayout>(R.id.RL_memo_topbar_content)
         RL_memo_topbar_content!!.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(this)
+            ThemeManager.instance!!.getThemeMainColor(this)
         )
 
         RL_memo_content_bg = findViewById<RelativeLayout>(R.id.RL_memo_content_bg)
-        RL_memo_content_bg!!.background = ThemeManager.getInstance().getMemoBgDrawable(this, topicId)
+        RL_memo_content_bg!!.background = ThemeManager.instance!!.getMemoBgDrawable(this, topicId)
 
         TV_memo_topbar_title = findViewById<TextView>(R.id.TV_memo_topbar_title)
         IV_memo_edit = findViewById<ImageView>(R.id.IV_memo_edit)
@@ -93,7 +93,7 @@ class MemoActivity : FragmentActivity(), View.OnClickListener, MemoCallback, OnS
         RecyclerView_memo = findViewById<RecyclerView>(R.id.RecyclerView_memo)
         rootView = findViewById<View>(R.id.Layout_memo_item_add)
         TV_memo_item_add = rootView!!.findViewById<TextView>(R.id.TV_memo_item_add)
-        TV_memo_item_add!!.setTextColor(ThemeManager.getInstance().getThemeDarkColor(this))
+        TV_memo_item_add!!.setTextColor(ThemeManager.instance!!.getThemeDarkColor(this))
         TV_memo_item_add!!.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val editMemoDialogFragment = newInstance(

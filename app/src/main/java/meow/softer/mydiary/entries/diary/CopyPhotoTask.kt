@@ -83,8 +83,8 @@ class CopyPhotoTask : AsyncTask<Void?, Void?, String?> {
             if (isAddPicture) {
                 returnFileName = savePhotoToTemp(
                     ExifUtil.rotateBitmap(
-                        srcFileName,
-                        BitmapHelper.getBitmapFromTempFileSrc(srcFileName, reqWidth, reqHeight)
+                        srcFileName!!,
+                        BitmapHelper.getBitmapFromTempFileSrc(srcFileName, reqWidth, reqHeight)!!
                     )
                 )
             } else {
@@ -92,7 +92,7 @@ class CopyPhotoTask : AsyncTask<Void?, Void?, String?> {
                 returnFileName = savePhotoToTemp(
                     ExifUtil.rotateBitmap(
                         mContext, uri,
-                        BitmapHelper.getBitmapFromReturnedImage(mContext, uri, reqWidth, reqHeight)
+                        BitmapHelper.getBitmapFromReturnedImage(mContext!!, uri!!, reqWidth, reqHeight)!!
                     )
                 )
             }

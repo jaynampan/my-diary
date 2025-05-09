@@ -47,7 +47,7 @@ class ReleaseNoteDialogFragment : DialogFragment(), View.OnClickListener {
 
         RL_release_note = rootView.findViewById<RelativeLayout?>(R.id.RL_release_note)
         RL_release_note!!.setBackgroundColor(
-            ThemeManager.getInstance().getThemeMainColor(activity)
+            ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
         TV_release_note_text = rootView.findViewById<TextView?>(R.id.TV_release_note_text)
@@ -65,7 +65,7 @@ class ReleaseNoteDialogFragment : DialogFragment(), View.OnClickListener {
         when (v.id) {
             R.id.CTV_release_note_knew -> CTV_release_note_knew!!.toggle()
             R.id.But_release_note_ok -> {
-                SPFManager.setReleaseNoteClose(activity, !CTV_release_note_knew!!.isChecked)
+                SPFManager.setReleaseNoteClose(requireContext(), !CTV_release_note_knew!!.isChecked)
                 dismiss()
             }
         }
