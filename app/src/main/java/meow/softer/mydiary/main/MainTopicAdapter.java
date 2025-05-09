@@ -116,7 +116,7 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
             @Override
             public void onClick(View v) {
                 TopicDetailDialogFragment createTopicDialogFragment =
-                        TopicDetailDialogFragment.newInstance(true, position, filteredTopicList.get(position).getId(),
+                        TopicDetailDialogFragment.Companion.newInstance(true, position, filteredTopicList.get(position).getId(),
                                 filteredTopicList.get(position).getTitle(), filteredTopicList.get(position).getType(),
                                 filteredTopicList.get(position).getColor());
                 createTopicDialogFragment.show(activity.getSupportFragmentManager(),
