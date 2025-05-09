@@ -475,26 +475,26 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
     }
 
     private fun loadDiaryItemContent(autoSaveDiary: BUDiaryEntries) {
-        for (i in autoSaveDiary.diaryItemList.indices) {
+        for (i in autoSaveDiary.diaryItemList!!.indices) {
             var diaryItem: IDiaryRow? = null
             var content: String? = ""
             if (autoSaveDiary.diaryItemList[i]
-                    .diaryItemType == IDiaryRow.TYPE_PHOTO
+                    !!.diaryItemType == IDiaryRow.TYPE_PHOTO
             ) {
                 diaryItem = DiaryPhoto(requireActivity(), null, IDiaryRow.TYPE_PHOTO, null)
                 content = FileManager.FILE_HEADER +
                         diaryTempFileManager!!.dirAbsolutePath + "/" +
-                        autoSaveDiary.diaryItemList[i].diaryItemContent
+                        autoSaveDiary.diaryItemList[i]!!.diaryItemContent
                 diaryItem.setDeleteClickListener(this)
                 //For get the right file name
                 diaryItem.setPhotoFileName(
-                    autoSaveDiary.diaryItemList[i].diaryItemContent
+                    autoSaveDiary.diaryItemList[i]!!.diaryItemContent
                 )
             } else if (autoSaveDiary.diaryItemList[i]
-                    .diaryItemType == IDiaryRow.TYPE_TEXT
+                    !!.diaryItemType == IDiaryRow.TYPE_TEXT
             ) {
                 diaryItem = DiaryText(requireActivity(), null, IDiaryRow.TYPE_TEXT, null)
-                content = autoSaveDiary.diaryItemList[i].diaryItemContent
+                content = autoSaveDiary.diaryItemList[i]!!.diaryItemContent
             }
             //In this page , it always is  edit mode.
             diaryItem!!.setEditMode(true)
