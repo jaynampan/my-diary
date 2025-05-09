@@ -724,11 +724,11 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
             locationName = ""
         }
         UpdateDiaryTask(
-            activity, calendar!!.getTimeInMillis(), EDT_diary_title!!.getText().toString(),
+            requireContext(), calendar!!.getTimeInMillis(), EDT_diary_title!!.getText().toString(),
             SP_diary_mood!!.selectedItemPosition, SP_diary_weather!!.selectedItemPosition,
             locationName,  //Check  attachment
             if (diaryItemHelper!!.nowPhotoCount > 0) true else false,
-            diaryItemHelper, diaryFileManager, this
+            diaryItemHelper!!, diaryFileManager!!, this
         ).execute((activity as DiaryActivity).topicId, diaryId)
     }
 

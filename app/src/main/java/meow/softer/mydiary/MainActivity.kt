@@ -519,7 +519,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                 when (oobeCount) {
                     0 -> {
                         sv!!.setButtonPosition(centerParams)
-                        sv!!.setShowcase(CustomViewTarget(RecyclerView_topic, 4, 4), true)
+                        sv!!.setShowcase(CustomViewTarget(RecyclerView_topic as View, 4, 4), true)
                         sv!!.setContentTitle(getString(R.string.oobe_main_topic_list_title))
                         sv!!.setContentText(getString(R.string.oobe_main_topic_list_content))
                     }
