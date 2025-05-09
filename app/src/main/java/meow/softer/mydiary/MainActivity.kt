@@ -36,8 +36,8 @@ import meow.softer.mydiary.main.ReleaseNoteDialogFragment
 import meow.softer.mydiary.main.TopicDeleteDialogFragment
 import meow.softer.mydiary.main.TopicDetailDialogFragment
 import meow.softer.mydiary.main.TopicDetailDialogFragment.TopicCreatedCallback
-import meow.softer.mydiary.main.YourNameDialogFragment
-import meow.softer.mydiary.main.YourNameDialogFragment.YourNameCallback
+import meow.softer.mydiary.main.DiaryDialogFragment
+import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback
 import meow.softer.mydiary.main.topic.Contacts
 import meow.softer.mydiary.main.topic.Diary
 import meow.softer.mydiary.main.topic.ITopic
@@ -229,8 +229,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     override fun onClick(v: View) {
         when (v.id) {
             R.id.LL_main_profile -> {
-                val yourNameDialogFragment = YourNameDialogFragment()
-                yourNameDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
+                val diaryDialogFragment = DiaryDialogFragment()
+                diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
             }
 
             R.id.IV_main_setting -> {
