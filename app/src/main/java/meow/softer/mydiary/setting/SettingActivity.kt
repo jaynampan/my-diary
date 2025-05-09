@@ -154,10 +154,11 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
+        permissions: Array<out String?>,
+        grantResults: IntArray,
+        deviceId: Int
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
         if (requestCode == PermissionHelper.REQUEST_WRITE_ES_PERMISSION) {
             if (grantResults.isNotEmpty()
                 && PermissionHelper.checkAllPermissionResult(grantResults)
@@ -168,6 +169,8 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
             }
         }
     }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
