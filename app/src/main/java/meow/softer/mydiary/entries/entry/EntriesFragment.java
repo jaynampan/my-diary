@@ -87,11 +87,11 @@ public class EntriesFragment extends BaseDiaryFragment  implements DiaryViewerDi
 
     public void setEditModeUI(boolean isEditMode) {
         if (isEditMode) {
-            entriesAdapter.setEditMode(false);
+            entriesAdapter.isEditMode = false;
             TV_entries_edit_msg.setVisibility(View.GONE);
             IV_entries_edit.setImageDrawable(ViewTools.getDrawable(getActivity(), R.drawable.ic_mode_edit_white_24dp));
         } else {
-            entriesAdapter.setEditMode(true);
+            entriesAdapter.isEditMode = true;
             TV_entries_edit_msg.setVisibility(View.VISIBLE);
             IV_entries_edit.setImageDrawable(ViewTools.getDrawable(getActivity(), R.drawable.ic_mode_edit_cancel_white_24dp));
         }
@@ -120,7 +120,7 @@ public class EntriesFragment extends BaseDiaryFragment  implements DiaryViewerDi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.IV_entries_edit:
-                setEditModeUI(entriesAdapter.isEditMode());
+                setEditModeUI(entriesAdapter.isEditMode);
                 break;
             case R.id.IV_entries_photo:
                 Intent gotoPhotoOverviewIntent = new Intent(getActivity(), PhotoOverviewActivity.class);
