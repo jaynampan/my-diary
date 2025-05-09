@@ -75,7 +75,7 @@ class MainTopicAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return filteredTopicList[position]!!.getId()
+        return filteredTopicList[position]!!.id
     }
 
     override fun getItemCount(): Int {
@@ -89,24 +89,24 @@ class MainTopicAdapter(
         holder.LL_topic_left_setting?.setBackgroundColor(
             ThemeManager.getInstance().getThemeMainColor(activity)
         )
-        holder.iconView?.setImageResource(filteredTopicList[position]!!.getIcon())
-        holder.iconView?.setColorFilter(filteredTopicList[position]!!.getColor())
-        holder.titleView?.text = filteredTopicList[position]!!.getTitle()
-        holder.titleView?.setTextColor(filteredTopicList[position]!!.getColor())
-        holder.tVCount?.text = filteredTopicList[position]!!.getCount().toString()
-        holder.tVCount?.setTextColor(filteredTopicList[position]!!.getColor())
-        holder.arrow?.setColorFilter(filteredTopicList[position]!!.getColor())
+        holder.iconView?.setImageResource(filteredTopicList[position]!!.icon)
+        holder.iconView?.setColorFilter(filteredTopicList[position]!!.color)
+        holder.titleView?.text = filteredTopicList[position]!!.title
+        holder.titleView?.setTextColor(filteredTopicList[position]!!.color)
+        holder.tVCount?.text = filteredTopicList[position]!!.count.toString()
+        holder.tVCount?.setTextColor(filteredTopicList[position]!!.color)
+        holder.arrow?.setColorFilter(filteredTopicList[position]!!.color)
 
         // set swiping properties
         holder.maxRightSwipeAmount = 0.3f
         holder.maxLeftSwipeAmount = 0F
         holder.swipeItemHorizontalSlideAmount =
-            if (filteredTopicList[position]!!.isPinned()) 0.3f else 0f
+            if (filteredTopicList[position]!!.isPinned) 0.3f else 0f
 
         //Click event
         holder.rLTopic?.setOnClickListener { v ->
             gotoTopic(
-                filteredTopicList[position]!!.getType(),
+                filteredTopicList[position]!!.type,
                 position
             )
         }
@@ -115,10 +115,10 @@ class MainTopicAdapter(
                 newInstance(
                     true,
                     position,
-                    filteredTopicList[position]!!.getId(),
-                    filteredTopicList[position]!!.getTitle(),
-                    filteredTopicList[position]!!.getType(),
-                    filteredTopicList[position]!!.getColor()
+                    filteredTopicList[position]!!.id,
+                    filteredTopicList[position]!!.title,
+                    filteredTopicList[position]!!.type,
+                    filteredTopicList[position]!!.color
                 )
             createTopicDialogFragment.show(
                 activity.supportFragmentManager,
@@ -130,7 +130,7 @@ class MainTopicAdapter(
             val topicDeleteDialogFragment =
                 TopicDeleteDialogFragment.newInstance(
                     position,
-                    filteredTopicList[position]!!.getTitle()
+                    filteredTopicList[position]!!.title
                 )
             topicDeleteDialogFragment.show(
                 activity.supportFragmentManager,
@@ -145,21 +145,21 @@ class MainTopicAdapter(
                 val goContactsPageIntent = Intent(activity, ContactsActivity::class.java)
                 goContactsPageIntent.putExtra(
                     "topicId",
-                    filteredTopicList[position]!!.getId()
+                    filteredTopicList[position]!!.id
                 )
                 goContactsPageIntent.putExtra(
                     "diaryTitle",
-                    filteredTopicList[position]!!.getTitle()
+                    filteredTopicList[position]!!.title
                 )
                 activity.startActivity(goContactsPageIntent)
             }
 
             ITopic.TYPE_DIARY -> {
                 val goEntriesPageIntent = Intent(activity, DiaryActivity::class.java)
-                goEntriesPageIntent.putExtra("topicId", filteredTopicList[position]!!.getId())
+                goEntriesPageIntent.putExtra("topicId", filteredTopicList[position]!!.id)
                 goEntriesPageIntent.putExtra(
                     "diaryTitle",
-                    filteredTopicList[position]!!.getTitle()
+                    filteredTopicList[position]!!.title
                 )
                 goEntriesPageIntent.putExtra("has_entries", true)
                 activity.startActivity(goEntriesPageIntent)
@@ -167,10 +167,10 @@ class MainTopicAdapter(
 
             ITopic.TYPE_MEMO -> {
                 val goMemoPageIntent = Intent(activity, MemoActivity::class.java)
-                goMemoPageIntent.putExtra("topicId", filteredTopicList[position]!!.getId())
+                goMemoPageIntent.putExtra("topicId", filteredTopicList[position]!!.id)
                 goMemoPageIntent.putExtra(
                     "diaryTitle",
-                    filteredTopicList[position]!!.getTitle()
+                    filteredTopicList[position]!!.title
                 )
                 activity.startActivity(goMemoPageIntent)
             }
@@ -278,7 +278,7 @@ class MainTopicAdapter(
         dbManager.openDB()
         dbManager.deleteAllCurrentTopicOrder()
         for (topic in topicList) {
-            dbManager.insertTopicOrder(topic.getId(), (--orderNumber).toLong())
+            dbManager.insertTopicOrder(topic.id, (--orderNumber).toLong())
         }
         dbManager.closeDB()
         notifyDataSetChanged(false)
@@ -309,8 +309,8 @@ class MainTopicAdapter(
 
             val item: ITopic = mAdapter?.getList()[mPosition]!!
 
-            if (!item.isPinned()) {
-                item.setPinned(true)
+            if (!item.isPinned) {
+                item.isPinned = true
                 mAdapter?.notifyItemChanged(mPosition)
             }
         }
@@ -337,8 +337,8 @@ class MainTopicAdapter(
             super.onPerformAction()
 
             val item: ITopic = mAdapter?.getList()[mPosition]!!
-            if (item.isPinned()) {
-                item.setPinned(false)
+            if (item.isPinned) {
+                item.isPinned = false
                 mAdapter?.notifyItemChanged(mPosition)
             }
         }
@@ -416,7 +416,7 @@ class MainTopicAdapter(
                 val filterPattern =
                     constraint.toString().lowercase(Locale.getDefault()).trim { it <= ' ' }
                 for (topic in originalList) {
-                    if (topic.getTitle().lowercase(Locale.getDefault()).contains(filterPattern)) {
+                    if (topic.title?.lowercase(Locale.getDefault())!!.contains(filterPattern)) {
                         filteredList.add(topic)
                     }
                 }

@@ -175,8 +175,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         when (topicBgStatus) {
             TopicDetailDialogFragment.TOPIC_BG_ADD_PHOTO -> {
                 val outputFile = themeManager!!.getTopicBgSavePathFile(
-                    this, mainTopicAdapter!!.getList()[position]!!.getId(),
-                    mainTopicAdapter!!.getList()[position]!!.getType()
+                    this, mainTopicAdapter!!.getList()[position]!!.id,
+                    mainTopicAdapter!!.getList()[position]!!.type
                 )
                 //Copy file into topic dir
                 try {
@@ -193,7 +193,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                     )
                     //Enter the topic
                     mainTopicAdapter!!.gotoTopic(
-                        mainTopicAdapter!!.getList()[position]!!.getType(), position
+                        mainTopicAdapter!!.getList()[position]!!.type, position
                     )
                 } catch (e: IOException) {
                     Toast.makeText(this, getString(R.string.topic_topic_bg_fail), Toast.LENGTH_LONG)
@@ -204,8 +204,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
 
             TopicDetailDialogFragment.TOPIC_BG_REVERT_DEFAULT -> {
                 val topicBgFile = themeManager!!.getTopicBgSavePathFile(
-                    this, mainTopicAdapter!!.getList()[position]!!.getId(),
-                    mainTopicAdapter!!.getList()[position]!!.getType()
+                    this, mainTopicAdapter!!.getList()[position]!!.id,
+                    mainTopicAdapter!!.getList()[position]!!.type
                 )
                 //Just delete the file  , the topic's activity will check file for changing the bg
                 if (topicBgFile.exists()) {
@@ -246,15 +246,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     override fun onTopicDelete(position: Int) {
         val dbManager = DBManager(this@MainActivity)
         dbManager.openDB()
-        when (mainTopicAdapter!!.getList()[position]!!.getType()) {
+        when (mainTopicAdapter!!.getList()[position]!!.type) {
             ITopic.TYPE_CONTACTS -> dbManager.delAllContactsInTopic(
-                mainTopicAdapter!!.getList()[position]!!.getId()
+                mainTopicAdapter!!.getList()[position]!!.id
             )
 
             ITopic.TYPE_MEMO -> {
-                dbManager.delAllMemoInTopic(mainTopicAdapter!!.getList()[position]!!.getId())
+                dbManager.delAllMemoInTopic(mainTopicAdapter!!.getList()[position]!!.id)
                 dbManager.deleteAllCurrentMemoOrder(
-                    mainTopicAdapter!!.getList()[position]!!.getId()
+                    mainTopicAdapter!!.getList()[position]!!.id
                 )
             }
 
@@ -262,12 +262,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                 //Clear the auto save content
                 SPFManager.clearDiaryAutoSave(
                     this,
-                    mainTopicAdapter!!.getList()[position]!!.getId()
+                    mainTopicAdapter!!.getList()[position]!!.id
                 )
                 //Because FOREIGN key is not work in this version,
                 //so delete diary item first , then delete diary
                 val diaryCursor =
-                    dbManager.selectDiaryList(mainTopicAdapter!!.getList()[position]!!.getId())
+                    dbManager.selectDiaryList(mainTopicAdapter!!.getList()[position]!!.id)
                 var i = 0
                 while (i < diaryCursor.count) {
                     dbManager.delAllDiaryItemByDiaryId(diaryCursor.getLong(0))
@@ -275,7 +275,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                     i++
                 }
                 diaryCursor.close()
-                dbManager.delAllDiaryInTopic(mainTopicAdapter!!.getList()[position]!!.getId())
+                dbManager.delAllDiaryInTopic(mainTopicAdapter!!.getList()[position]!!.id)
             }
         }
         //Delete the dir if it exist.
@@ -283,20 +283,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
             FileUtils.deleteDirectory(
                 FileManager(
                     this@MainActivity,
-                    mainTopicAdapter!!.getList()[position]!!.getType(),
-                    mainTopicAdapter!!.getList()[position]!!.getId()
+                    mainTopicAdapter!!.getList()[position]!!.type,
+                    mainTopicAdapter!!.getList()[position]!!.id
                 ).dir
             )
         } catch (e: IOException) {
             //Do nothing if delete fail
             e.printStackTrace()
         }
-        dbManager.delTopic(mainTopicAdapter!!.getList()[position]!!.getId())
+        dbManager.delTopic(mainTopicAdapter!!.getList()[position]!!.id)
         //Don't delete the topic order, it will be refreshed next moving time.
         dbManager.closeDB()
         //Search for remove the topiclist
         for (i in topicList!!.indices) {
-            if (topicList!![i].getId() == mainTopicAdapter!!.getList()[position]!!.getId()) {
+            if (topicList!![i].id == mainTopicAdapter!!.getList()[position]!!.id) {
                 topicList!!.removeAt(i)
                 break
             }
@@ -425,18 +425,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     private fun countTopicContent() {
         dbManager!!.openDB()
         for (i in topicList!!.indices) {
-            when (topicList!![i].getType()) {
-                ITopic.TYPE_CONTACTS -> topicList!![i].setCount(
-                    dbManager!!.getContactsCountByTopicId(topicList!![i].getId()).toLong()
-                )
+            when (topicList!![i].type) {
+                ITopic.TYPE_CONTACTS -> topicList!![i].count =
+                    dbManager!!.getContactsCountByTopicId(topicList!![i].id).toLong()
 
-                ITopic.TYPE_DIARY -> topicList!![i].setCount(
-                    dbManager!!.getDiaryCountByTopicId(topicList!![i].getId()).toLong()
-                )
+                ITopic.TYPE_DIARY -> topicList!![i].count =
+                    dbManager!!.getDiaryCountByTopicId(topicList!![i].id).toLong()
 
-                ITopic.TYPE_MEMO -> topicList!![i].setCount(
-                    dbManager!!.getMemoCountByTopicId(topicList!![i].getId()).toLong()
-                )
+                ITopic.TYPE_MEMO -> topicList!![i].count =
+                    dbManager!!.getMemoCountByTopicId(topicList!![i].id).toLong()
             }
         }
         dbManager!!.closeDB()
@@ -579,48 +576,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         topicList!!.add(
             0,
             object : ITopic {
-                override fun getTitle(): String? {
-                    return topicTitle
-                }
 
-                override fun setTitle(title: String?) {
-                    //do nothing
-                }
-
-                override fun getType(): Int {
-                    return type
-                }
-
-                override fun getId(): Long {
-                    return newTopicId
-                }
-
-                override fun getIcon(): Int {
-                    return 0
-                }
-
-                override fun setCount(count: Long) {
-                }
-
-                override fun getCount(): Long {
-                    return 0
-                }
-
-                override fun getColor(): Int {
-                    return color
-                }
-
-                override fun setColor(color: Int) {
-                    //do nothing
-                }
-
-                override fun setPinned(pinned: Boolean) {
-                    //do nothing
-                }
-
-                override fun isPinned(): Boolean {
-                    return false
-                }
+                override var title: String?
+                    get() = topicTitle
+                    set(value) {}
+                override val type: Int
+                    get() = type
+                override val id: Long
+                    get() = newTopicId
+                override val icon: Int
+                    get() = 0
+                override var count: Long
+                    get() = 0
+                    set(value) {}
+                override var color: Int
+                    get() = color
+                    set(value) {}
+                override var isPinned: Boolean
+                    get() = false
+                    set(value) {}
             })
         //Get size
         var orderNumber = topicList!!.size
@@ -628,7 +602,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         dbManager!!.deleteAllCurrentTopicOrder()
         //sort the topic order
         for (topic in topicList!!) {
-            dbManager!!.insertTopicOrder(topic.getId(), (--orderNumber).toLong())
+            dbManager!!.insertTopicOrder(topic.id, (--orderNumber).toLong())
         }
         loadTopic()
         dbManager!!.closeDB()
@@ -648,14 +622,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         val dbManager = DBManager(this)
         dbManager.openDB()
         dbManager.updateTopic(
-            mainTopicAdapter!!.getList()[position]!!.getId(),
+            mainTopicAdapter!!.getList()[position]!!.id,
             newTopicTitle,
             color
         )
         dbManager.closeDB()
         //Update filter list
-       mainTopicAdapter!!.getList()[position]?.setTitle(newTopicTitle)
-       mainTopicAdapter!!.getList()[position]?.setColor(color)
+        mainTopicAdapter!!.getList()[position]?.title = newTopicTitle
+        mainTopicAdapter!!.getList()[position]?.color = color
         mainTopicAdapter!!.notifyDataSetChanged(false)
 
         updateTopicBg(position, topicBgStatus, newTopicBgFileName)

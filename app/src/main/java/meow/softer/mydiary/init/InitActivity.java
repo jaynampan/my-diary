@@ -18,7 +18,7 @@ import meow.softer.mydiary.shared.MyDiaryApplication;
 import java.util.Locale;
 
 public class InitActivity extends AppCompatActivity implements InitTask.InitCallBack {
-    private int initTime = 2500; // 2.5S
+    private int initTime = 2200; // 2.5S
     private Handler initHandler;
 
     @Override
@@ -31,12 +31,7 @@ public class InitActivity extends AppCompatActivity implements InitTask.InitCall
     @Override
     protected void onResume() {
         super.onResume();
-        initHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                new InitTask(InitActivity.this, InitActivity.this).execute();
-            }
-        }, initTime);
+        initHandler.postDelayed(() -> new InitTask(InitActivity.this, InitActivity.this).execute(), initTime);
     }
 
     @Override
