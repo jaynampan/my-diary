@@ -175,8 +175,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         when (topicBgStatus) {
             TopicDetailDialogFragment.TOPIC_BG_ADD_PHOTO -> {
                 val outputFile = themeManager!!.getTopicBgSavePathFile(
-                    this, mainTopicAdapter!!.list[position].getId(),
-                    mainTopicAdapter!!.list[position].getType()
+                    this, mainTopicAdapter!!.getList()[position]!!.getId(),
+                    mainTopicAdapter!!.getList()[position]!!.getType()
                 )
                 //Copy file into topic dir
                 try {
@@ -193,7 +193,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                     )
                     //Enter the topic
                     mainTopicAdapter!!.gotoTopic(
-                        mainTopicAdapter!!.list[position].getType(), position
+                        mainTopicAdapter!!.getList()[position]!!.getType(), position
                     )
                 } catch (e: IOException) {
                     Toast.makeText(this, getString(R.string.topic_topic_bg_fail), Toast.LENGTH_LONG)
@@ -204,8 +204,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
 
             TopicDetailDialogFragment.TOPIC_BG_REVERT_DEFAULT -> {
                 val topicBgFile = themeManager!!.getTopicBgSavePathFile(
-                    this, mainTopicAdapter!!.list[position].getId(),
-                    mainTopicAdapter!!.list[position].getType()
+                    this, mainTopicAdapter!!.getList()[position]!!.getId(),
+                    mainTopicAdapter!!.getList()[position]!!.getType()
                 )
                 //Just delete the file  , the topic's activity will check file for changing the bg
                 if (topicBgFile.exists()) {
@@ -246,15 +246,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     override fun onTopicDelete(position: Int) {
         val dbManager = DBManager(this@MainActivity)
         dbManager.openDB()
-        when (mainTopicAdapter!!.list[position].getType()) {
+        when (mainTopicAdapter!!.getList()[position]!!.getType()) {
             ITopic.TYPE_CONTACTS -> dbManager.delAllContactsInTopic(
-                mainTopicAdapter!!.list[position].getId()
+                mainTopicAdapter!!.getList()[position]!!.getId()
             )
 
             ITopic.TYPE_MEMO -> {
-                dbManager.delAllMemoInTopic(mainTopicAdapter!!.list[position].getId())
+                dbManager.delAllMemoInTopic(mainTopicAdapter!!.getList()[position]!!.getId())
                 dbManager.deleteAllCurrentMemoOrder(
-                    mainTopicAdapter!!.list[position].getId()
+                    mainTopicAdapter!!.getList()[position]!!.getId()
                 )
             }
 
@@ -262,12 +262,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                 //Clear the auto save content
                 SPFManager.clearDiaryAutoSave(
                     this,
-                    mainTopicAdapter!!.list[position].getId()
+                    mainTopicAdapter!!.getList()[position]!!.getId()
                 )
                 //Because FOREIGN key is not work in this version,
                 //so delete diary item first , then delete diary
                 val diaryCursor =
-                    dbManager.selectDiaryList(mainTopicAdapter!!.list[position].getId())
+                    dbManager.selectDiaryList(mainTopicAdapter!!.getList()[position]!!.getId())
                 var i = 0
                 while (i < diaryCursor.count) {
                     dbManager.delAllDiaryItemByDiaryId(diaryCursor.getLong(0))
@@ -275,7 +275,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                     i++
                 }
                 diaryCursor.close()
-                dbManager.delAllDiaryInTopic(mainTopicAdapter!!.list[position].getId())
+                dbManager.delAllDiaryInTopic(mainTopicAdapter!!.getList()[position]!!.getId())
             }
         }
         //Delete the dir if it exist.
@@ -283,26 +283,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
             FileUtils.deleteDirectory(
                 FileManager(
                     this@MainActivity,
-                    mainTopicAdapter!!.list[position].getType(),
-                    mainTopicAdapter!!.list[position].getId()
+                    mainTopicAdapter!!.getList()[position]!!.getType(),
+                    mainTopicAdapter!!.getList()[position]!!.getId()
                 ).dir
             )
         } catch (e: IOException) {
             //Do nothing if delete fail
             e.printStackTrace()
         }
-        dbManager.delTopic(mainTopicAdapter!!.list[position].getId())
+        dbManager.delTopic(mainTopicAdapter!!.getList()[position]!!.getId())
         //Don't delete the topic order, it will be refreshed next moving time.
         dbManager.closeDB()
         //Search for remove the topiclist
         for (i in topicList!!.indices) {
-            if (topicList!![i].getId() == mainTopicAdapter!!.list[position].getId()) {
+            if (topicList!![i].getId() == mainTopicAdapter!!.getList()[position]!!.getId()) {
                 topicList!!.removeAt(i)
                 break
             }
         }
         //remove the filter list
-        mainTopicAdapter!!.list.removeAt(position)
+       mainTopicAdapter!!.getList().removeAt(position)
         //Notify recycle view
         mainTopicAdapter!!.notifyItemRemoved(position)
         mainTopicAdapter!!.notifyItemRangeChanged(position, mainTopicAdapter!!.itemCount)
@@ -461,7 +461,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         val lmr = LinearLayoutManager(this)
         RecyclerView_topic!!.setLayoutManager(lmr)
         RecyclerView_topic!!.setHasFixedSize(true)
-        mainTopicAdapter = MainTopicAdapter(this, topicList, dbManager)
+        mainTopicAdapter = MainTopicAdapter(this, topicList!!, dbManager!!)
         mWrappedAdapter = mRecyclerViewSwipeManager!!.createWrappedAdapter(mainTopicAdapter!!)
 
 
@@ -648,14 +648,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         val dbManager = DBManager(this)
         dbManager.openDB()
         dbManager.updateTopic(
-            mainTopicAdapter!!.list[position].getId(),
+            mainTopicAdapter!!.getList()[position]!!.getId(),
             newTopicTitle,
             color
         )
         dbManager.closeDB()
         //Update filter list
-        mainTopicAdapter!!.list[position].setTitle(newTopicTitle)
-        mainTopicAdapter!!.list[position].setColor(color)
+       mainTopicAdapter!!.getList()[position]?.setTitle(newTopicTitle)
+       mainTopicAdapter!!.getList()[position]?.setColor(color)
         mainTopicAdapter!!.notifyDataSetChanged(false)
 
         updateTopicBg(position, topicBgStatus, newTopicBgFileName)
