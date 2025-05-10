@@ -1,6 +1,7 @@
 package meow.softer.mydiary.shared
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -8,6 +9,11 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.util.Log
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.core.graphics.drawable.toBitmap
 import meow.softer.mydiary.R
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.shared.ColorTools.getColor
@@ -54,18 +60,63 @@ class ThemeManager private constructor() {
         setTheme(context, themeId)
     }
 
+    fun getProfileBgPainter(context: Context): Painter {
+        return when (currentTheme) {
+            TAKI -> {
+                Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme + "TAKI")
+                BitmapPainter(
+                    AppCompatResources.getDrawable(
+                        context,
+                        R.drawable.profile_theme_bg_taki
+                    )!!.toBitmap().asImageBitmap()
+                )
+            }
+
+            MITSUHA -> {
+                Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme + "Mitsuha")
+                BitmapPainter(
+                    AppCompatResources.getDrawable(
+                        context,
+                        R.drawable.profile_theme_bg_mitsuha
+                    )!!.toBitmap().asImageBitmap()
+                )
+            }
+
+            else -> {
+                val settingFM = FileManager(context, FileManager.SETTING_DIR)
+                val profileBgFile = File(
+                    (settingFM.dirAbsolutePath
+                            + "/" + CUSTOM_PROFILE_BANNER_BG_FILENAME)
+                )
+                val profilePic = if (profileBgFile.exists()) {
+                    val bitmap = BitmapFactory.decodeFile(profileBgFile.absolutePath)
+                    BitmapPainter(bitmap.asImageBitmap())
+                } else {
+                    BitmapPainter(
+                        AppCompatResources.getDrawable(
+                            context,
+                            R.drawable.ic_person_picture_default
+                        )!!.toBitmap().asImageBitmap()
+                    )
+                }
+                Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme + "default")
+                profilePic
+            }
+        }
+    }
+
     fun getProfileBgDrawable(context: Context): Drawable? {
         val bgDrawable: Drawable?
         Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme)
         when (currentTheme) {
             TAKI -> {
-                bgDrawable = ViewTools.getDrawable(context, R.drawable.profile_theme_bg_taki)
                 Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme + "TAKI")
+                bgDrawable = ViewTools.getDrawable(context, R.drawable.profile_theme_bg_taki)
             }
 
             MITSUHA -> {
-                bgDrawable = ViewTools.getDrawable(context, R.drawable.profile_theme_bg_mitsuha)
                 Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme + "Mitsuha")
+                bgDrawable = ViewTools.getDrawable(context, R.drawable.profile_theme_bg_mitsuha)
             }
 
             else -> {
@@ -80,9 +131,16 @@ class ThemeManager private constructor() {
                     ColorDrawable(getThemeMainColor(context))
                 }
                 Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme + "default")
+                bgDrawable
             }
         }
         return bgDrawable
+    }
+
+    fun getProfilePicPainter(context: Context): Painter {
+        val drawable = getProfilePictureDrawable(context)
+            ?: AppCompatResources.getDrawable(context, R.drawable.ic_person_picture_default)
+        return BitmapPainter(drawable!!.toBitmap().asImageBitmap())
     }
 
     fun getProfilePictureDrawable(context: Context): Drawable? {

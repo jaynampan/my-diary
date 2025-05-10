@@ -17,7 +17,12 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.amlcurran.showcaseview.ShowcaseView
@@ -50,6 +55,8 @@ import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.gui.MyDiaryButton
 import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 import meow.softer.mydiary.shared.statusbar.OOBE
+import meow.softer.mydiary.ui.components.HomeHeader
+import meow.softer.mydiary.ui.home.MainViewModel
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
@@ -110,6 +117,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     private var rootView: View? = null
     private var globalLayoutListener: OnGlobalLayoutListener? = null
     private val keyboardHeightThreshold = 300
+    private val mainViewModel: MainViewModel by viewModels()
+    private lateinit var composeView: ComposeView
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,11 +128,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         //set status bar
         ChinaPhoneHelper.setStatusBar(this, true)
         themeManager = ThemeManager.instance
-        LL_main_profile = findViewById<LinearLayout?>(R.id.LL_main_profile)
-        LL_main_profile!!.setOnClickListener(this)
+        //LL_main_profile = findViewById<LinearLayout?>(R.id.LL_main_profile)
+        //LL_main_profile!!.setOnClickListener(this)
 
-        IV_main_profile_picture = findViewById<ImageView?>(R.id.IV_main_profile_picture)
-        TV_main_profile_username = findViewById<TextView?>(R.id.TV_main_profile_username)
+        composeView = findViewById<ComposeView>(R.id.compose_view)
+        composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val userName = mainViewModel.userName.collectAsStateWithLifecycle().value
+                val userPic = mainViewModel.userPic.collectAsStateWithLifecycle().value
+                val profilePic = mainViewModel.userPainter.collectAsStateWithLifecycle().value
+                    ?: painterResource(R.drawable.ic_person_picture_default)
+                val bgPainter = mainViewModel.headerBgPainter.collectAsStateWithLifecycle().value
+                    ?: painterResource(R.drawable.profile_theme_bg_taki)
+                HomeHeader(
+                    profilePic = profilePic,
+                    bgPainter = bgPainter,
+                    userName = userName,
+                    onClick = {
+                        val diaryDialogFragment = DiaryDialogFragment()
+                        diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
+                    }
+                )
+            }
+        }
 
         EDT_main_topic_search = findViewById<EditText?>(R.id.EDT_main_topic_search)
         EDT_main_topic_search!!.addTextChangedListener(this)
@@ -228,10 +256,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.LL_main_profile -> {
-                val diaryDialogFragment = DiaryDialogFragment()
-                diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
-            }
+//            R.id.LL_main_profile -> {
+//                val diaryDialogFragment = DiaryDialogFragment()
+//                diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
+//            }
 
             R.id.IV_main_setting -> {
                 val mainSettingDialogFragment = MainSettingDialogFragment()
@@ -302,7 +330,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
             }
         }
         //remove the filter list
-       mainTopicAdapter!!.getList().removeAt(position)
+        mainTopicAdapter!!.getList().removeAt(position)
         //Notify recycle view
         mainTopicAdapter!!.notifyItemRemoved(position)
         mainTopicAdapter!!.notifyItemRangeChanged(position, mainTopicAdapter!!.itemCount)
@@ -370,11 +398,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
 
     private fun initProfile() {
         var YourNameIs = SPFManager.getYourName(this@MainActivity)
-        if (YourNameIs == null || YourNameIs.isEmpty()) {
+        if (YourNameIs.isEmpty()) {
             YourNameIs = themeManager!!.getThemeUserName(this@MainActivity)
         }
-        TV_main_profile_username!!.text = YourNameIs
-        LL_main_profile!!.background = themeManager!!.getProfileBgDrawable(this)
+        //TV_main_profile_username!!.text = YourNameIs
+        mainViewModel.updateUserName(YourNameIs)
+        //LL_main_profile!!.background = themeManager!!.getProfileBgDrawable(this)
+        mainViewModel.updateHeaderBgPic(themeManager!!.getProfileBgPainter(this))
     }
 
     private fun initBottomBar() {
@@ -419,7 +449,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     }
 
     private fun loadProfilePicture() {
-        IV_main_profile_picture!!.setImageDrawable(themeManager!!.getProfilePictureDrawable(this))
+        //IV_main_profile_picture!!.setImageDrawable(themeManager!!.getProfilePictureDrawable(this))
+        mainViewModel.updateUserPic(themeManager!!.getProfilePicPainter(this))
+
     }
 
     private fun countTopicContent() {
