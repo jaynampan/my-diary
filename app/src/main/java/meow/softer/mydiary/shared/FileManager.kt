@@ -295,7 +295,7 @@ class FileManager {
                         split[1]
                     )
 
-                    return Companion.getDataColumn(context, contentUri!!, selection, selectionArgs)
+                    return getDataColumn(context, contentUri!!, selection, selectionArgs)
                 }
             } else if ("content".equals(uri.scheme, ignoreCase = true)) {
                 return getDataColumn(context, uri, null, null)

@@ -27,7 +27,7 @@ class DirectoryPickerActivity : FilePickerActivity() {
         val path = (if (startPath != null)
             startPath
         else
-            Environment.getExternalStorageDirectory().getPath())
+            Environment.getExternalStorageDirectory().path)
 
         currentFragment = DirectoryPickerFragment()
         currentFragment!!.setArgs(

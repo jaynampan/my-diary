@@ -80,7 +80,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             loadBackupJsonFileIntoManager()
             importSuccessful = importTopic()
         } catch (e: Exception) {
-            Log.e(ImportAsyncTask.Companion.TAG, "import flow fail", e)
+            Log.e(TAG, "import flow fail", e)
             importSuccessful = false
         } finally {
             backupFileManager.clearDir()
@@ -141,7 +141,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             //Check update success
             dbManager.setTransactionSuccessful()
         } catch (e: Exception) {
-            Log.e(ImportAsyncTask.Companion.TAG, "importTopic fail", e)
+            Log.e(TAG, "importTopic fail", e)
             importSuccessful = false
         } finally {
             dbManager.endTransaction()

@@ -86,7 +86,7 @@ class ZipManager(context: Context) {
                 zipSubFolder(out, file, basePathLength)
             } else {
                 val data: ByteArray? = ByteArray(BUFFER_SIZE)
-                val unmodifiedFilePath = file.getPath()
+                val unmodifiedFilePath = file.path
                 val relativePath = unmodifiedFilePath
                     .substring(basePathLength)
                 val fi = FileInputStream(unmodifiedFilePath)
@@ -124,10 +124,10 @@ class ZipManager(context: Context) {
             try {
                 var ze: ZipEntry? = null
                 while ((zin.getNextEntry().also { ze = it }) != null) {
-                    val path = location + ze!!.getName()
+                    val path = location + ze!!.name
                     val unzipFile = File(path)
 
-                    if (ze.isDirectory()) {
+                    if (ze.isDirectory) {
                         if (!unzipFile.isDirectory()) {
                             unzipFile.mkdirs()
                         }

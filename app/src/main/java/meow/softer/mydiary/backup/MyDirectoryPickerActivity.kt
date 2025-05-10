@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import meow.softer.mydiary.R
 import java.io.File
-import java.util.Collections
-import kotlin.collections.sort
 
 class MyDirectoryPickerActivity : AppCompatActivity() {
     private var recyclerView: RecyclerView? = null

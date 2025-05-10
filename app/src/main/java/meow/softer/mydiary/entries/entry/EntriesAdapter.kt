@@ -5,7 +5,6 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
@@ -101,8 +100,6 @@ class EntriesAdapter(
         val iVMood: ImageView = rootView.findViewById<ImageView>(R.id.IV_entries_item_mood)
         val iVBookmark: ImageView = rootView.findViewById<ImageView>(R.id.IV_entries_item_bookmark)
         val iVAttachment: ImageView = rootView.findViewById<ImageView>(R.id.IV_entries_item_attachment)
-
-        val rLContent: RelativeLayout? = rootView.findViewById<RelativeLayout?>(R.id.RL_entries_item_content)
 
         init {
             this.itemView.setOnClickListener(this)

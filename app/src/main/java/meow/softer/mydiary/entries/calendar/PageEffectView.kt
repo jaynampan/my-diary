@@ -682,9 +682,6 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
      * Description : 是否从左边翻向右边
      */
     fun DragToRight(): Boolean {
-        if (mCornerX > 0) {
-            return false
-        }
-        return true
+        return mCornerX <= 0
     }
 }

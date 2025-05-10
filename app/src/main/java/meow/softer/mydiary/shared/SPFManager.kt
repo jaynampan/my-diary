@@ -47,12 +47,6 @@ object SPFManager {
     private const val ENCRYPTED_PASSWORD = "ENCRYPTED_PASSWORD"
 
     /**
-     * OOBE:
-     * Add in  Version 33 , Not use now.
-     */
-    private const val SPF_OOBE = "OOBE"
-
-    /**
      * Diary auto save
      */
     private const val SPF_DIARY = "DIARY"
@@ -94,12 +88,6 @@ object SPFManager {
         val PE = settings.edit()
         PE.putString(PROFILE_YOUR_NAME_IS, yourNameIs)
         PE.apply()
-    }
-
-    fun hasCustomProfileBannerBg(context: Context): Boolean {
-        val settings = context.getSharedPreferences(SPF_PROFILE, 0)
-        //default is space
-        return settings.getBoolean(PROFILE_MAIN_PAGE_BANNER_BG, false)
     }
 
     fun setCustomProfileBannerBg(context: Context, customProfileBg: Boolean) {

@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,10 +24,11 @@ import meow.softer.mydiary.main.topic.ITopic
 
 @Composable
 fun TopicList(
+    modifier: Modifier = Modifier,
     topicList: List<ITopic>,
     onClick: (ITopic) -> Unit
 ) {
-    LazyColumn(Modifier.fillMaxSize()) {
+    LazyColumn(modifier.fillMaxWidth()) {
         items(topicList) {
             TopicItem(topic = it) {  onClick(it)}
         }

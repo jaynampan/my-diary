@@ -22,10 +22,6 @@ object Encryption {
         return encoded
     }
 
-    fun MD5(str: String): String? {
-        return Encrypt(str, "MD5")
-    }
-
     fun SHA256(str: String): String? {
         return Encrypt(str, "SHA-256")
     }

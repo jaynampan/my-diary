@@ -53,10 +53,6 @@ object ScreenHelper {
         return result
     }
 
-    fun hideSystemUI(decorView: View) {
-        openImmersiveMode(decorView)
-    }
-
 
     private fun openImmersiveMode(view: View) {
         view.setSystemUiVisibility(

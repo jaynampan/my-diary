@@ -3,35 +3,15 @@ package meow.softer.mydiary
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.PorterDuff
-import android.graphics.Rect
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.github.amlcurran.showcaseview.ShowcaseView
-import com.github.amlcurran.showcaseview.targets.Target
-import com.github.amlcurran.showcaseview.targets.ViewTarget
-import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator
-import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator
-import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
-import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager
 import meow.softer.mydiary.contacts.ContactsActivity
 import meow.softer.mydiary.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
@@ -48,18 +28,14 @@ import meow.softer.mydiary.main.topic.Diary
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.main.topic.Memo
 import meow.softer.mydiary.memo.MemoActivity
-import meow.softer.mydiary.oobe.CustomViewTarget
 import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.shared.gui.MyDiaryButton
 import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
-import meow.softer.mydiary.shared.statusbar.OOBE
-import meow.softer.mydiary.ui.components.HomeBottomBar
-import meow.softer.mydiary.ui.components.HomeHeader
-import meow.softer.mydiary.ui.components.TopicList
+import meow.softer.mydiary.ui.home.HomeScreen
 import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.theme.DiaryTheme
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
@@ -67,9 +43,9 @@ import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCallback,
+class MainActivity : FragmentActivity(), TopicCreatedCallback,
     YourNameCallback,
-    TopicDeleteDialogFragment.DeleteCallback, TextWatcher {
+    TopicDeleteDialogFragment.DeleteCallback {
     private var isExit: Boolean
 
     init {
@@ -79,18 +55,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     }
 
 
-    //RecyclerView
-    private var RecyclerView_topic: RecyclerView? = null
     private var mainTopicAdapter: MainTopicAdapter? = null
     private var topicList: MutableList<ITopic>? = null
-
-    //swipe
-    private var mRecyclerViewSwipeManager: RecyclerViewSwipeManager? = null
-    private var mWrappedAdapter: RecyclerView.Adapter<*>? = null
-    private var mRecyclerViewTouchActionGuardManager: RecyclerViewTouchActionGuardManager? = null
-
-    //drag
-    private var mRecyclerViewDragDropManager: RecyclerViewDragDropManager? = null
 
     /*
      * DB
@@ -101,93 +67,50 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     private val backTimer = Timer()
 
     /*
-     * OOBE
-     */
-    private var oobeCount = 0
-    private var sv: ShowcaseView? = null
-
-    /*
      * UI
      */
     private var themeManager: ThemeManager? = null
-    private var IV_main_profile_picture: ImageView? = null
     private var EDT_main_topic_search: EditText? = null
-    private var IV_main_setting: ImageView? = null
 
-    private var rootView: View? = null
-    private var globalLayoutListener: OnGlobalLayoutListener? = null
-    private val keyboardHeightThreshold = 300
     private val mainViewModel: MainViewModel by viewModels()
-    private lateinit var composeHeader: ComposeView
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        //set status bar
-        ChinaPhoneHelper.setStatusBar(this, true)
-        themeManager = ThemeManager.instance
-        //LL_main_profile = findViewById<LinearLayout?>(R.id.LL_main_profile)
-        //LL_main_profile!!.setOnClickListener(this)
-
-        composeHeader = findViewById<ComposeView>(R.id.compose_view)
-        composeHeader.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                val userName = mainViewModel.userName.collectAsStateWithLifecycle().value
-                val userPic = mainViewModel.userPic.collectAsStateWithLifecycle().value
-                val profilePic = mainViewModel.userPainter.collectAsStateWithLifecycle().value
-                    ?: painterResource(R.drawable.ic_person_picture_default)
-                val bgPainter = mainViewModel.headerBgPainter.collectAsStateWithLifecycle().value
-                    ?: painterResource(R.drawable.profile_theme_bg_taki)
-                HomeHeader(
+        setContent {
+            val userName = mainViewModel.userName.collectAsStateWithLifecycle().value
+            val profilePic = mainViewModel.userPainter.collectAsStateWithLifecycle().value
+                ?: painterResource(R.drawable.ic_person_picture_default)
+            val bgPainter = mainViewModel.headerBgPainter.collectAsStateWithLifecycle().value
+                ?: painterResource(R.drawable.profile_theme_bg_taki)
+            val topicListData = mainViewModel.topicData.collectAsStateWithLifecycle().value
+            DiaryTheme {
+                HomeScreen(
                     profilePic = profilePic,
                     bgPainter = bgPainter,
                     userName = userName,
-                    onClick = {
+                    topics = topicListData,
+                    onProfileClick = {
                         val diaryDialogFragment = DiaryDialogFragment()
                         diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
-                    }
-                )
-            }
-        }
-        val composeTopic = findViewById<ComposeView>(R.id.compose_topic)
-
-        composeTopic.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                val topicListData = mainViewModel.topicData.collectAsStateWithLifecycle().value
-                TopicList(
-                    topicList = topicListData,
-                    onClick = { it -> gotoTopic(it) }
-                )
-            }
-        }
-        val composeBottom = findViewById<ComposeView>(R.id.compose_bottom)
-        composeBottom.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                HomeBottomBar(
+                    },
                     onSettingClick = {
                         val mainSettingDialogFragment = MainSettingDialogFragment()
                         mainSettingDialogFragment.show(
                             supportFragmentManager,
                             "mainSettingDialogFragment"
                         )
+                    },
+                    onTopicClick = {
+                        gotoTopic(it)
                     }
                 )
             }
         }
 
-        //EDT_main_topic_search = findViewById<EditText?>(R.id.EDT_main_topic_search)
-        //EDT_main_topic_search!!.addTextChangedListener(this)
-
-        //IV_main_setting = findViewById<ImageView?>(R.id.IV_main_setting)
-        //IV_main_setting!!.setOnClickListener(this)
-
-        //RecyclerView_topic = findViewById<RecyclerView?>(R.id.RecyclerView_topic)
-        rootView = findViewById<View?>(android.R.id.content)
+        //set status bar
+        ChinaPhoneHelper.setStatusBar(this, true)
+        themeManager = ThemeManager.instance
+        //rootView = findViewById<View?>(android.R.id.content)
 
         topicList = ArrayList<ITopic>()
         dbManager = DBManager(this@MainActivity)
@@ -202,14 +125,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         dbManager!!.openDB()
         loadTopic()
         dbManager!!.closeDB()
-        //mainTopicAdapter!!.notifyDataSetChanged(true)
-
-
-        //listen the edit text
-        autoClearEditTextFocus()
-
-
-        //initOOBE()
 
         //Check show Release note dialog.
         if (SPFManager.getFirstRun(this)) {
@@ -271,32 +186,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     }
 
 
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-    }
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        mainTopicAdapter!!.filter.filter(s)
-    }
-
-    override fun afterTextChanged(s: Editable?) {
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-//            R.id.LL_main_profile -> {
-//                val diaryDialogFragment = DiaryDialogFragment()
-//                diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
-//            }
-
-//            R.id.IV_main_setting -> {
-//                val mainSettingDialogFragment = MainSettingDialogFragment()
-//                mainSettingDialogFragment.show(
-//                    supportFragmentManager,
-//                    "mainSettingDialogFragment"
-//                )
-//            }
-        }
-    }
 
     override fun onTopicDelete(position: Int) {
         val dbManager = DBManager(this@MainActivity)
@@ -373,35 +262,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     }
 
     override fun onPause() {
-        //mRecyclerViewDragDropManager!!.cancelDrag()
         super.onPause()
     }
 
     override fun onDestroy() {
-//        if (mRecyclerViewDragDropManager != null) {
-//            mRecyclerViewDragDropManager!!.release()
-//            mRecyclerViewDragDropManager = null
-//        }
-//        if (mRecyclerViewSwipeManager != null) {
-//            mRecyclerViewSwipeManager!!.release()
-//            mRecyclerViewSwipeManager = null
-//        }
-//
-//        if (mRecyclerViewTouchActionGuardManager != null) {
-//            mRecyclerViewTouchActionGuardManager!!.release()
-//            mRecyclerViewTouchActionGuardManager = null
-//        }
-
-//        if (RecyclerView_topic != null) {
-//            RecyclerView_topic!!.setItemAnimator(null)
-//            RecyclerView_topic!!.setAdapter(null)
-//            RecyclerView_topic = null
-//        }
-
-//        if (mWrappedAdapter != null) {
-//            WrapperAdapterUtils.releaseAll(mWrappedAdapter)
-//            mWrappedAdapter = null
-//        }
         mainTopicAdapter = null
         super.onDestroy()
     }
@@ -432,14 +296,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         mainViewModel.updateUserName(YourNameIs)
         //LL_main_profile!!.background = themeManager!!.getProfileBgDrawable(this)
         mainViewModel.updateHeaderBgPic(themeManager!!.getProfileBgPainter(this))
-    }
-
-    private fun initBottomBar() {
-        EDT_main_topic_search!!.background.setColorFilter(
-            themeManager!!.getThemeMainColor(this),
-            PorterDuff.Mode.SRC_ATOP
-        )
-        IV_main_setting!!.setColorFilter(themeManager!!.getThemeMainColor(this))
     }
 
     private fun loadTopic() {
@@ -500,133 +356,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         //mWrappedAdapter!!.notifyDataSetChanged()
     }
 
-    private fun initTopicAdapter() {
-        // For swipe
-
-        // swipe manager
-
-        mRecyclerViewSwipeManager = RecyclerViewSwipeManager()
-
-        // touch guard manager  (this class is required to suppress scrolling while swipe-dismiss animation is running)
-        mRecyclerViewTouchActionGuardManager = RecyclerViewTouchActionGuardManager()
-        mRecyclerViewTouchActionGuardManager!!.setInterceptVerticalScrollingWhileAnimationRunning(
-            true
-        )
-        mRecyclerViewTouchActionGuardManager!!.setEnabled(true)
-
-        //Init topic adapter
-        val lmr = LinearLayoutManager(this)
-        RecyclerView_topic!!.setLayoutManager(lmr)
-        RecyclerView_topic!!.setHasFixedSize(true)
-        mainTopicAdapter = MainTopicAdapter(this, topicList!!, dbManager!!)
-        mWrappedAdapter = mRecyclerViewSwipeManager!!.createWrappedAdapter(mainTopicAdapter!!)
-
-
-        val animator: GeneralItemAnimator = DraggableItemAnimator()
-
-        // Change animations are enabled by default since support-v7-recyclerview v22.
-        // Disable the change animation in order to make turning back animation of swiped item works properly.
-        animator.supportsChangeAnimations = false
-
-
-        //For Drag
-
-        // Setup D&D feature and RecyclerView
-        mRecyclerViewDragDropManager = RecyclerViewDragDropManager()
-
-        mRecyclerViewDragDropManager!!.setInitiateOnMove(false)
-        mRecyclerViewDragDropManager!!.setInitiateOnLongPress(true)
-        mWrappedAdapter = mRecyclerViewDragDropManager!!.createWrappedAdapter(mWrappedAdapter!!)
-
-
-        RecyclerView_topic!!.setAdapter(mWrappedAdapter) // requires *wrapped* adapter
-        RecyclerView_topic!!.setItemAnimator(animator)
-
-        //For Attach the all manager
-
-        // NOTE:
-        // The initialization order is very important! This order determines the priority of touch event handling.
-        //
-        // priority: TouchActionGuard > Swipe > DragAndDrop
-        mRecyclerViewTouchActionGuardManager!!.attachRecyclerView(RecyclerView_topic!!)
-        mRecyclerViewSwipeManager!!.attachRecyclerView(RecyclerView_topic!!)
-
-        mRecyclerViewDragDropManager!!.attachRecyclerView(RecyclerView_topic!!)
-    }
-
-    private fun initOOBE() {
-        val margin = ((getResources().displayMetrics.density * 12) as Number).toInt()
-
-        val centerParams =
-            RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        centerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-        centerParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-        centerParams.setMargins(0, 0, 0, margin)
-
-        val leftParams = RelativeLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        leftParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-        leftParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-        leftParams.setMargins(margin, margin, margin, margin)
-
-        val showcaseViewOnClickListener: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(view: View?) {
-                when (oobeCount) {
-                    0 -> {
-                        sv!!.setButtonPosition(centerParams)
-                        sv!!.setShowcase(CustomViewTarget(RecyclerView_topic as View, 4, 4), true)
-                        sv!!.setContentTitle(getString(R.string.oobe_main_topic_list_title))
-                        sv!!.setContentText(getString(R.string.oobe_main_topic_list_content))
-                    }
-
-                    1 -> {
-                        sv!!.setButtonPosition(leftParams)
-                        sv!!.setShowcase(ViewTarget(EDT_main_topic_search), true)
-                        sv!!.setContentTitle(getString(R.string.oobe_main_search_title))
-                        sv!!.setContentText(getString(R.string.oobe_main_search_content))
-                    }
-
-                    2 -> {
-                        sv!!.setButtonPosition(centerParams)
-                        sv!!.setShowcase(ViewTarget(IV_main_setting), true)
-                        sv!!.setContentTitle(getString(R.string.oobe_main_adv_setting_title))
-                        sv!!.setContentText(getString(R.string.oobe_main_adv_setting_content))
-                    }
-
-                    3 -> {
-                        sv!!.setButtonPosition(centerParams)
-                        sv!!.setTarget(Target.NONE)
-                        sv!!.setContentTitle(getString(R.string.oobe_main_mydiary_title))
-                        sv!!.setContentText(getString(R.string.oobe_main_mydiary_content))
-                        sv!!.setButtonText(getString(R.string.dialog_button_ok))
-                    }
-
-                    4 -> sv!!.hide()
-                }
-                oobeCount++
-            }
-        }
-
-
-        val viewTarget: Target = ViewTarget(IV_main_profile_picture)
-        sv = ShowcaseView.Builder(this)
-            .withMaterialShowcase()
-            .setTarget(viewTarget)
-            .setContentTitle(getString(R.string.oobe_main_your_name_title))
-            .setContentText(getString(R.string.oobe_main_your_name_content)) //.setStyle(R.style.OOBEShowcaseTheme)
-            .singleShot(OOBE.MAIN_PAGE.toLong())
-            .replaceEndButton(MyDiaryButton(this))
-            .setOnClickListener(showcaseViewOnClickListener)
-            .build()
-        sv!!.setButtonText(getString(R.string.oobe_next_button))
-        sv!!.setButtonPosition(leftParams)
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun TopicCreated(topicTitle: String?, type: Int, color: Int) {
         dbManager!!.openDB()
@@ -635,7 +364,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         //This ITopic is temp object to order
         topicList!!.add(
             0,
-            object : ITopic {
+            element = object : ITopic {
 
                 override var title: String?
                     get() = topicTitle
@@ -693,8 +422,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         mainTopicAdapter!!.notifyDataSetChanged(false)
 
         updateTopicBg(position, topicBgStatus, newTopicBgFileName)
-        //Clear the filter
-        EDT_main_topic_search!!.setText("")
+
     }
 
     override fun updateName() {
@@ -702,18 +430,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         loadProfilePicture()
     }
 
-    private fun autoClearEditTextFocus() {
-        globalLayoutListener = OnGlobalLayoutListener {
-            val rect = Rect()
-            rootView!!.getWindowVisibleDisplayFrame(rect)
-            val heightDiff = rootView!!.getRootView().height - (rect.bottom - rect.top)
-            Log.e("Mytest", "height diff:$heightDiff")
-            if (heightDiff <= keyboardHeightThreshold) {
-                EDT_main_topic_search?.clearFocus()
-            }
-        }
-        rootView!!.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener)
-    }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(updateBaseContextLocale(base))

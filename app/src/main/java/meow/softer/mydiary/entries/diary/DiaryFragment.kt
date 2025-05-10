@@ -174,7 +174,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
         LL_diary_item_content = rootView.findViewById<LinearLayout>(R.id.LL_diary_item_content)
         LL_diary_item_content!!.setOnClickListener(this)
 
-        val IV_diary_menu = rootView.findViewById<ImageView?>(R.id.IV_diary_menu)
+        rootView.findViewById<ImageView?>(R.id.IV_diary_menu)
         IV_diary_location = rootView.findViewById<ImageView>(R.id.IV_diary_location)
         IV_diary_location!!.setOnClickListener(this)
         val IV_diary_photo = rootView.findViewById<ImageView>(R.id.IV_diary_photo)

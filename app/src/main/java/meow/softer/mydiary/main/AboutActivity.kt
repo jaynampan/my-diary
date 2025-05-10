@@ -16,7 +16,7 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //For set status bar
         ChinaPhoneHelper.setStatusBar(this, true)
-
+        supportFragmentManager
         setContentView(R.layout.activity_about)
         license = StringBuilder()
         license!!.append(

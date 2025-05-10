@@ -23,16 +23,14 @@ class DirectoryPickerFragment : FilePickerFragment() {
         val rootView = inflater.inflate(R.layout.fragment_filepicker, container, false)
         //Set toolbar
         val toolbar = rootView.findViewById<Toolbar>(R.id.my_picker_toolbar)
-        toolbar.setBackgroundColor(instance!!.getThemeMainColor(getActivity()!!))
+        toolbar.setBackgroundColor(instance!!.getThemeMainColor(requireActivity()))
         //set RecyclerView
         mRecyclerView = rootView.findViewById<RecyclerView>(R.id.RV_filepicker)
         mRecyclerView!!.setBackgroundColor(Color.WHITE)
 
         //set Button
-        (rootView.findViewById<View?>(R.id.my_button_cancel) as Button)
-            .setText(getResources().getString(R.string.dialog_button_cancel))
-        (rootView.findViewById<View?>(R.id.my_button_ok) as Button)
-            .setText(getResources().getString(R.string.dialog_button_ok))
+        (rootView.findViewById<View?>(R.id.my_button_cancel) as Button).text = resources.getString(R.string.dialog_button_cancel)
+        (rootView.findViewById<View?>(R.id.my_button_ok) as Button).text = resources.getString(R.string.dialog_button_ok)
 
         return rootView
     }
@@ -42,7 +40,7 @@ class DirectoryPickerFragment : FilePickerFragment() {
          * For consistency, the top level the back button checks against should be the start path.
          * But it will fall back on /.
          */
-        get() = getPath(getArguments()!!.getString(KEY_START_PATH, "/"))
+        get() = getPath(requireArguments().getString(KEY_START_PATH, "/"))
 
     /**
      * @return true if the current path is the startpath or /
