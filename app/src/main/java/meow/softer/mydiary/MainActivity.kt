@@ -19,6 +19,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -56,6 +60,8 @@ import meow.softer.mydiary.shared.gui.MyDiaryButton
 import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 import meow.softer.mydiary.shared.statusbar.OOBE
 import meow.softer.mydiary.ui.components.HomeHeader
+import meow.softer.mydiary.ui.components.TopicItem
+import meow.softer.mydiary.ui.components.TopicList
 import meow.softer.mydiary.ui.home.MainViewModel
 import org.apache.commons.io.FileUtils
 import java.io.File
@@ -118,7 +124,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     private var globalLayoutListener: OnGlobalLayoutListener? = null
     private val keyboardHeightThreshold = 300
     private val mainViewModel: MainViewModel by viewModels()
-    private lateinit var composeView: ComposeView
+    private lateinit var composeHeader: ComposeView
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,8 +137,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         //LL_main_profile = findViewById<LinearLayout?>(R.id.LL_main_profile)
         //LL_main_profile!!.setOnClickListener(this)
 
-        composeView = findViewById<ComposeView>(R.id.compose_view)
-        composeView.apply {
+        composeHeader = findViewById<ComposeView>(R.id.compose_view)
+        composeHeader.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 val userName = mainViewModel.userName.collectAsStateWithLifecycle().value
@@ -152,6 +158,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
                 )
             }
         }
+        val composeTopic = findViewById<ComposeView>(R.id.compose_topic)
+
+        composeTopic.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val topicListData = mainViewModel.topicData.collectAsStateWithLifecycle().value
+                TopicList(
+                    topicList = topicListData
+                )
+            }
+        }
 
         EDT_main_topic_search = findViewById<EditText?>(R.id.EDT_main_topic_search)
         EDT_main_topic_search!!.addTextChangedListener(this)
@@ -159,7 +176,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         IV_main_setting = findViewById<ImageView?>(R.id.IV_main_setting)
         IV_main_setting!!.setOnClickListener(this)
 
-        RecyclerView_topic = findViewById<RecyclerView?>(R.id.RecyclerView_topic)
+        //RecyclerView_topic = findViewById<RecyclerView?>(R.id.RecyclerView_topic)
         rootView = findViewById<View?>(android.R.id.content)
 
         topicList = ArrayList<ITopic>()
@@ -167,7 +184,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
 
         initProfile()
         initBottomBar()
-        initTopicAdapter()
+        //initTopicAdapter()
         loadProfilePicture()
 
 
@@ -175,14 +192,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         dbManager!!.openDB()
         loadTopic()
         dbManager!!.closeDB()
-        mainTopicAdapter!!.notifyDataSetChanged(true)
+        //mainTopicAdapter!!.notifyDataSetChanged(true)
 
 
         //listen the edit text
         autoClearEditTextFocus()
 
 
-        initOOBE()
+        //initOOBE()
 
         //Check show Release note dialog.
         if (SPFManager.getFirstRun(this)) {
@@ -346,35 +363,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     }
 
     override fun onPause() {
-        mRecyclerViewDragDropManager!!.cancelDrag()
+        //mRecyclerViewDragDropManager!!.cancelDrag()
         super.onPause()
     }
 
     override fun onDestroy() {
-        if (mRecyclerViewDragDropManager != null) {
-            mRecyclerViewDragDropManager!!.release()
-            mRecyclerViewDragDropManager = null
-        }
-        if (mRecyclerViewSwipeManager != null) {
-            mRecyclerViewSwipeManager!!.release()
-            mRecyclerViewSwipeManager = null
-        }
+//        if (mRecyclerViewDragDropManager != null) {
+//            mRecyclerViewDragDropManager!!.release()
+//            mRecyclerViewDragDropManager = null
+//        }
+//        if (mRecyclerViewSwipeManager != null) {
+//            mRecyclerViewSwipeManager!!.release()
+//            mRecyclerViewSwipeManager = null
+//        }
+//
+//        if (mRecyclerViewTouchActionGuardManager != null) {
+//            mRecyclerViewTouchActionGuardManager!!.release()
+//            mRecyclerViewTouchActionGuardManager = null
+//        }
 
-        if (mRecyclerViewTouchActionGuardManager != null) {
-            mRecyclerViewTouchActionGuardManager!!.release()
-            mRecyclerViewTouchActionGuardManager = null
-        }
+//        if (RecyclerView_topic != null) {
+//            RecyclerView_topic!!.setItemAnimator(null)
+//            RecyclerView_topic!!.setAdapter(null)
+//            RecyclerView_topic = null
+//        }
 
-        if (RecyclerView_topic != null) {
-            RecyclerView_topic!!.setItemAnimator(null)
-            RecyclerView_topic!!.setAdapter(null)
-            RecyclerView_topic = null
-        }
-
-        if (mWrappedAdapter != null) {
-            WrapperAdapterUtils.releaseAll(mWrappedAdapter)
-            mWrappedAdapter = null
-        }
+//        if (mWrappedAdapter != null) {
+//            WrapperAdapterUtils.releaseAll(mWrappedAdapter)
+//            mWrappedAdapter = null
+//        }
         mainTopicAdapter = null
         super.onDestroy()
     }
@@ -418,7 +435,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
     private fun loadTopic() {
         topicList!!.clear()
         val topicCursor = dbManager!!.selectTopic()
-        for (i in 0..<topicCursor.count) {
+        (0..<topicCursor.count).forEach { i ->
             when (topicCursor.getInt(2)) {
                 ITopic.TYPE_CONTACTS -> topicList!!.add(
                     Contacts(
@@ -446,6 +463,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
             topicCursor.moveToNext()
         }
         topicCursor.close()
+        mainViewModel.updateTopicData(topicList!!)
     }
 
     private fun loadProfilePicture() {
@@ -469,7 +487,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
             }
         }
         dbManager!!.closeDB()
-        mWrappedAdapter!!.notifyDataSetChanged()
+        //mWrappedAdapter!!.notifyDataSetChanged()
     }
 
     private fun initTopicAdapter() {
