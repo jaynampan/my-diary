@@ -53,42 +53,48 @@
 
     <!--        </LinearLayout>-->
 
-
-    <RelativeLayout
-        android:id="@+id/RL_main_bottom_bar"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_height"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:layout_alignParentBottom="true"/>
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/RL_main_bottom_bar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/bottom_bar_height"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:background="@android:color/white"-->
+<!--        android:focusable="true"-->
+<!--        android:focusableInTouchMode="true">-->
 
 
-        <ImageView
-            android:id="@+id/IV_main_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/ic_settings_black_24dp" />
+<!--        <ImageView-->
+<!--            android:id="@+id/IV_main_setting"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:src="@drawable/ic_settings_black_24dp" />-->
 
-        <EditText
-            android:id="@+id/EDT_main_topic_search"
-            android:layout_width="match_parent"
-            android:layout_height="26dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toStartOf="@id/IV_main_setting"
-            android:background="@drawable/edittext_rounded_corner_bg"
-            android:drawableStart="@drawable/ic_search_white_18dp"
-            android:inputType="textCapSentences"
-            android:maxLines="1"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+<!--        <EditText-->
+<!--            android:id="@+id/EDT_main_topic_search"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="26dp"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_toStartOf="@id/IV_main_setting"-->
+<!--            android:background="@drawable/edittext_rounded_corner_bg"-->
+<!--            android:drawableStart="@drawable/ic_search_white_18dp"-->
+<!--            android:inputType="textCapSentences"-->
+<!--            android:maxLines="1"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:textSize="16sp" />-->
 
-    </RelativeLayout>
+<!--    </RelativeLayout>-->
 
 
     <!--    <androidx.recyclerview.widget.RecyclerView-->
@@ -104,7 +110,7 @@
         android:id="@+id/compose_topic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/RL_main_bottom_bar"
+        android:layout_above="@id/compose_bottom"
         android:layout_below="@id/compose_view"
         android:paddingTop="10dp"
         android:paddingBottom="10dp" />
@@ -120,7 +126,7 @@
         android:id="@+id/search_shadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_height_3dp"
-        android:layout_above="@id/RL_main_bottom_bar"
+        android:layout_above="@id/compose_bottom"
         android:background="@drawable/view_top_shadow" />
 
 </RelativeLayout>

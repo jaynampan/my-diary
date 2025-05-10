@@ -28,4 +28,5 @@ class MainViewModel : ViewModel() {
     fun updateTopicData(value: List<ITopic>) {
         topicData.value = value
     }
+
 }

@@ -1,7 +1,7 @@
 package meow.softer.mydiary.ui.theme
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF236488)
+val primaryLight = Color(0xFF67B5E6)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFC7E7FF)
 val onPrimaryContainerLight = Color(0xFF004C6C)

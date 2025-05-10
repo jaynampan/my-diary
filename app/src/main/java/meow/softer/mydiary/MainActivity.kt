@@ -2,6 +2,7 @@ package meow.softer.mydiary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.os.Bundle
@@ -13,16 +14,10 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -37,20 +32,22 @@ import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager
-import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils
+import meow.softer.mydiary.contacts.ContactsActivity
 import meow.softer.mydiary.db.DBManager
+import meow.softer.mydiary.entries.DiaryActivity
+import meow.softer.mydiary.main.DiaryDialogFragment
+import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback
 import meow.softer.mydiary.main.MainSettingDialogFragment
 import meow.softer.mydiary.main.MainTopicAdapter
 import meow.softer.mydiary.main.ReleaseNoteDialogFragment
 import meow.softer.mydiary.main.TopicDeleteDialogFragment
 import meow.softer.mydiary.main.TopicDetailDialogFragment
 import meow.softer.mydiary.main.TopicDetailDialogFragment.TopicCreatedCallback
-import meow.softer.mydiary.main.DiaryDialogFragment
-import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback
 import meow.softer.mydiary.main.topic.Contacts
 import meow.softer.mydiary.main.topic.Diary
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.main.topic.Memo
+import meow.softer.mydiary.memo.MemoActivity
 import meow.softer.mydiary.oobe.CustomViewTarget
 import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.MyDiaryApplication
@@ -59,8 +56,8 @@ import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.gui.MyDiaryButton
 import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 import meow.softer.mydiary.shared.statusbar.OOBE
+import meow.softer.mydiary.ui.components.HomeBottomBar
 import meow.softer.mydiary.ui.components.HomeHeader
-import meow.softer.mydiary.ui.components.TopicItem
 import meow.softer.mydiary.ui.components.TopicList
 import meow.softer.mydiary.ui.home.MainViewModel
 import org.apache.commons.io.FileUtils
@@ -114,9 +111,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
      */
     private var themeManager: ThemeManager? = null
     private var IV_main_profile_picture: ImageView? = null
-
-    private var LL_main_profile: LinearLayout? = null
-    private var TV_main_profile_username: TextView? = null
     private var EDT_main_topic_search: EditText? = null
     private var IV_main_setting: ImageView? = null
 
@@ -165,16 +159,32 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
             setContent {
                 val topicListData = mainViewModel.topicData.collectAsStateWithLifecycle().value
                 TopicList(
-                    topicList = topicListData
+                    topicList = topicListData,
+                    onClick = { it -> gotoTopic(it) }
+                )
+            }
+        }
+        val composeBottom = findViewById<ComposeView>(R.id.compose_bottom)
+        composeBottom.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                HomeBottomBar(
+                    onSettingClick = {
+                        val mainSettingDialogFragment = MainSettingDialogFragment()
+                        mainSettingDialogFragment.show(
+                            supportFragmentManager,
+                            "mainSettingDialogFragment"
+                        )
+                    }
                 )
             }
         }
 
-        EDT_main_topic_search = findViewById<EditText?>(R.id.EDT_main_topic_search)
-        EDT_main_topic_search!!.addTextChangedListener(this)
+        //EDT_main_topic_search = findViewById<EditText?>(R.id.EDT_main_topic_search)
+        //EDT_main_topic_search!!.addTextChangedListener(this)
 
-        IV_main_setting = findViewById<ImageView?>(R.id.IV_main_setting)
-        IV_main_setting!!.setOnClickListener(this)
+        //IV_main_setting = findViewById<ImageView?>(R.id.IV_main_setting)
+        //IV_main_setting!!.setOnClickListener(this)
 
         //RecyclerView_topic = findViewById<RecyclerView?>(R.id.RecyclerView_topic)
         rootView = findViewById<View?>(android.R.id.content)
@@ -183,7 +193,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         dbManager = DBManager(this@MainActivity)
 
         initProfile()
-        initBottomBar()
+        //initBottomBar()
         //initTopicAdapter()
         loadProfilePicture()
 
@@ -278,13 +288,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
 //                diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
 //            }
 
-            R.id.IV_main_setting -> {
-                val mainSettingDialogFragment = MainSettingDialogFragment()
-                mainSettingDialogFragment.show(
-                    supportFragmentManager,
-                    "mainSettingDialogFragment"
-                )
-            }
+//            R.id.IV_main_setting -> {
+//                val mainSettingDialogFragment = MainSettingDialogFragment()
+//                mainSettingDialogFragment.show(
+//                    supportFragmentManager,
+//                    "mainSettingDialogFragment"
+//                )
+//            }
         }
     }
 
@@ -699,7 +709,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
             val heightDiff = rootView!!.getRootView().height - (rect.bottom - rect.top)
             Log.e("Mytest", "height diff:$heightDiff")
             if (heightDiff <= keyboardHeightThreshold) {
-                EDT_main_topic_search!!.clearFocus()
+                EDT_main_topic_search?.clearFocus()
             }
         }
         rootView!!.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener)
@@ -718,5 +728,42 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TopicCreatedCall
         return context.createConfigurationContext(configuration)
     }
 
+    fun gotoTopic(topic: ITopic) {
+        when (topic.type) {
+            ITopic.TYPE_CONTACTS -> {
+                val goContactsPageIntent = Intent(this, ContactsActivity::class.java)
+                goContactsPageIntent.putExtra(
+                    "topicId",
+                    topic.id
+                )
+                goContactsPageIntent.putExtra(
+                    "diaryTitle",
+                    topic.title
+                )
+                this.startActivity(goContactsPageIntent)
+            }
+
+            ITopic.TYPE_DIARY -> {
+                val goEntriesPageIntent = Intent(this, DiaryActivity::class.java)
+                goEntriesPageIntent.putExtra("topicId", topic.id)
+                goEntriesPageIntent.putExtra(
+                    "diaryTitle",
+                    topic.title
+                )
+                goEntriesPageIntent.putExtra("has_entries", true)
+                startActivity(goEntriesPageIntent)
+            }
+
+            ITopic.TYPE_MEMO -> {
+                val goMemoPageIntent = Intent(this, MemoActivity::class.java)
+                goMemoPageIntent.putExtra("topicId", topic.id)
+                goMemoPageIntent.putExtra(
+                    "diaryTitle",
+                    topic.title
+                )
+                startActivity(goMemoPageIntent)
+            }
+        }
+    }
 
 }
