@@ -13,6 +13,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import meow.softer.mydiary.R
 import meow.softer.mydiary.main.topic.ITopic
@@ -394,6 +395,9 @@ class ThemeManager private constructor() {
         return darkColor
     }
 
+    fun getThemeColor(context: Context):androidx.compose.ui.graphics.Color{
+        return androidx.compose.ui.graphics.Color(getThemeMainColor(context))
+    }
     fun getThemeMainColor(context: Context): Int {
         val mainColor: Int = when (currentTheme) {
             TAKI -> getColor(context, R.color.themeColor_taki)

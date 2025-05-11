@@ -18,28 +18,36 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.yalantis.ucrop.UCrop
+import meow.softer.mydiary.MainActivity
+import meow.softer.mydiary.R
 import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.ViewTools
-import meow.softer.mydiary.shared.gui.MyDiaryButton
+import meow.softer.mydiary.ui.home.MainViewModel
 import java.io.File
-import meow.softer.mydiary.R
 
 
-class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
+class DiaryDialogFragment : DialogFragment() {
     private var readPermissionLauncher: ActivityResultLauncher<String?>? = null
 
     interface YourNameCallback {
@@ -66,13 +74,8 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
     /**
      * UI
      */
-    private var LL_your_name_content: LinearLayout? = null
-    private var IV_your_name_profile_picture: ImageView? = null
-    private var IV_your_name_profile_picture_cancel: ImageView? = null
-    private var EDT_your_name_name: EditText? = null
-    private var But_your_name_ok: MyDiaryButton? = null
-    private var But_your_name_cancel: MyDiaryButton? = null
 
+    private lateinit var viewModel: MainViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -85,6 +88,13 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        var YourNameIs = SPFManager.getYourName(requireContext())
+        if (YourNameIs.isEmpty()) {
+            YourNameIs = ThemeManager.instance!!.getThemeUserName(requireContext())
+        }
+        //TV_main_profile_username!!.text = YourNameIs
+        viewModel.updateUserName(YourNameIs)
         readPermissionLauncher = registerForActivityResult<String?, Boolean?>(
             RequestPermission(),
             object : ActivityResultCallback<Boolean?> {
@@ -113,26 +123,63 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
     ): View? {
         this.dialog!!.setCanceledOnTouchOutside(true)
         val rootView: View = inflater.inflate(R.layout.dialog_fragment_your_name, container)
-        LL_your_name_content = rootView.findViewById<LinearLayout?>(R.id.LL_your_name_content)
-        LL_your_name_content!!.setBackgroundColor(
-            ThemeManager.instance!!.getThemeMainColor(requireContext())
-        )
+        val composeView = rootView.findViewById<ComposeView>(R.id.composeView)
 
-        IV_your_name_profile_picture =
-            rootView.findViewById<ImageView?>(R.id.IV_your_name_profile_picture)
-        IV_your_name_profile_picture!!.setOnClickListener(this)
-        IV_your_name_profile_picture_cancel =
-            rootView.findViewById<ImageView?>(R.id.IV_your_name_profile_picture_cancel)
-        IV_your_name_profile_picture_cancel!!.setOnClickListener(this)
+        composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                ProfileDialogWrapper(
+                    mainViewModel = viewModel,
+                    onClick = { it ->
+                        when (it) {
+                            "Dismiss" -> {
+                                dismiss()
+                            }
 
-        EDT_your_name_name = rootView.findViewById<EditText?>(R.id.EDT_your_name_name)
-        EDT_your_name_name!!.setText(SPFManager.getYourName(requireContext()))
+                            "Confirm" -> {
+                                saveYourName()
+                                callback!!.updateName()
+                                dismiss()
+                            }
 
-        But_your_name_ok = rootView.findViewById<MyDiaryButton?>(R.id.But_your_name_ok)
-        But_your_name_ok!!.setOnClickListener(this)
-        But_your_name_cancel = rootView.findViewById<MyDiaryButton?>(R.id.But_your_name_cancel)
-        But_your_name_cancel!!.setOnClickListener(this)
+                            "Photo" -> {
+                                Log.e(
+                                    "Mytest",
+                                    "yournamedialogfragment IV_your_name_profile_picture clicked"
+                                )
+                                requestPhotoPermission()
+                            }
 
+                            "Reset" -> {
+                                Log.e(
+                                    "Mytest",
+                                    "yournamedialogfragment IV_your_name_profile_picture_cancel clicked"
+                                )
+                                isAddNewProfilePicture = true
+                                profilePictureFileName = ""
+                                viewModel.updateUserPic(
+                                    BitmapPainter(
+                                        AppCompatResources.getDrawable(
+                                            requireContext(), R.drawable.ic_person_picture_default
+                                        )!!.toBitmap()
+                                            .asImageBitmap()
+                                    )
+                                )
+                                Toast.makeText(
+                                    this.context,
+                                    "Pic set to default",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.e(
+                                    "Mytest",
+                                    "yournamedialogfragment set profile image to default"
+                                )
+                            }
+                        }
+                    }
+                )
+            }
+        }
         loadProfilePicture()
         return rootView
     }
@@ -145,8 +192,13 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     val resultUri = UCrop.getOutput(data)
-                    IV_your_name_profile_picture!!.setImageBitmap(BitmapFactory.decodeFile(resultUri!!.path))
-                    profilePictureFileName = FileManager.getFileNameByUri(requireContext(), resultUri)
+                    viewModel.updateUserPic(
+                        BitmapPainter(
+                            BitmapFactory.decodeFile(resultUri!!.path).asImageBitmap()
+                        )
+                    )
+                    profilePictureFileName =
+                        FileManager.getFileNameByUri(requireContext(), resultUri)
                     isAddNewProfilePicture = true
                 } else {
                     Toast.makeText(
@@ -154,23 +206,20 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
                         getString(R.string.toast_crop_profile_picture_fail),
                         Toast.LENGTH_LONG
                     ).show()
-                    //sample error
-                    // final Throwable cropError = UCrop.getError(data);
                 }
             }
         }
     }
 
     private fun loadProfilePicture() {
-        IV_your_name_profile_picture!!.setImageDrawable(
-            ThemeManager.instance!!.getProfilePictureDrawable(requireContext())
-        )
+        viewModel.updateUserPic(ThemeManager.instance!!.getProfilePicPainter(requireContext()))
+
     }
 
 
     private fun saveYourName() {
         //Save name
-        SPFManager.setYourName(requireContext(), EDT_your_name_name!!.getText().toString())
+        SPFManager.setYourName(requireContext(), viewModel.userName.value)
         //Save profile picture
         if (isAddNewProfilePicture) {
             //Remove the old file
@@ -201,49 +250,18 @@ class DiaryDialogFragment : DialogFragment(), View.OnClickListener {
         }
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.IV_your_name_profile_picture -> {
-                Log.e("Mytest", "yournamedialogfragment IV_your_name_profile_picture clicked")
-                requestPhotoPermission()
-            }
-
-            R.id.IV_your_name_profile_picture_cancel -> {
-                Log.e(
-                    "Mytest",
-                    "yournamedialogfragment IV_your_name_profile_picture_cancel clicked"
-                )
-                isAddNewProfilePicture = true
-                profilePictureFileName = ""
-                IV_your_name_profile_picture!!.setImageDrawable(
-                    ViewTools.getDrawable(requireContext(), R.drawable.ic_person_picture_default)
-                )
-                Toast.makeText(this.context, "Pic set to default", Toast.LENGTH_SHORT).show()
-                Log.e("Mytest", "yournamedialogfragment set profile image to default")
-            }
-
-            R.id.But_your_name_ok -> {
-                saveYourName()
-                callback!!.updateName()
-                dismiss()
-            }
-
-            R.id.But_your_name_cancel -> dismiss()
-        }
-    }
-
 
     private fun getImage() {
-            try {
-                val intent =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                mGetContentLauncher.launch(intent)
-                Log.e("Mytest", "yourname getimage started ")
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("Mytest", "yourname getimage failed")
-            }
+        try {
+            val intent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            mGetContentLauncher.launch(intent)
+            Log.e("Mytest", "yourname getimage started ")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("Mytest", "yourname getimage failed")
         }
+    }
 
     private val mGetContentLauncher = registerForActivityResult<Intent?, ActivityResult?>(
         StartActivityForResult(),

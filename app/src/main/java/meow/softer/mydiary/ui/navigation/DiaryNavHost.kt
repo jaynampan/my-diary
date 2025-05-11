@@ -17,7 +17,9 @@ import meow.softer.mydiary.ui.home.MainViewModel
 fun DiaryNav(
     mainViewModel: MainViewModel,
     onTopicClick: (ITopic) -> Unit,
-    onSettingClick: () -> Unit
+    onSettingClick: () -> Unit,
+    onProfileClick: () -> Unit
+
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -27,7 +29,7 @@ fun DiaryNav(
         composable(route = "Home") {
             HomeWrapper(
                 mainViewModel = mainViewModel,
-                onProfileClick = { navController.navigate("ProfileDialog") },
+                onProfileClick = { onProfileClick() },
                 onSettingClick = {
                     onSettingClick()
                 },
@@ -40,12 +42,24 @@ fun DiaryNav(
         dialog(route = "ProfileDialog") {
             ProfileDialogWrapper(
                 mainViewModel = mainViewModel,
-                onDismiss = {
-                    navController.popBackStack()
-                },
-                onConfirm = {
+                onClick = { it ->
+                    when (it) {
+                        "Dismiss" -> {
 
-                    navController.popBackStack()
+                        }
+
+                        "Confirm" -> {
+
+                        }
+
+                        "Photo" -> {
+
+                        }
+
+                        "Reset" -> {
+
+                        }
+                    }
                 }
             )
         }

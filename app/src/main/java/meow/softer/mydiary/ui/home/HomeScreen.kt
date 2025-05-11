@@ -7,8 +7,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import meow.softer.mydiary.R
-import meow.softer.mydiary.main.DiaryDialogFragment
-import meow.softer.mydiary.main.MainSettingDialogFragment
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.ui.components.HomeBottomBar
 import meow.softer.mydiary.ui.components.HomeHeader

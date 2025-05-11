@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import meow.softer.mydiary.contacts.ContactsActivity
 import meow.softer.mydiary.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
+import meow.softer.mydiary.main.DiaryDialogFragment
 import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback
 import meow.softer.mydiary.main.MainSettingDialogFragment
 import meow.softer.mydiary.main.MainTopicAdapter
@@ -79,7 +80,14 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
                     val mainSettingDialogFragment = MainSettingDialogFragment()
                     mainSettingDialogFragment.show(
                         supportFragmentManager,
-                        "releaseNoteDialogFragment"
+                        "mainSettingDialogFragment"
+                    )
+                },
+                onProfileClick = {
+                    val diaryDialogFragment = DiaryDialogFragment()
+                    diaryDialogFragment.show(
+                        supportFragmentManager,
+                        "diaryDialogFragment"
                     )
                 }
             )
