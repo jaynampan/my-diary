@@ -69,7 +69,7 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contacts)
-        //For set status bar
+         
         setStatusBar(this, true)
         setStatusBarBgColor()
 

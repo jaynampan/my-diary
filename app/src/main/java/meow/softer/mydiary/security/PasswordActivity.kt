@@ -62,8 +62,8 @@ class PasswordActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_password)
-        //For set status bar
-        ChinaPhoneHelper.setStatusBar(this, true)
+         
+        
 
         //Get this page mode
         currentMode = intent.getIntExtra("password_mode", FAIL)

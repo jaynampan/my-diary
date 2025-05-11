@@ -63,8 +63,8 @@ class MemoActivity : FragmentActivity(), View.OnClickListener, MemoCallback, OnS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memo)
 
-        //For set status bar
-        ChinaPhoneHelper.setStatusBar(this, true)
+         
+        
         setStatusBarBgColor()
         topicId = intent.getLongExtra("topicId", -1)
         if (topicId == -1L) {

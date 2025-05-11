@@ -69,8 +69,8 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diary)
-        //For set status bar
-        ChinaPhoneHelper.setStatusBar(this, true)
+         
+        
         setStatusBarBgColor()
 
         topicId = intent.getLongExtra("topicId", -1)

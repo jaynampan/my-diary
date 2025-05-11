@@ -71,8 +71,8 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
-        //For set status bar
-        ChinaPhoneHelper.setStatusBar(this, true)
+         
+        
 
 
         themeManager = ThemeManager.instance!!

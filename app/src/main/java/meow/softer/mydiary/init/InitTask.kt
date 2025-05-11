@@ -50,16 +50,10 @@ class InitTask(private val mContext: Context, private val callBack: InitCallBack
 
     @Throws(Exception::class)
     private fun loadSampleData(dbManager: DBManager) {
-        /*
-                *insert sample memo
-                */
-        //Insert sample topic
 
         val mitsuhaMemoId = dbManager.insertTopic("Sample Memo", ITopic.TYPE_MEMO, Color.BLACK)
 
-
         dbManager.insertTopicOrder(mitsuhaMemoId, 0)
-
         //Insert sample memo
         if (mitsuhaMemoId != -1L) {
             dbManager.insertMemoOrder(

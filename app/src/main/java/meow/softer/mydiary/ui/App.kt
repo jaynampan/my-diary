@@ -6,6 +6,6 @@ import meow.softer.mydiary.ui.theme.DiaryTheme
 @Composable
 fun App(){
     DiaryTheme {
-//        HomeScreen()
+
     }
 }

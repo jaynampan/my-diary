@@ -9,13 +9,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import meow.softer.mydiary.contacts.ContactsActivity
 import meow.softer.mydiary.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
-import meow.softer.mydiary.main.DiaryDialogFragment
 import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback
 import meow.softer.mydiary.main.MainSettingDialogFragment
 import meow.softer.mydiary.main.MainTopicAdapter
@@ -32,10 +29,8 @@ import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
-import meow.softer.mydiary.ui.home.HomeScreen
 import meow.softer.mydiary.ui.home.MainViewModel
-import meow.softer.mydiary.ui.theme.DiaryTheme
+import meow.softer.mydiary.ui.navigation.DiaryNav
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
@@ -77,38 +72,21 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val userName = mainViewModel.userName.collectAsStateWithLifecycle().value
-            val profilePic = mainViewModel.userPainter.collectAsStateWithLifecycle().value
-                ?: painterResource(R.drawable.ic_person_picture_default)
-            val bgPainter = mainViewModel.headerBgPainter.collectAsStateWithLifecycle().value
-                ?: painterResource(R.drawable.profile_theme_bg_taki)
-            val topicListData = mainViewModel.topicData.collectAsStateWithLifecycle().value
-            DiaryTheme {
-                HomeScreen(
-                    profilePic = profilePic,
-                    bgPainter = bgPainter,
-                    userName = userName,
-                    topics = topicListData,
-                    onProfileClick = {
-                        val diaryDialogFragment = DiaryDialogFragment()
-                        diaryDialogFragment.show(supportFragmentManager, "yourNameDialogFragment")
-                    },
-                    onSettingClick = {
-                        val mainSettingDialogFragment = MainSettingDialogFragment()
-                        mainSettingDialogFragment.show(
-                            supportFragmentManager,
-                            "mainSettingDialogFragment"
-                        )
-                    },
-                    onTopicClick = {
-                        gotoTopic(it)
-                    }
-                )
-            }
+            DiaryNav(
+                mainViewModel = mainViewModel,
+                onTopicClick = { gotoTopic(it) },
+                onSettingClick = {
+                    val mainSettingDialogFragment = MainSettingDialogFragment()
+                    mainSettingDialogFragment.show(
+                        supportFragmentManager,
+                        "releaseNoteDialogFragment"
+                    )
+                }
+            )
         }
 
         //set status bar
-        ChinaPhoneHelper.setStatusBar(this, true)
+
         themeManager = ThemeManager.instance
         //rootView = findViewById<View?>(android.R.id.content)
 
@@ -184,7 +162,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
             }
         }
     }
-
 
 
     override fun onTopicDelete(position: Int) {
