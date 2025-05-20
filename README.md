@@ -1,6 +1,6 @@
 ### Introduction
 
-A Android diary app with a theme matching the diary app in popular movie *Your Name*
+Android diary app with a theme matching the diary app in popular anime movie *Your Name*
 
 ### Features
 
@@ -20,9 +20,9 @@ A Android diary app with a theme matching the diary app in popular movie *Your N
 ### Build Notes
 
 - Used mirrors in settings.gradle.kts and gradle/wrapper/gradle-wrapper.properties
-- In gradle.properties the maximum RAM is set to 4G, adjust it if needed. And both gradle
+- In gradle.properties the maximum RAM is set to 4GB, adjust it if needed. And both gradle
   configuration and build cache are enable to speed up build process
-- Java toolchain is set to 21, you can adjust to jvm that's >= 11 and compatible with gradle
+- Java toolchain version is set to 21, you can adjust to jvm that's >= 11 and compatible with gradle
 
 ### Credits
 
