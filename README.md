@@ -13,7 +13,7 @@ Android diary app with a theme matching the diary app in popular anime movie *Yo
 
 ### Progress & Todos
 
-- [x] Migrate codes to Kotlin
+- [x] Migrate codes from Java to Kotlin
 - [ ] Migrate to Compose
 - [ ] Implement diary backing up
 

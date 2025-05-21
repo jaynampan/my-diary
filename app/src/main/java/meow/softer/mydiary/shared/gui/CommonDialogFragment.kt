@@ -8,19 +8,14 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
 import meow.softer.mydiary.R
-import meow.softer.mydiary.shared.ThemeManager
+import meow.softer.mydiary.ui.components.CommonDialog
 
-abstract class CommonDialogFragment : DialogFragment(), View.OnClickListener {
-    /**
-     * UI
-     */
-    protected var But_common_ok: MyDiaryButton? = null
-    protected var But_common_cancel: MyDiaryButton? = null
-
-    protected var RL_common_view: RelativeLayout? = null
-    protected var TV_common_content: TextView? = null
+abstract class CommonDialogFragment : DialogFragment() {
+    protected var content :String =""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -35,30 +30,21 @@ abstract class CommonDialogFragment : DialogFragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.dialog_fragment_common, container)
-        RL_common_view = rootView.findViewById<RelativeLayout>(R.id.RL_common_view)
-
-        RL_common_view!!.setBackgroundColor(
-            ThemeManager.instance!!.getThemeMainColor(requireContext())
-        )
-
-
-        TV_common_content = rootView.findViewById<TextView?>(R.id.TV_common_content)
-        But_common_ok = rootView.findViewById<MyDiaryButton>(R.id.But_common_ok)
-        But_common_cancel = rootView.findViewById<MyDiaryButton>(R.id.But_common_cancel)
-
-        But_common_ok!!.setOnClickListener(this)
-        But_common_cancel!!.setOnClickListener(this)
+        val composeView = rootView.findViewById<ComposeView>(R.id.compose_view)
+        composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                CommonDialog(
+                    content = content,
+                    onConfirm = { okButtonEvent() },
+                    onCancel = {cancelButtonEvent()}
+                )
+            }
+        }
         return rootView
     }
 
     protected abstract fun okButtonEvent()
 
     protected abstract fun cancelButtonEvent()
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.But_common_ok -> okButtonEvent()
-            R.id.But_common_cancel -> cancelButtonEvent()
-        }
-    }
 }

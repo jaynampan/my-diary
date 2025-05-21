@@ -20,7 +20,7 @@ class EditDiaryBackDialogFragment : CommonDialogFragment() {
         callback = targetFragment as BackDialogCallback?
         this.dialog!!.setCanceledOnTouchOutside(true)
         super.onViewCreated(view, savedInstanceState)
-        this.TV_common_content?.text = getString(R.string.diary_back_message)
+        this.content = getString(R.string.diary_back_message)
     }
 
     override fun okButtonEvent() {

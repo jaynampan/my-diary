@@ -8,9 +8,13 @@ import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -28,13 +32,12 @@ import meow.softer.mydiary.entries.entry.EntriesEntity
 import meow.softer.mydiary.entries.entry.EntriesFragment
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
+import meow.softer.mydiary.ui.components.DiaryHeadGroup
 import java.util.Date
 import java.util.Locale
 import kotlin.math.min
 
-//import android.support.v4.app.FragmentPagerAdapter;
-class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
+class DiaryActivity : FragmentActivity() {
     /**
      * Public data
      */
@@ -48,20 +51,12 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
     private var LL_diary_topbar_content: LinearLayout? = null
     private var ViewPager_diary_content: ViewPager? = null
     private var TV_diary_topbar_title: TextView? = null
-    private var SG_diary_topbar: SegmentedGroup? = null
-    private var But_diary_topbar_entries: RadioButton? = null
-    private var But_diary_topbar_calendar: RadioButton? = null
-    private var But_diary_topbar_diary: RadioButton? = null
 
     /**
      * View pager
      */
     private var mPagerAdapter: ScreenSlidePagerAdapter? = null
-
-    /**
-     * Google API
-     */
-    //private GoogleApiClient mGoogleApiClient;
+    private var selectedIdx by mutableIntStateOf(0)
     /**
      * The diary list for every fragment
      */
@@ -69,9 +64,6 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diary)
-         
-        
-        setStatusBarBgColor()
 
         topicId = intent.getLongExtra("topicId", -1)
         hasEntries = intent.getBooleanExtra("has_entries", true)
@@ -81,13 +73,25 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
         /**
          * init UI
          */
+        val composeRadio = findViewById<ComposeView>(R.id.compose_radio)
+        composeRadio.apply {
+
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                DiaryHeadGroup(
+                    names = listOf(
+                        stringResource(R.string.segmented_entries),
+                        stringResource(R.string.segmented_calendar),
+                        stringResource(R.string.segmented_Diary),
+                    ),
+                    selectedIdx = selectedIdx
+                ) {
+                    selectedIdx = it
+                    ViewPager_diary_content!!.setCurrentItem(it)
+                }
+            }
+        }
         LL_diary_topbar_content = findViewById<LinearLayout?>(R.id.LL_diary_topbar_content)
-        SG_diary_topbar = findViewById<SegmentedGroup>(R.id.SG_diary_topbar)
-        SG_diary_topbar!!.setOnCheckedChangeListener(this)
-        SG_diary_topbar!!.setTintColor(ThemeManager.instance!!.getThemeDarkColor(this))
-        But_diary_topbar_entries = findViewById<RadioButton>(R.id.But_diary_topbar_entries)
-        But_diary_topbar_calendar = findViewById<RadioButton>(R.id.But_diary_topbar_calendar)
-        But_diary_topbar_diary = findViewById<RadioButton>(R.id.But_diary_topbar_diary)
         TV_diary_topbar_title = findViewById<TextView>(R.id.TV_diary_topbar_title)
         TV_diary_topbar_title!!.setTextColor(ThemeManager.instance!!.getThemeDarkColor(this))
 
@@ -96,10 +100,8 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
             diaryTitle = "Diary"
         }
         TV_diary_topbar_title!!.text = diaryTitle
-        //After SegmentedGroup was created
-        initViewPager()
 
-        //initGoogleAPi();
+        initViewPager()
 
         //Load the all entries from db.
         loadEntries()
@@ -171,10 +173,10 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
         if (!hasEntries) {
             ViewPager_diary_content!!.setCurrentItem(2)
             //Set Default Checked Item
-            But_diary_topbar_diary!!.setChecked(true)
+            selectedIdx = 2
         } else {
             //Set Default Checked Item
-            But_diary_topbar_entries!!.setChecked(true)
+            selectedIdx = 0
         }
     }
 
@@ -200,21 +202,10 @@ class DiaryActivity : FragmentActivity(), RadioGroup.OnCheckedChangeListener {
         calendarFragment?.refreshCalendar()
     }
 
-    override fun onCheckedChanged(group: RadioGroup, checkedId: Int) {
-        when (checkedId) {
-            R.id.But_diary_topbar_entries -> ViewPager_diary_content!!.setCurrentItem(0)
-            R.id.But_diary_topbar_calendar -> ViewPager_diary_content!!.setCurrentItem(1)
-            R.id.But_diary_topbar_diary -> ViewPager_diary_content!!.setCurrentItem(2)
-        }
-    }
 
     private val onPageChangeListener: OnPageChangeListener = object : SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
-            when (position) {
-                1 -> But_diary_topbar_calendar!!.setChecked(true)
-                2 -> But_diary_topbar_diary!!.setChecked(true)
-                else -> But_diary_topbar_entries!!.setChecked(true)
-            }
+            selectedIdx = position
         }
     }
 

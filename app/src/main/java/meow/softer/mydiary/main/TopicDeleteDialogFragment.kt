@@ -36,8 +36,7 @@ class TopicDeleteDialogFragment : CommonDialogFragment() {
             dismiss()
         }
         topicTitle = requireArguments().getString("topicTitle", "")
-        this.TV_common_content?.text = resources.getString(R.string.topic_dialog_delete_content)+
-                topicTitle
+        this.content = resources.getString(R.string.topic_dialog_delete_content)+ topicTitle
     }
 
     override fun okButtonEvent() {

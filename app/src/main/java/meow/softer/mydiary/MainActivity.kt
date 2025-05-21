@@ -17,7 +17,6 @@ import meow.softer.mydiary.main.DiaryDialogFragment
 import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback
 import meow.softer.mydiary.main.MainSettingDialogFragment
 import meow.softer.mydiary.main.MainTopicAdapter
-import meow.softer.mydiary.main.ReleaseNoteDialogFragment
 import meow.softer.mydiary.main.TopicDeleteDialogFragment
 import meow.softer.mydiary.main.TopicDetailDialogFragment
 import meow.softer.mydiary.main.TopicDetailDialogFragment.TopicCreatedCallback
@@ -111,17 +110,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
         dbManager!!.openDB()
         loadTopic()
         dbManager!!.closeDB()
-
-        //Check show Release note dialog.
-        if (SPFManager.getFirstRun(this)) {
-            if (intent.getBooleanExtra("showReleaseNote", false)) {
-                val releaseNoteDialogFragment = ReleaseNoteDialogFragment()
-                releaseNoteDialogFragment.show(
-                    supportFragmentManager,
-                    "releaseNoteDialogFragment"
-                )
-            }
-        }
 
         SPFManager.setFirstRun(this, false)
 

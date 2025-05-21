@@ -22,13 +22,13 @@ recyclerviewAnimators = "4.0.2"
 playServicesPlaces = "17.0.0"
 photodraweeview = "2.1.0"
 ucrop = "2.2.0"
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 coreKtx = "1.16.0"
-lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
 composeBom = "2025.05.00"
 constraintlayoutCompose = "1.1.1"
-navigationCompose = "2.8.9"
+navigationCompose = "2.9.0"
 
 [libraries]
 material3 = { module = "androidx.compose.material3:material3" }

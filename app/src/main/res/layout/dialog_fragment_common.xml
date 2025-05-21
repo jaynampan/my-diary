@@ -6,61 +6,69 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
-    <LinearLayout
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@android:color/white"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"/>
 
-        <RelativeLayout
-            android:id="@+id/RL_common_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:paddingBottom="20dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="20dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical">-->
 
-            <TextView
-                android:id="@+id/TV_common_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:inputType="textMultiLine"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
-        </RelativeLayout>
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/RL_common_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:minHeight="40dp"-->
+<!--            android:paddingBottom="20dp"-->
+<!--            android:paddingLeft="15dp"-->
+<!--            android:paddingRight="15dp"-->
+<!--            android:paddingTop="20dp">-->
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp">
+<!--            <TextView-->
+<!--                android:id="@+id/TV_common_content"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:inputType="textMultiLine"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="20sp" />-->
+<!--        </RelativeLayout>-->
 
-            <Space
-                android:id="@+id/Space_common"
-                android:layout_width="20dp"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+<!--        <RelativeLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:layout_marginTop="10dp">-->
 
-            <meow.softer.mydiary.shared.gui.MyDiaryButton
-                android:id="@+id/But_common_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/Space_common"
-                android:gravity="center"
-                android:text="@string/dialog_button_cancel"
-                android:textAllCaps="false" />
+<!--            <Space-->
+<!--                android:id="@+id/Space_common"-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:layout_centerHorizontal="true" />-->
 
-            <meow.softer.mydiary.shared.gui.MyDiaryButton
-                android:id="@+id/But_common_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/Space_common"
-                android:gravity="center"
-                android:text="@string/dialog_button_ok"
-                android:textAllCaps="false" />
-        </RelativeLayout>
-    </LinearLayout>
+<!--            <meow.softer.mydiary.shared.gui.MyDiaryButton-->
+<!--                android:id="@+id/But_common_cancel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toStartOf="@id/Space_common"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/dialog_button_cancel"-->
+<!--                android:textAllCaps="false" />-->
+
+<!--            <meow.softer.mydiary.shared.gui.MyDiaryButton-->
+<!--                android:id="@+id/But_common_ok"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toEndOf="@id/Space_common"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/dialog_button_ok"-->
+<!--                android:textAllCaps="false" />-->
+<!--        </RelativeLayout>-->
+<!--    </LinearLayout>-->
 </RelativeLayout>
