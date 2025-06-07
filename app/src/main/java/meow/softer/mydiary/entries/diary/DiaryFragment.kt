@@ -34,7 +34,6 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.Fragment
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.gson.Gson
 import meow.softer.mydiary.R
@@ -58,7 +57,6 @@ import meow.softer.mydiary.shared.PermissionHelper
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.TimeTools
-import meow.softer.mydiary.shared.ViewTools
 import meow.softer.mydiary.ui.components.DiaryBottom
 import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
@@ -219,8 +217,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
                 }
             }
         }
-        val scrollView_diary_content =
-            rootView.findViewById<ScrollView?>(R.id.ScrollView_diary_content)
+        rootView.findViewById<ScrollView?>(R.id.ScrollView_diary_content)
 //        ViewTools.setScrollBarColor(requireContext(), scrollView_diary_content)
 
         val RL_diary_info = rootView.findViewById<RelativeLayout>(R.id.RL_diary_info)
@@ -329,10 +326,6 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
         }
         diaryHandler!!.removeCallbacksAndMessages(null)
         progressDialog!!.dismiss()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -24,10 +24,7 @@ class DirectoryPickerActivity : FilePickerActivity() {
     ): AbstractFilePickerFragment<File?> {
         // startPath is allowed to be null.
         // In that case, default folder should be SD-card and not "/"
-        val path = (if (startPath != null)
-            startPath
-        else
-            Environment.getExternalStorageDirectory().path)
+        val path = (startPath ?: Environment.getExternalStorageDirectory().path)
 
         currentFragment = DirectoryPickerFragment()
         currentFragment!!.setArgs(

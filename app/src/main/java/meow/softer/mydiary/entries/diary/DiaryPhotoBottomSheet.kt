@@ -50,10 +50,10 @@ class DiaryPhotoBottomSheet : BottomSheetDialogFragment(), View.OnClickListener 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        if (requireArguments().getBoolean("isEditMode", false)) {
-            fileManager = FileManager(requireContext(), FileManager.DIARY_EDIT_CACHE_DIR)
+        fileManager = if (requireArguments().getBoolean("isEditMode", false)) {
+            FileManager(requireContext(), FileManager.DIARY_EDIT_CACHE_DIR)
         } else {
-            fileManager = FileManager(requireContext(), (activity as DiaryActivity).topicId)
+            FileManager(requireContext(), (activity as DiaryActivity).topicId)
         }
         try {
             callBack = targetFragment as PhotoCallBack?
@@ -124,10 +124,9 @@ class DiaryPhotoBottomSheet : BottomSheetDialogFragment(), View.OnClickListener 
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 tempFileName = "/" + FileManager.createRandomFileName()
                 val tmpFile = File(fileManager!!.dir, tempFileName)
-                val outputFileUri: Uri?
 
                 //Fix the Android N+ file can't be send
-                outputFileUri = FileProvider.getUriForFile(
+                val outputFileUri = FileProvider.getUriForFile(
                     requireActivity(),
                     requireActivity().applicationContext.packageName + ".provider", tmpFile
                 )

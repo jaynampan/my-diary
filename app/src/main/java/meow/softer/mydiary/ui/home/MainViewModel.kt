@@ -27,4 +27,20 @@ class MainViewModel : ViewModel() {
         topicData.value = value
     }
 
+    fun updateBackUpSrc(path: String) {
+        //Todo
+    }
+
+    fun getBackUpPath(): String? {
+        TODO("Not yet implemented")
+    }
+
+    fun getImportPath(): String? {
+        TODO("Not yet implemented")
+    }
+
+    fun updateImportPath(path: String) {
+        TODO("Not yet implemented")
+    }
+
 }

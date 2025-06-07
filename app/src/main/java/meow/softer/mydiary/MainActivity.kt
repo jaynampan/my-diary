@@ -234,10 +234,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
         countTopicContent()
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onDestroy() {
         mainTopicAdapter = null
         super.onDestroy()

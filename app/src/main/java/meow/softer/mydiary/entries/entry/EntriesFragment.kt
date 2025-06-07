@@ -65,10 +65,6 @@ class EntriesFragment : BaseDiaryFragment(), DiaryViewerCallback, View.OnClickLi
         countEntries()
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
 
     private fun initRecyclerView() {
         val lmr = LinearLayoutManager(activity)

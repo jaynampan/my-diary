@@ -4,10 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.Utils
@@ -15,39 +32,155 @@ import meow.softer.mydiary.MainActivity
 import meow.softer.mydiary.R
 import meow.softer.mydiary.backup.ExportAsyncTask.ExportCallBack
 import meow.softer.mydiary.backup.ImportAsyncTask.ImportCallBack
-import meow.softer.mydiary.shared.gui.MyDiaryButton
+import meow.softer.mydiary.ui.components.DashedLine
+import meow.softer.mydiary.ui.components.DiaryButton
+import meow.softer.mydiary.ui.home.MainViewModel
 import java.io.File
 
-class BackupActivity : AppCompatActivity(), View.OnClickListener, ExportCallBack, ImportCallBack {
+class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
     private val EXPORT_SRC_PICKER_CODE = 0
     private val IMPORT_SRC_PICKER_CODE = 1
 
-    /*
-     * UI
-     */
-    private var TV_backup_export_src: TextView? = null
-    private var TV_backup_import_src: TextView? = null
-    private var But_backup_export: MyDiaryButton? = null
-    private var But_backup_import: MyDiaryButton? = null
+
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_backup)
+        setContent {
+            Column(
+                modifier = Modifier
+                    .padding(5.dp)
 
-        //UI
-        TV_backup_export_src = findViewById<TextView>(R.id.TV_backup_export_src)
-        TV_backup_export_src!!.setOnClickListener(this)
+            ) {
+                Text(text = stringResource(R.string.backup_title),
+                    fontSize = 28.sp,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top  = dimensionResource(R.dimen.setting_group_margin_top))
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    text = stringResource(R.string.backup_export_title),
+                    color = Color.Black,
+                    fontSize = 22.sp
+                )
+                Spacer(Modifier.height(5.dp))
+                Text(
+                    text = stringResource(R.string.backup_export_hint),
+                    color = colorResource(R.color.backup_hint_text_color),
+                    fontSize = 16.sp
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    text = stringResource(R.string.backup_export_path_hint),
+                    color = colorResource(R.color.backup_hint_text_color),
+                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                        .padding(4.dp)
+                        .clickable {
+                            val exportIntent = Intent(
+                                this@BackupActivity,
+                                MyDirectoryPickerActivity::class.java
+                            )
 
-        TV_backup_import_src = findViewById<TextView>(R.id.TV_backup_import_src)
-        TV_backup_import_src!!.setOnClickListener(this)
+                            exportIntent.putExtra(
+                                FilePickerActivity.EXTRA_ALLOW_MULTIPLE,
+                                false
+                            )
+                            exportIntent.putExtra(
+                                FilePickerActivity.EXTRA_ALLOW_CREATE_DIR,
+                                true
+                            )
+                            exportIntent.putExtra(
+                                FilePickerActivity.EXTRA_MODE,
+                                FilePickerActivity.MODE_DIR
+                            )
+                            exportIntent.putExtra(
+                                FilePickerActivity.EXTRA_START_PATH,
+                                Environment.getExternalStorageDirectory().path
+                            )
+                            startActivityForResult(exportIntent, EXPORT_SRC_PICKER_CODE)
+                        }
+                )
+                Spacer(Modifier.height(10.dp))
+                DiaryButton(
+                    onClick = {
+                        ExportAsyncTask(
+                            this@BackupActivity,
+                            this@BackupActivity,
+                            viewModel.getBackUpPath()
+                        ).execute()
+                    },
+                    content = {
+                        Text(stringResource(R.string.backup_export_button))
+                    },
+                )
+                Spacer(Modifier
+                    .height(2.dp)
+                    .padding(horizontal = 5.dp)
+                    .fillMaxWidth()
 
-        But_backup_export = findViewById<MyDiaryButton>(R.id.But_backup_export)
-        But_backup_export!!.setOnClickListener(this)
-        But_backup_export!!.setEnabled(false)
+                )
+                DashedLine(Modifier.fillMaxWidth())
 
-        But_backup_import = findViewById<MyDiaryButton>(R.id.But_backup_import)
-        But_backup_import!!.setOnClickListener(this)
-        But_backup_import!!.setEnabled(false)
+                Text(
+                    text = stringResource(R.string.backup_import_title),
+                    color = Color.Black,
+                    fontSize = 22.sp
+                )
+                Spacer(Modifier.height(5.dp))
+                Text(
+                    text = stringResource(R.string.backup_import_hint),
+                    color = colorResource(R.color.backup_hint_text_color),
+                    fontSize = 16.sp
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    text = stringResource(R.string.backup_import_path_hint),
+                    color = colorResource(R.color.backup_hint_text_color),
+                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                        .padding(4.dp)
+                        .clickable {
+                            val importIntent = Intent(this@BackupActivity, MyDirectoryPickerActivity::class.java)
+
+                            importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
+                            importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false)
+                            importIntent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE)
+                            importIntent.putExtra(
+                                FilePickerActivity.EXTRA_START_PATH,
+                                Environment.getExternalStorageDirectory().path
+                            )
+                            startActivityForResult(importIntent, IMPORT_SRC_PICKER_CODE)
+                        }
+                )
+                Spacer(Modifier.height(10.dp))
+                DiaryButton(
+                    onClick = {
+                        ImportAsyncTask(
+                            this@BackupActivity,
+                            this@BackupActivity,
+                            viewModel.getImportPath()
+                        ).execute()
+                    },
+                    content = {
+                        Text(stringResource(R.string.backup_import_button))
+                    },
+                )
+                Spacer(Modifier
+                    .height(2.dp)
+                    .padding(horizontal = 5.dp)
+                    .fillMaxWidth()
+
+                )
+            }
+        }
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -57,8 +190,7 @@ class BackupActivity : AppCompatActivity(), View.OnClickListener, ExportCallBack
             if (uri != null) {
                 val file = Utils.getFileForUri(uri)
                 if (file.canWrite()) {
-                    TV_backup_export_src!!.text = file.absolutePath
-                    But_backup_export!!.setEnabled(true)
+                    viewModel.updateBackUpSrc(file.absolutePath)
                 } else {
                     Toast.makeText(
                         this, getString(R.string.backup_export_can_not_write),
@@ -71,8 +203,7 @@ class BackupActivity : AppCompatActivity(), View.OnClickListener, ExportCallBack
             if (uri != null) {
                 val file = Utils.getFileForUri(uri)
                 if (file.canRead()) {
-                    TV_backup_import_src!!.text = file.absolutePath
-                    But_backup_import!!.setEnabled(true)
+                    viewModel.updateImportPath(file.absolutePath)
                 } else {
                     Toast.makeText(
                         this, getString(R.string.backup_import_can_not_read),
@@ -83,49 +214,7 @@ class BackupActivity : AppCompatActivity(), View.OnClickListener, ExportCallBack
         }
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.TV_backup_export_src -> {
-                val exportIntent = Intent(this, MyDirectoryPickerActivity::class.java)
 
-                exportIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
-                exportIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true)
-                exportIntent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR)
-                exportIntent.putExtra(
-                    FilePickerActivity.EXTRA_START_PATH,
-                    Environment.getExternalStorageDirectory().path
-                )
-                startActivityForResult(exportIntent, EXPORT_SRC_PICKER_CODE)
-            }
-
-            R.id.TV_backup_import_src -> {
-                val importIntent = Intent(this, MyDirectoryPickerActivity::class.java)
-
-                importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
-                importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false)
-                importIntent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE)
-                importIntent.putExtra(
-                    FilePickerActivity.EXTRA_START_PATH,
-                    Environment.getExternalStorageDirectory().path
-                )
-                startActivityForResult(importIntent, IMPORT_SRC_PICKER_CODE)
-            }
-
-            R.id.But_backup_export -> ExportAsyncTask(
-                this,
-                this,
-                TV_backup_export_src!!.getText().toString()
-            )
-                .execute()
-
-            R.id.But_backup_import -> ImportAsyncTask(
-                this,
-                this,
-                TV_backup_import_src!!.getText().toString()
-            )
-                .execute()
-        }
-    }
 
     override fun onImportCompiled(importSuccessful: Boolean) {
         val backMainActivityIntent = Intent(this, MainActivity::class.java)
@@ -159,3 +248,5 @@ class BackupActivity : AppCompatActivity(), View.OnClickListener, ExportCallBack
         }
     }
 }
+
+

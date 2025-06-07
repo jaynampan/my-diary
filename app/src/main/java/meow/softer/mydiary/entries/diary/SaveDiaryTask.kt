@@ -33,12 +33,11 @@ class SaveDiaryTask(
     private val diaryItemHelper: DiaryItemHelper
     private val tempFileManager: FileManager?
     private var diaryFileManager: FileManager? = null
-    private val progressDialog: ProgressDialog
+    private val progressDialog: ProgressDialog = ProgressDialog(context)
 
     private val callBack: SaveDiaryCallBack
 
     init {
-        progressDialog = ProgressDialog(context)
         progressDialog.setMessage(context.getString(R.string.process_dialog_saving))
         progressDialog.setCancelable(false)
         progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar)

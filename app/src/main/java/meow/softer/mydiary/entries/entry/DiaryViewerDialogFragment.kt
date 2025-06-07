@@ -458,12 +458,12 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         val dialog = getDialog()
         if (dialog != null) {
             val dialogHeight: Int
-            if (ChinaPhoneHelper.deviceStatusBarType== PhoneModel.OTHER) {
-                dialogHeight = (ScreenHelper.getScreenHeight(requireContext())
+            dialogHeight = if (ChinaPhoneHelper.deviceStatusBarType== PhoneModel.OTHER) {
+                (ScreenHelper.getScreenHeight(requireContext())
                         - ScreenHelper.getStatusBarHeight(requireContext())
                         - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 10))
             } else {
-                dialogHeight = (ScreenHelper.getScreenHeight(requireContext())
+                (ScreenHelper.getScreenHeight(requireContext())
                         - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 10))
             }
             val dialogWidth = (ScreenHelper.getScreenWidth(requireContext())
@@ -981,11 +981,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
     }
 
     private class DiaryViewerHandler(aFragment: DiaryViewerDialogFragment?) : Handler() {
-        private val mFrag: WeakReference<DiaryViewerDialogFragment?>
-
-        init {
-            mFrag = WeakReference<DiaryViewerDialogFragment?>(aFragment)
-        }
+        private val mFrag: WeakReference<DiaryViewerDialogFragment?> = WeakReference<DiaryViewerDialogFragment?>(aFragment)
 
         override fun handleMessage(msg: Message) {
             val theFrag = mFrag.get()

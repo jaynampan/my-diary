@@ -97,10 +97,10 @@ class CalendarFragment : BaseDiaryFragment(), View.OnClickListener, OnDateSelect
         when (v.id) {
             R.id.FAB_calendar_change_mode -> {
                 //togle the mode
-                if (currentMode == MODE_DAY) {
-                    currentMode = MODE_MONTH
+                currentMode = if (currentMode == MODE_DAY) {
+                    MODE_MONTH
                 } else {
-                    currentMode = MODE_DAY
+                    MODE_DAY
                 }
                 initCalendarMode()
             }

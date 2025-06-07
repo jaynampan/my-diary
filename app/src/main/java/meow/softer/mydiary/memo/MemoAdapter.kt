@@ -101,13 +101,11 @@ class MemoAdapter(
         private val IV_memo_item_dot: ImageView
         val tVContent: TextView
         private val IV_memo_item_delete: ImageView
-        private val RL_memo_item_root_view: RelativeLayout
+        private val RL_memo_item_root_view: RelativeLayout = rootView.findViewById<RelativeLayout>(R.id.RL_memo_item_root_view)
         private var itemPosition = 0
 
 
         init {
-            RL_memo_item_root_view =
-                rootView.findViewById<RelativeLayout>(R.id.RL_memo_item_root_view)
             IV_memo_item_dot = rootView.findViewById<ImageView>(R.id.IV_memo_item_dot)
             this.tVContent = rootView.findViewById<TextView>(R.id.TV_memo_item_content)
             IV_memo_item_delete = rootView.findViewById<ImageView>(R.id.IV_memo_item_delete)

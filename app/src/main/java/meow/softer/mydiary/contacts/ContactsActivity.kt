@@ -226,7 +226,7 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
     }
 
     override fun onTouchingLetterChanged(s: String?) {
-        val position = contactsAdapter!!.getPositionForSection(s!!.get(0))
+        val position = contactsAdapter!!.getPositionForSection(s!![0])
         if (position != -1) {
             RecyclerView_contacts!!.layoutManager!!.scrollToPosition(position)
         }
@@ -241,15 +241,15 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
      */
     private fun checkLanguage(): String? {
         val language: String?
-        when (getLocalLanguageCode(this)) {
-            1 -> language = EN
+        language = when (getLocalLanguageCode(this)) {
+            1 -> EN
             2 ->                 // CHINESE;
-                language = ZH
+                ZH
 
             3 ->                 //BANGLA
-                language = BN
+                BN
 
-            else -> language = resources.configuration.locale.language +
+            else -> resources.configuration.locale.language +
                     "-" + resources.configuration.locale.country
         }
         return language

@@ -29,10 +29,6 @@ class PhotoDetailViewerFragment : Fragment() {
         initZoomView()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     private fun initZoomView() {
         zoomImageView!!.setPhotoUri(photoUri)
     }

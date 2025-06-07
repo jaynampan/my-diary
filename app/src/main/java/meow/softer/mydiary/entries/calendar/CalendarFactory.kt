@@ -19,7 +19,7 @@ class CalendarFactory(
 ) {
     private var dateChange = 0
 
-    private val timeTools: TimeTools
+    private val timeTools: TimeTools = TimeTools.getInstance(mContext)
     private val monthPaint: Paint
     private val datePaint: Paint
     private val dayPaint: Paint
@@ -35,7 +35,6 @@ class CalendarFactory(
 
 
     init {
-        timeTools = TimeTools.getInstance(mContext)
         textRect = Rect(0, 0, width, height)
         scale = mContext.resources.displayMetrics.density
 

@@ -11,14 +11,9 @@ import java.util.Observable
 
 class DiaryItemHelper(private val itemContentLayout: LinearLayout) : Observable() {
     //For test to Public
-    private val diaryItemList: MutableList<IDiaryRow?>
+    private val diaryItemList: MutableList<IDiaryRow?> = ArrayList<IDiaryRow?>()
     var nowPhotoCount: Int = 0
         private set
-
-
-    init {
-        this.diaryItemList = ArrayList<IDiaryRow?>()
-    }
 
     fun initDiary() {
         //Remove old data
@@ -110,20 +105,19 @@ class DiaryItemHelper(private val itemContentLayout: LinearLayout) : Observable(
             val topbarHeight =
                 context.resources.getDimensionPixelOffset(R.dimen.top_bar_height)
             val imageHeight: Int
-            if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
-                imageHeight = (ScreenHelper.getScreenHeight(context)
+            imageHeight = if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
+                (ScreenHelper.getScreenHeight(context)
                         - ScreenHelper.getStatusBarHeight(context) //diary activity top bar  -( diary info + diary bottom bar + diary padding+ photo padding)
                         - topbarHeight - ScreenHelper.dpToPixel(
                     context.resources,
                     120 + 40 + (2 * 5) + (2 * 5)
                 ))
             } else {
-                imageHeight =
-                    (ScreenHelper.getScreenHeight(context) //diary activity top bar  -( diary info + diary bottom bar + diary padding + photo padding)
-                            - topbarHeight - ScreenHelper.dpToPixel(
-                        context.resources,
-                        120 + 40 + (2 * 5) + (2 * 5)
-                    ))
+                (ScreenHelper.getScreenHeight(context) //diary activity top bar  -( diary info + diary bottom bar + diary padding + photo padding)
+                        - topbarHeight - ScreenHelper.dpToPixel(
+                    context.resources,
+                    120 + 40 + (2 * 5) + (2 * 5)
+                ))
             }
             return imageHeight
         }

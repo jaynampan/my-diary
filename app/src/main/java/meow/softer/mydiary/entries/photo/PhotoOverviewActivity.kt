@@ -57,10 +57,10 @@ class PhotoOverviewActivity : AppCompatActivity() {
     private fun loadDiaryImageData(topicId: Long, diaryId: Long) {
         val diaryRoot = FileManager(this@PhotoOverviewActivity, FileManager.DIARY_ROOT_DIR)
         val topicRootFile: File?
-        if (diaryId != -1L) {
-            topicRootFile = File(diaryRoot.dirAbsolutePath + "/" + topicId + "/" + diaryId)
+        topicRootFile = if (diaryId != -1L) {
+            File(diaryRoot.dirAbsolutePath + "/" + topicId + "/" + diaryId)
         } else {
-            topicRootFile = File(diaryRoot.dirAbsolutePath + "/" + topicId)
+            File(diaryRoot.dirAbsolutePath + "/" + topicId)
         }
         //Load all file form topic dir
         diaryPhotoFileList = ArrayList<Uri?>()

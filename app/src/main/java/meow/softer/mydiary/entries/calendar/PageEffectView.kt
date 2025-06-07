@@ -129,13 +129,12 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
 
     private fun setScreen(context: Context) {
         mWidth = ScreenHelper.getScreenWidth(context)
-        if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
-            mHeight =
-                ((ScreenHelper.getScreenHeight(context) - ScreenHelper.getStatusBarHeight(context)
-                        - context.resources.getDimension(R.dimen.top_bar_height))
-                        * 0.7).toInt()
+        mHeight = if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
+            ((ScreenHelper.getScreenHeight(context) - ScreenHelper.getStatusBarHeight(context)
+                    - context.resources.getDimension(R.dimen.top_bar_height))
+                    * 0.7).toInt()
         } else {
-            mHeight = ((ScreenHelper.getScreenHeight(context) -
+            ((ScreenHelper.getScreenHeight(context) -
                     context.resources.getDimension(R.dimen.top_bar_height))
                     * 0.7).toInt()
         }
@@ -153,14 +152,14 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
     }
 
     fun calcCornerXY(x: Float, y: Float) {
-        if (x <= mWidth / 2) mCornerX = 0
-        else mCornerX = mWidth
-        if (y <= mHeight / 2) mCornerY = 0
-        else mCornerY = mHeight
-        if ((mCornerX == 0 && mCornerY == mHeight)
+        mCornerX = if (x <= mWidth / 2) 0
+        else mWidth
+        mCornerY = if (y <= mHeight / 2) 0
+        else mHeight
+        mIsRTandLB = if ((mCornerX == 0 && mCornerY == mHeight)
             || (mCornerX == mWidth && mCornerY == 0)
-        ) mIsRTandLB = true
-        else mIsRTandLB = false
+        ) true
+        else false
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -438,15 +437,15 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
      */
     fun drawCurrentPageShadow(canvas: Canvas) {
         val degree: Double
-        if (mIsRTandLB) {
-            degree = (Math.PI
+        degree = if (mIsRTandLB) {
+            (Math.PI
                     / 4
                     - atan2(
                 (mBezierControl1.y - mTouch.y).toDouble(), (mTouch.x
                         - mBezierControl1.x).toDouble()
             ))
         } else {
-            degree = (Math.PI
+            (Math.PI
                     / 4
                     - atan2(
                 (mTouch.y - mBezierControl1.y).toDouble(), (mTouch.x
@@ -458,10 +457,10 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
         val d2 = 25f * 1.414 * sin(degree)
         val x = (mTouch.x + d1).toFloat()
         val y: Float
-        if (mIsRTandLB) {
-            y = (mTouch.y + d2).toFloat()
+        y = if (mIsRTandLB) {
+            (mTouch.y + d2).toFloat()
         } else {
-            y = (mTouch.y - d2).toFloat()
+            (mTouch.y - d2).toFloat()
         }
         mPath1!!.reset()
         mPath1!!.moveTo(x, y)
@@ -469,7 +468,6 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
         mPath1!!.lineTo(mBezierControl1.x, mBezierControl1.y)
         mPath1!!.lineTo(mBezierStart1.x, mBezierStart1.y)
         mPath1!!.close()
-        var rotateDegrees: Float
         canvas.save()
 
         //TODO:ERROR canvas.clipPath(mPath0, Region.Op.XOR);
@@ -487,7 +485,7 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
             mCurrentPageShadow = mFrontShadowDrawableVRL!!
         }
 
-        rotateDegrees = Math.toDegrees(
+        var rotateDegrees: Float = Math.toDegrees(
             atan2(
                 (mTouch.x
                         - mBezierControl1.x).toDouble(), (mBezierControl1.y - mTouch.y).toDouble()
@@ -529,10 +527,10 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
         ).toFloat()
         canvas.rotate(rotateDegrees, mBezierControl2.x, mBezierControl2.y)
         val temp: Float
-        if (mBezierControl2.y < 0) {
-            temp = mBezierControl2.y - mHeight
+        temp = if (mBezierControl2.y < 0) {
+            mBezierControl2.y - mHeight
         } else {
-            temp = mBezierControl2.y
+            mBezierControl2.y
         }
         val hmg = hypot(mBezierControl2.x.toDouble(), temp.toDouble()).toInt()
         if (hmg > mMaxLength) {
@@ -631,15 +629,15 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
         val dy: Int
         // dx 水平方向滑动的距离，负值会使滚动向左滚动
         // dy 垂直方向滑动的距离，负值会使滚动向上滚动
-        if (mCornerX > 0) {
-            dx = -(mWidth + mTouch.x).toInt()
+        dx = if (mCornerX > 0) {
+            -(mWidth + mTouch.x).toInt()
         } else {
-            dx = (mWidth - mTouch.x + mWidth).toInt()
+            (mWidth - mTouch.x + mWidth).toInt()
         }
-        if (mCornerY > 0) {
-            dy = (mHeight - mTouch.y).toInt()
+        dy = if (mCornerY > 0) {
+            (mHeight - mTouch.y).toInt()
         } else {
-            dy = (1 - mTouch.y).toInt() // 防止mTouch.y最终变为0
+            (1 - mTouch.y).toInt() // 防止mTouch.y最终变为0
         }
         mScroller!!.startScroll(
             mTouch.x.toInt(), mTouch.y.toInt(), dx, dy,

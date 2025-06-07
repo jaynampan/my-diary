@@ -42,12 +42,11 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
      * UI
      */
     //From MyDiaryApplication Context
-    private val mContext: Context
+    private val mContext: Context = context
     private val progressDialog: ProgressDialog
     private val callBack: ImportCallBack
 
     init {
-        this.mContext = context
         this.dbManager = DBManager(context)
         val backFM = FileManager(context, FileManager.BACKUP_DIR)
         this.backupJsonFilePath = (backFM.dirAbsolutePath + "/"
@@ -133,7 +132,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             //Start a transaction
             dbManager.beginTransaction()
             for (i in backupManager!!.getBackup_topic_list().indices) {
-                saveTopicIntoDB(backupManager!!.getBackup_topic_list().get(i)!!)
+                saveTopicIntoDB(backupManager!!.getBackup_topic_list()[i]!!)
             }
 
             //Re-sort the topic
@@ -163,7 +162,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             ITopic.TYPE_MEMO -> if (backupTopic.memo_topic_entries_list != null) {
                 var x = 0
                 while (x < backupTopic.memo_topic_entries_list!!.size) {
-                    val memo = backupTopic.memo_topic_entries_list!!.get(x)
+                    val memo = backupTopic.memo_topic_entries_list!![x]
                     val newMemoId = dbManager.insertMemo(
                         memo!!.memoEntriesContent,
                         memo.isChecked,
@@ -181,7 +180,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             ITopic.TYPE_DIARY -> if (backupTopic.diary_topic_entries_list != null) {
                 var y = 0
                 while (y < backupTopic.diary_topic_entries_list!!.size) {
-                    val diary = backupTopic.diary_topic_entries_list!!.get(y)
+                    val diary = backupTopic.diary_topic_entries_list!![y]
                     //Write the diary entries
                     val newDiaryId =
                         dbManager.insertDiaryInfo(
@@ -196,7 +195,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
                     //Write the diary item
                     var yi = 0
                     while (yi < diary.diaryItemList!!.size) {
-                        val diaryItem = diary.diaryItemList.get(yi)
+                        val diaryItem = diary.diaryItemList[yi]
                         dbManager.insertDiaryContent(
                             diaryItem!!.diaryItemType,
                             diaryItem.diaryItemPosition,
@@ -216,7 +215,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             ITopic.TYPE_CONTACTS -> if (backupTopic.contacts_topic_entries_list != null) {
                 var z = 0
                 while (z < backupTopic.contacts_topic_entries_list!!.size) {
-                    val contact = backupTopic.contacts_topic_entries_list!!.get(z)
+                    val contact = backupTopic.contacts_topic_entries_list!![z]
                     dbManager.insertContacts(
                         contact!!.contactsEntriesName,
                         contact.contactsEntriesPhonenumber, "", newTopicId

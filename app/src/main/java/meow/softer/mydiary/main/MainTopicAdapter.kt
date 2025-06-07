@@ -315,10 +315,6 @@ class MainTopicAdapter(
             }
         }
 
-        override fun onSlideAnimationEnd() {
-            super.onSlideAnimationEnd()
-        }
-
         override fun onCleanUp() {
             super.onCleanUp()
             // clear the references

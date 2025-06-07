@@ -13,10 +13,9 @@ import meow.softer.mydiary.backup.MyFileItemAdapter.FileItemViewHolder
 
 class MyFileItemAdapter(dirNames: MutableList<String?>) :
     RecyclerView.Adapter<FileItemViewHolder?>() {
-    private val mDirNames: MutableList<String?>
+    private val mDirNames: MutableList<String?> = dirNames
 
     init {
-        this.mDirNames = dirNames
         Log.e("Mytest", "mDirNames:$mDirNames")
     }
 
@@ -36,12 +35,11 @@ class MyFileItemAdapter(dirNames: MutableList<String?>) :
     }
 
      inner class FileItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val ll_file_item: LinearLayout?
-        private val iv_item_icon: ImageView?
+        private val ll_file_item: LinearLayout? = itemView.findViewById<LinearLayout?>(R.id.file_item_container)
+         private val iv_item_icon: ImageView?
          val tv_item_name: TextView
 
         init {
-            this.ll_file_item = itemView.findViewById<LinearLayout?>(R.id.file_item_container)
             this.iv_item_icon = itemView.findViewById<ImageView?>(R.id.file_item_icon)
             this.tv_item_name = itemView.findViewById<TextView>(R.id.file_item_name)
         }

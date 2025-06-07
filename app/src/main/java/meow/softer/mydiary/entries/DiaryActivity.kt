@@ -212,8 +212,7 @@ class DiaryActivity : FragmentActivity() {
         private val registeredFragments = SparseArray<Fragment?>()
 
         override fun getItem(position: Int): BaseDiaryFragment {
-            val fragment: BaseDiaryFragment
-            fragment = when (position) {
+            val fragment = when (position) {
                 1 -> CalendarFragment()
                 2 -> DiaryFragment()
                 else -> EntriesFragment()
