@@ -35,6 +35,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -46,8 +48,10 @@ import meow.softer.mydiary.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.entries.EditDiaryBackDialogFragment
 import meow.softer.mydiary.entries.EditDiaryBackDialogFragment.BackDialogCallback
+import meow.softer.mydiary.entries.diary.ClearDialogFragment
 import meow.softer.mydiary.entries.diary.CopyPhotoTask
 import meow.softer.mydiary.entries.diary.CopyPhotoTask.CopyPhotoCallBack
+import meow.softer.mydiary.entries.diary.DiaryFragment
 import meow.softer.mydiary.entries.diary.DiaryInfoHelper.getWeatherResourceId
 import meow.softer.mydiary.entries.diary.DiaryInfoHelper.moodArray
 import meow.softer.mydiary.entries.diary.DiaryInfoHelper.weatherArray
@@ -74,6 +78,7 @@ import meow.softer.mydiary.shared.TimeTools
 import meow.softer.mydiary.shared.ViewTools
 import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 import meow.softer.mydiary.shared.statusbar.PhoneModel
+import meow.softer.mydiary.ui.components.DiaryBottom
 import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
@@ -204,6 +209,117 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         this.dialog!!.setCanceledOnTouchOutside(false)
         val rootView = inflater.inflate(R.layout.fragment_diary, container)
 
+        val composeBottom = rootView.findViewById<ComposeView>(R.id.compose_bottom)
+        composeBottom.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                DiaryBottom(
+                    images = listOf(
+                        R.drawable.ic_more_horiz_white_24dp,
+                        R.drawable.ic_location_off_white_24dp,
+                        R.drawable.ic_photo_camera_white_24dp,
+                        R.drawable.ic_delete_white_24dp,
+                        R.drawable.ic_clear_white_24dp,
+                        R.drawable.ic_save_white_24dp
+                    )
+                ) {
+                    when(it){
+                        1 -> if (haveLocation) {
+                            haveLocation = false
+                            initLocationIcon()
+                        } else {
+                            if (PermissionHelper.checkPermission(
+                                    this@DiaryViewerDialogFragment.requireActivity(),
+                                    PermissionHelper.REQUEST_ACCESS_FINE_LOCATION_PERMISSION
+                                )
+                            ) {
+                                //Check gps is open
+                                if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                                    locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                                ) {
+                                    startGetLocation()
+                                } else {
+                                    Toast.makeText(
+                                        activity,
+                                        getString(R.string.toast_location_not_open),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+                        2 -> if (isEditMode) {
+                            //Allow add photo
+                            if (FileManager.sDCardFreeSize > FileManager.MIN_FREE_SPACE) {
+                                if (PermissionHelper.checkPermission(
+                                        this@DiaryViewerDialogFragment.requireActivity(),
+                                        PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION
+                                    )
+                                ) {
+                                    if (diaryItemHelper!!.nowPhotoCount < DiaryItemHelper.MAX_PHOTO_COUNT) {
+                                        openPhotoBottomSheet()
+                                    } else {
+                                        Toast.makeText(
+                                            activity,
+                                            String.format(
+                                                resources.getString(R.string.toast_max_photo),
+                                                DiaryItemHelper.MAX_PHOTO_COUNT
+                                            ),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            } else {
+                                //Insufficient
+                                Toast.makeText(
+                                    activity,
+                                    getString(R.string.toast_space_insufficient),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            //Show the gallery
+                            val gotoPhotoOverviewIntent =
+                                Intent(activity, PhotoOverviewActivity::class.java)
+                            gotoPhotoOverviewIntent.putExtra(
+                                PhotoOverviewActivity.PHOTO_OVERVIEW_TOPIC_ID,
+                                (activity as DiaryActivity).topicId
+                            )
+                            gotoPhotoOverviewIntent.putExtra(
+                                PhotoOverviewActivity.PHOTO_OVERVIEW_DIARY_ID,
+                                diaryId
+                            )
+                            requireActivity().startActivity(gotoPhotoOverviewIntent)
+                        }
+
+                        R.id.IV_diary_close_dialog -> if (isEditMode) {
+                            val backDialogFragment = EditDiaryBackDialogFragment()
+                            backDialogFragment.setTargetFragment(this@DiaryViewerDialogFragment, 0)
+                            backDialogFragment.show(requireFragmentManager(), "backDialogFragment")
+                        } else {
+                            dismiss()
+                        }
+
+                        3 -> {
+                            val diaryDeleteDialogFragment =
+                                newInstance((activity as DiaryActivity).topicId, diaryId)
+                            diaryDeleteDialogFragment.setTargetFragment(this@DiaryViewerDialogFragment, 0)
+                            diaryDeleteDialogFragment.show(requireFragmentManager(), "diaryDeleteDialogFragment")
+                        }
+
+                        4 -> dismiss()
+                        5 -> if (diaryItemHelper!!.itemSize > 0) {
+                            updateDiary()
+                        } else {
+                            Toast.makeText(
+                                activity,
+                                getString(R.string.toast_diary_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
         /**
          * UI
          */
@@ -214,8 +330,8 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         val RL_diary_info = rootView.findViewById<RelativeLayout>(R.id.RL_diary_info)
         RL_diary_info.background = ThemeManager.instance!!.createDiaryViewerInfoBg(requireContext())
 
-        val LL_diary_edit_bar = rootView.findViewById<LinearLayout>(R.id.LL_diary_edit_bar)
-        LL_diary_edit_bar.background = ThemeManager.instance!!.createDiaryViewerEditBarBg(requireContext())
+//        val LL_diary_edit_bar = rootView.findViewById<LinearLayout>(R.id.LL_diary_edit_bar)
+//        LL_diary_edit_bar.background = ThemeManager.instance!!.createDiaryViewerEditBarBg(requireContext())
 
         PB_diary_item_content_hint =
             rootView.findViewById<ProgressBar>(R.id.PB_diary_item_content_hint)
@@ -237,12 +353,12 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         IV_diary_close_dialog.setVisibility(View.VISIBLE)
         IV_diary_close_dialog.setOnClickListener(this)
 
-        IV_diary_location = rootView.findViewById<ImageView>(R.id.IV_diary_location)
-
-        IV_diary_photo = rootView.findViewById<ImageView>(R.id.IV_diary_photo)
-        IV_diary_delete = rootView.findViewById<ImageView>(R.id.IV_diary_delete)
-        IV_diary_clear = rootView.findViewById<ImageView>(R.id.IV_diary_clear)
-        IV_diary_save = rootView.findViewById<ImageView>(R.id.IV_diary_save)
+//        IV_diary_location = rootView.findViewById<ImageView>(R.id.IV_diary_location)
+//
+//        IV_diary_photo = rootView.findViewById<ImageView>(R.id.IV_diary_photo)
+//        IV_diary_delete = rootView.findViewById<ImageView>(R.id.IV_diary_delete)
+//        IV_diary_clear = rootView.findViewById<ImageView>(R.id.IV_diary_clear)
+//        IV_diary_save = rootView.findViewById<ImageView>(R.id.IV_diary_save)
 
         initView(rootView)
         diaryItemHelper = DiaryItemHelper(LL_diary_item_content!!)
@@ -446,13 +562,13 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
 
             initMoodSpinner()
             initWeatherSpinner()
-            IV_diary_location!!.setOnClickListener(this)
+//            IV_diary_location!!.setOnClickListener(this)
 
-            IV_diary_delete!!.setOnClickListener(this)
-            IV_diary_clear!!.setVisibility(View.GONE)
+//            IV_diary_delete!!.setOnClickListener(this)
+//            IV_diary_clear!!.setVisibility(View.GONE)
 
-            IV_diary_photo!!.setImageResource(R.drawable.ic_photo_camera_white_24dp)
-            IV_diary_photo!!.setOnClickListener(this)
+//            IV_diary_photo!!.setImageResource(R.drawable.ic_photo_camera_white_24dp)
+//            IV_diary_photo!!.setOnClickListener(this)
         } else {
             EDT_diary_title!!.visibility = View.GONE
             val RL_diary_weather = rootView.findViewById<RelativeLayout>(R.id.RL_diary_weather)
@@ -473,12 +589,12 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
                 ThemeManager.instance!!.getThemeMainColor(requireContext())
             )
 
-            IV_diary_delete!!.setOnClickListener(this)
-            IV_diary_clear!!.setVisibility(View.GONE)
-            IV_diary_save!!.setVisibility(View.GONE)
+//            IV_diary_delete!!.setOnClickListener(this)
+//            IV_diary_clear!!.setVisibility(View.GONE)
+//            IV_diary_save!!.setVisibility(View.GONE)
 
-            IV_diary_photo!!.setImageResource(R.drawable.ic_photo_white_24dp)
-            IV_diary_photo!!.setOnClickListener(this)
+//            IV_diary_photo!!.setImageResource(R.drawable.ic_photo_white_24dp)
+//            IV_diary_photo!!.setOnClickListener(this)
         }
     }
 
@@ -546,9 +662,9 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
 
     private fun initLocationIcon() {
         if (haveLocation) {
-            IV_diary_location!!.setImageResource(R.drawable.ic_location_on_white_24dp)
+//            IV_diary_location!!.setImageResource(R.drawable.ic_location_on_white_24dp)
         } else {
-            IV_diary_location!!.setImageResource(R.drawable.ic_location_off_white_24dp)
+//            IV_diary_location!!.setImageResource(R.drawable.ic_location_off_white_24dp)
             TV_diary_location!!.text = noLocation
         }
     }
@@ -835,29 +951,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
                 datePickerFragment.show(requireFragmentManager(), "datePickerFragment")
             }
 
-            R.id.IV_diary_location -> if (haveLocation) {
-                haveLocation = false
-                initLocationIcon()
-            } else {
-                if (PermissionHelper.checkPermission(
-                        this.requireActivity(),
-                        PermissionHelper.REQUEST_ACCESS_FINE_LOCATION_PERMISSION
-                    )
-                ) {
-                    //Check gps is open
-                    if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                        locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-                    ) {
-                        startGetLocation()
-                    } else {
-                        Toast.makeText(
-                            activity,
-                            getString(R.string.toast_location_not_open),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
+
 
             R.id.IV_diary_photo_delete -> {
                 val deletePosition = v.tag as Int
@@ -882,75 +976,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
                 requireActivity().startActivity(gotoPhotoDetailViewer)
             }
 
-            R.id.IV_diary_photo -> if (isEditMode) {
-                //Allow add photo
-                if (FileManager.sDCardFreeSize > FileManager.MIN_FREE_SPACE) {
-                    if (PermissionHelper.checkPermission(
-                            this.requireActivity(),
-                            PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION
-                        )
-                    ) {
-                        if (diaryItemHelper!!.nowPhotoCount < DiaryItemHelper.MAX_PHOTO_COUNT) {
-                            openPhotoBottomSheet()
-                        } else {
-                            Toast.makeText(
-                                activity,
-                                String.format(
-                                    resources.getString(R.string.toast_max_photo),
-                                    DiaryItemHelper.MAX_PHOTO_COUNT
-                                ),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                } else {
-                    //Insufficient
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.toast_space_insufficient),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else {
-                //Show the gallery
-                val gotoPhotoOverviewIntent =
-                    Intent(activity, PhotoOverviewActivity::class.java)
-                gotoPhotoOverviewIntent.putExtra(
-                    PhotoOverviewActivity.PHOTO_OVERVIEW_TOPIC_ID,
-                    (activity as DiaryActivity).topicId
-                )
-                gotoPhotoOverviewIntent.putExtra(
-                    PhotoOverviewActivity.PHOTO_OVERVIEW_DIARY_ID,
-                    diaryId
-                )
-                requireActivity().startActivity(gotoPhotoOverviewIntent)
-            }
 
-            R.id.IV_diary_close_dialog -> if (isEditMode) {
-                val backDialogFragment = EditDiaryBackDialogFragment()
-                backDialogFragment.setTargetFragment(this@DiaryViewerDialogFragment, 0)
-                backDialogFragment.show(requireFragmentManager(), "backDialogFragment")
-            } else {
-                dismiss()
-            }
-
-            R.id.IV_diary_delete -> {
-                val diaryDeleteDialogFragment =
-                    newInstance((activity as DiaryActivity).topicId, diaryId)
-                diaryDeleteDialogFragment.setTargetFragment(this, 0)
-                diaryDeleteDialogFragment.show(requireFragmentManager(), "diaryDeleteDialogFragment")
-            }
-
-            R.id.IV_diary_clear -> dismiss()
-            R.id.IV_diary_save -> if (diaryItemHelper!!.itemSize > 0) {
-                updateDiary()
-            } else {
-                Toast.makeText(
-                    activity,
-                    getString(R.string.toast_diary_empty),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
     }
 

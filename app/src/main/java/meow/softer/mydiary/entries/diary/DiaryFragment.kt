@@ -32,6 +32,9 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.Fragment
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.gson.Gson
 import meow.softer.mydiary.R
@@ -56,6 +59,7 @@ import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.TimeTools
 import meow.softer.mydiary.shared.ViewTools
+import meow.softer.mydiary.ui.components.DiaryBottom
 import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
@@ -130,22 +134,104 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_diary, container, false)
 
-        /**
-         * UI
-         */
+        val composeBottom = rootView.findViewById<ComposeView>(R.id.compose_bottom)
+        composeBottom.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                DiaryBottom(
+                    images = listOf(
+                        R.drawable.ic_more_horiz_white_24dp,
+                        R.drawable.ic_location_off_white_24dp,
+                        R.drawable.ic_photo_camera_white_24dp,
+                        R.drawable.ic_clear_white_24dp,
+                        R.drawable.ic_save_white_24dp
+                    )
+                ) {
+                    when(it){
+                        1 -> if (isLocation) {
+                            isLocation = false
+                            initLocationIcon()
+                        } else {
+                            if (PermissionHelper.checkPermission(
+                                    requireActivity(),
+                                    PermissionHelper.REQUEST_ACCESS_FINE_LOCATION_PERMISSION
+                                )
+                            ) {
+                                //Check gps is open
+                                if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                                    locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                                ) {
+                                    //startGetLocation();
+                                } else {
+                                    Toast.makeText(
+                                        activity,
+                                        getString(R.string.toast_location_not_open),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+
+                        2 -> if (FileManager.sDCardFreeSize > FileManager.MIN_FREE_SPACE) {
+                            if (PermissionHelper.checkPermission(
+                                    requireActivity(),
+                                    PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION
+                                )
+                            ) {
+                                if (diaryItemHelper!!.nowPhotoCount < DiaryItemHelper.MAX_PHOTO_COUNT) {
+                                    openPhotoBottomSheet()
+                                } else {
+                                    Toast.makeText(
+                                        activity,
+                                        String.format(
+                                            resources.getString(R.string.toast_max_photo),
+                                            DiaryItemHelper.MAX_PHOTO_COUNT
+                                        ),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        } else {
+                            //Insufficient
+                            Toast.makeText(
+                                activity,
+                                getString(R.string.toast_space_insufficient),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        3 -> if (diaryItemHelper!!.itemSize > 0 || EDT_diary_title!!.length() > 0 || SP_diary_mood!!.selectedItemPosition > 0 || SP_diary_weather!!.selectedItemPosition > 0) {
+                            val clearDialogFragment = ClearDialogFragment()
+                            clearDialogFragment.setTargetFragment(this@DiaryFragment, 0)
+                            clearDialogFragment.show(requireFragmentManager(), "clearDialogFragment")
+                        }
+
+                        4 -> if (diaryItemHelper!!.itemSize > 0) {
+                            saveDiary()
+                        } else {
+                            Toast.makeText(
+                                activity,
+                                getString(R.string.toast_diary_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
         val scrollView_diary_content =
             rootView.findViewById<ScrollView?>(R.id.ScrollView_diary_content)
-        ViewTools.setScrollBarColor(requireContext(), scrollView_diary_content)
+//        ViewTools.setScrollBarColor(requireContext(), scrollView_diary_content)
 
         val RL_diary_info = rootView.findViewById<RelativeLayout>(R.id.RL_diary_info)
         RL_diary_info.setBackgroundColor(
             ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
-        val LL_diary_edit_bar = rootView.findViewById<LinearLayout>(R.id.LL_diary_edit_bar)
-        LL_diary_edit_bar.setBackgroundColor(
-            ThemeManager.instance!!.getThemeMainColor(requireContext())
-        )
+//        val LL_diary_edit_bar = rootView.findViewById<LinearLayout>(R.id.LL_diary_edit_bar)
+//        LL_diary_edit_bar.setBackgroundColor(
+//            ThemeManager.instance!!.getThemeMainColor(requireContext())
+//        )
 
         val LL_diary_time_information =
             rootView.findViewById<LinearLayout>(R.id.LL_diary_time_information)
@@ -174,17 +260,17 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
         LL_diary_item_content = rootView.findViewById<LinearLayout>(R.id.LL_diary_item_content)
         LL_diary_item_content!!.setOnClickListener(this)
 
-        rootView.findViewById<ImageView?>(R.id.IV_diary_menu)
-        IV_diary_location = rootView.findViewById<ImageView>(R.id.IV_diary_location)
-        IV_diary_location!!.setOnClickListener(this)
-        val IV_diary_photo = rootView.findViewById<ImageView>(R.id.IV_diary_photo)
-        IV_diary_photo.setOnClickListener(this)
-        val IV_diary_delete = rootView.findViewById<ImageView>(R.id.IV_diary_delete)
-        IV_diary_delete.setVisibility(View.GONE)
-        val IV_diary_clear = rootView.findViewById<ImageView>(R.id.IV_diary_clear)
-        IV_diary_clear.setOnClickListener(this)
-        val IV_diary_save = rootView.findViewById<ImageView>(R.id.IV_diary_save)
-        IV_diary_save.setOnClickListener(this)
+//        rootView.findViewById<ImageView?>(R.id.IV_diary_menu)
+//        IV_diary_location = rootView.findViewById<ImageView>(R.id.IV_diary_location)
+//        IV_diary_location!!.setOnClickListener(this)
+//        val IV_diary_photo = rootView.findViewById<ImageView>(R.id.IV_diary_photo)
+//        IV_diary_photo.setOnClickListener(this)
+//        val IV_diary_delete = rootView.findViewById<ImageView>(R.id.IV_diary_delete)
+//        IV_diary_delete.setVisibility(View.GONE)
+//        val IV_diary_clear = rootView.findViewById<ImageView>(R.id.IV_diary_clear)
+//        IV_diary_clear.setOnClickListener(this)
+//        val IV_diary_save = rootView.findViewById<ImageView>(R.id.IV_diary_save)
+//        IV_diary_save.setOnClickListener(this)
 
         return rootView
     }
@@ -362,9 +448,9 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
 
     private fun initLocationIcon() {
         if (isLocation) {
-            IV_diary_location!!.setImageResource(R.drawable.ic_location_on_white_24dp)
+//            IV_diary_location!!.setImageResource(R.drawable.ic_location_on_white_24dp)
         } else {
-            IV_diary_location!!.setImageResource(R.drawable.ic_location_off_white_24dp)
+//            IV_diary_location!!.setImageResource(R.drawable.ic_location_off_white_24dp)
             TV_diary_location!!.text = noLocation
         }
     }
@@ -479,7 +565,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
             var diaryItem: IDiaryRow? = null
             var content: String? = ""
             if (autoSaveDiary.diaryItemList[i]
-                    !!.diaryItemType == IDiaryRow.TYPE_PHOTO
+                !!.diaryItemType == IDiaryRow.TYPE_PHOTO
             ) {
                 diaryItem = DiaryPhoto(requireActivity(), null, IDiaryRow.TYPE_PHOTO, null)
                 content = FileManager.FILE_HEADER +
@@ -491,7 +577,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
                     autoSaveDiary.diaryItemList[i]!!.diaryItemContent
                 )
             } else if (autoSaveDiary.diaryItemList[i]
-                    !!.diaryItemType == IDiaryRow.TYPE_TEXT
+                !!.diaryItemType == IDiaryRow.TYPE_TEXT
             ) {
                 diaryItem = DiaryText(requireActivity(), null, IDiaryRow.TYPE_TEXT, null)
                 content = autoSaveDiary.diaryItemList[i]!!.diaryItemContent
@@ -746,73 +832,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
                 diaryItemHelper!!.resortPosition()
             }
 
-            R.id.IV_diary_location -> if (isLocation) {
-                isLocation = false
-                initLocationIcon()
-            } else {
-                if (PermissionHelper.checkPermission(
-                        requireActivity(),
-                        PermissionHelper.REQUEST_ACCESS_FINE_LOCATION_PERMISSION
-                    )
-                ) {
-                    //Check gps is open
-                    if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                        locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-                    ) {
-                        //startGetLocation();
-                    } else {
-                        Toast.makeText(
-                            activity,
-                            getString(R.string.toast_location_not_open),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
 
-            R.id.IV_diary_photo -> if (FileManager.sDCardFreeSize > FileManager.MIN_FREE_SPACE) {
-                if (PermissionHelper.checkPermission(
-                        requireActivity(),
-                        PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION
-                    )
-                ) {
-                    if (diaryItemHelper!!.nowPhotoCount < DiaryItemHelper.MAX_PHOTO_COUNT) {
-                        openPhotoBottomSheet()
-                    } else {
-                        Toast.makeText(
-                            activity,
-                            String.format(
-                                resources.getString(R.string.toast_max_photo),
-                                DiaryItemHelper.MAX_PHOTO_COUNT
-                            ),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            } else {
-                //Insufficient
-                Toast.makeText(
-                    activity,
-                    getString(R.string.toast_space_insufficient),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            R.id.IV_diary_clear -> if (diaryItemHelper!!.itemSize > 0 || EDT_diary_title!!.length() > 0 || SP_diary_mood!!.selectedItemPosition > 0 || SP_diary_weather!!.selectedItemPosition > 0) {
-                val clearDialogFragment = ClearDialogFragment()
-                clearDialogFragment.setTargetFragment(this, 0)
-                clearDialogFragment.show(requireFragmentManager(), "clearDialogFragment")
-            }
-
-            R.id.IV_diary_save -> if (diaryItemHelper!!.itemSize > 0) {
-                saveDiary()
-            } else {
-                Toast.makeText(
-                    activity,
-                    getString(R.string.toast_diary_empty),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
     }
 

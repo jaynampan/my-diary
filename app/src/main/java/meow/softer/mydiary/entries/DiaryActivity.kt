@@ -22,7 +22,6 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
-import info.hoang8f.android.segmented.SegmentedGroup
 import meow.softer.mydiary.R
 import meow.softer.mydiary.db.DBManager
 import meow.softer.mydiary.entries.calendar.CalendarFragment
