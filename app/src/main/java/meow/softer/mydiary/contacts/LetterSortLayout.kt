@@ -23,9 +23,6 @@ class LetterSortLayout(private val mContext: Context?, attrs: AttributeSet?) : L
         fun onTouchingLetterChanged(s: String?)
     }
 
-    fun setSortTextView(sortTextView: TextView?) {
-        this.sortTextView = sortTextView
-    }
 
     init {
         orientation = VERTICAL

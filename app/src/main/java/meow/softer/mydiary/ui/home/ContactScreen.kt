@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,9 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,6 +40,7 @@ import meow.softer.mydiary.ui.components.DiarySearchBar
 @Composable
 fun ContactScreen(
     modifier: Modifier = Modifier, headerName: String, data: List<ContactGroup>,
+    backgroundPainter: Painter? = null,
     onAddContact: () -> Unit,
     onClickContact: (ContactInfo) -> Unit,
     onLongPressContact: (ContactInfo) -> Unit,
@@ -47,6 +51,34 @@ fun ContactScreen(
             headerName = headerName
         ) {
             onAddContact()
+        }
+        ContactBody(
+            data = data,
+            backgroundPainter = backgroundPainter,
+            onClickContact = onClickContact,
+            onLongPressContact = onLongPressContact
+        )
+    }
+}
+
+@Composable
+private fun ContactBody(
+    data: List<ContactGroup>,
+    backgroundPainter: Painter? = null,
+    onClickContact: (ContactInfo) -> Unit,
+    onLongPressContact: (ContactInfo) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        backgroundPainter?.let {
+            Image(
+                painter = it,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
         }
         Row(Modifier.fillMaxSize()) {
             ContactIndex(Modifier.fillMaxHeight()) { }

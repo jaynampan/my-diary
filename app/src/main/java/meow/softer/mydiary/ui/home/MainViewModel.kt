@@ -1,12 +1,11 @@
 package meow.softer.mydiary.ui.home
 
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import meow.softer.mydiary.contacts.ContactsEntity
-import meow.softer.mydiary.main.topic.Contacts
 import meow.softer.mydiary.main.topic.ITopic
-import kotlin.collections.mutableListOf
 
 class MainViewModel : ViewModel() {
     val userName = MutableStateFlow("User")
@@ -17,6 +16,7 @@ class MainViewModel : ViewModel() {
     val importPath = MutableStateFlow<String>("")
     val exportPath = MutableStateFlow<String>("")
     val contacts = MutableStateFlow<List<ContactGroup>>(emptyList())
+    val contactBackgroundPainter = MutableStateFlow<Painter?>(null)
 
 
     fun updateUserName(value: String) {
@@ -64,5 +64,9 @@ class MainViewModel : ViewModel() {
             }
         contacts.value = data
 
+    }
+
+    fun updateContactBackground(painter: BitmapPainter) {
+        contactBackgroundPainter.value = painter
     }
 }
