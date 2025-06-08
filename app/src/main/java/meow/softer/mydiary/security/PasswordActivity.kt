@@ -15,7 +15,6 @@ import meow.softer.mydiary.shared.Encryption
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 
 class PasswordActivity : AppCompatActivity(), View.OnClickListener {
     private var currentMode = 0

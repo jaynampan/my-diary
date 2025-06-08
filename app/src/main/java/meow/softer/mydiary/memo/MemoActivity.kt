@@ -19,7 +19,6 @@ import meow.softer.mydiary.memo.EditMemoDialogFragment.MemoCallback
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.ViewTools
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 import java.util.Locale
 
 class MemoActivity : FragmentActivity(), View.OnClickListener, MemoCallback, OnStartDragListener {

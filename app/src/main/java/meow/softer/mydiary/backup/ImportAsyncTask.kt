@@ -24,37 +24,26 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
         fun onImportCompiled(importSuccessful: Boolean)
     }
 
-    /*
-     * Backup
-     */
     private var backupManager: BackupManager? = null
     private val backupFileManager: FileManager
-    private val diartFileManager: FileManager
+    private val diaryFileManager: FileManager
     private val backupJsonFilePath: String?
     private val backupZieFilePath: String?
 
-    /*
-     * DB
-     */
-    private val dbManager: DBManager
+    private val dbManager: DBManager = DBManager(context)
 
-    /*
-     * UI
-     */
-    //From MyDiaryApplication Context
     private val mContext: Context = context
     private val progressDialog: ProgressDialog
     private val callBack: ImportCallBack
 
     init {
-        this.dbManager = DBManager(context)
         val backFM = FileManager(context, FileManager.BACKUP_DIR)
         this.backupJsonFilePath = (backFM.dirAbsolutePath + "/"
                 + BackupManager.BACKUP_JSON_FILE_NAME)
         this.backupZieFilePath = backupZieFilePath
 
         this.backupFileManager = FileManager(mContext, FileManager.BACKUP_DIR)
-        this.diartFileManager = FileManager(mContext, FileManager.DIARY_ROOT_DIR)
+        this.diaryFileManager = FileManager(mContext, FileManager.DIARY_ROOT_DIR)
 
         this.callBack = callBack
         this.progressDialog = ProgressDialog(context)
@@ -119,11 +108,10 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
         val json = sb.toString()
         val gson = Gson()
         backupManager = gson.fromJson<BackupManager>(json, BackupManager::class.java)
-        if (backupManager!!.header == null || backupManager!!.header != BackupManager.header) {
+        if (backupManager!!.header != BackupManager.header) {
             throw Exception("This is not mydiary backup file")
         }
     }
-
 
     private fun importTopic(): Boolean {
         var importSuccessful = true
@@ -134,8 +122,6 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             for (i in backupManager!!.getBackup_topic_list().indices) {
                 saveTopicIntoDB(backupManager!!.getBackup_topic_list()[i]!!)
             }
-
-            //Re-sort the topic
 
             //Check update success
             dbManager.setTransactionSuccessful()
@@ -156,7 +142,6 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
             backupTopic.topic_type,
             backupTopic.topic_color
         )
-
 
         when (backupTopic.topic_type) {
             ITopic.TYPE_MEMO -> if (backupTopic.memo_topic_entries_list != null) {
@@ -218,7 +203,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
                     val contact = backupTopic.contacts_topic_entries_list!![z]
                     dbManager.insertContacts(
                         contact!!.contactsEntriesName,
-                        contact.contactsEntriesPhonenumber, "", newTopicId
+                        contact.contactsEntriesPhoneNumber, "", newTopicId
                     )
                     z++
                 }
@@ -237,7 +222,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
         )
         if (backupDiaryDir.exists() || backupDiaryDir.isDirectory()) {
             val newDiaryDir = File(
-                diartFileManager.dirAbsolutePath + "/" +
+                diaryFileManager.dirAbsolutePath + "/" +
                         newTopicId + "/" + newDiaryId + "/"
             )
             FileUtils.moveDirectory(backupDiaryDir, newDiaryDir)

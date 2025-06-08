@@ -13,7 +13,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import meow.softer.mydiary.R
 import meow.softer.mydiary.main.topic.ITopic

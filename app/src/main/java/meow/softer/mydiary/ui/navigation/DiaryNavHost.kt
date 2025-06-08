@@ -5,7 +5,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import meow.softer.mydiary.main.ProfileDialog
 import meow.softer.mydiary.main.ProfileDialogWrapper
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.ui.home.AboutScreen

@@ -1,19 +1,15 @@
 package meow.softer.mydiary.contacts
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import meow.softer.mydiary.R
 import meow.softer.mydiary.contacts.ContactsDetailDialogFragment.Companion.newInstance
 import meow.softer.mydiary.contacts.ContactsDetailDialogFragment.ContactsDetailCallback
 import meow.softer.mydiary.contacts.LetterSortLayout.OnTouchingLetterChangedListener
@@ -23,7 +19,8 @@ import meow.softer.mydiary.shared.SPFManager.getLocalLanguageCode
 import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.ThemeManager.Companion.instance
 import meow.softer.mydiary.shared.gui.LetterComparator
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper.Companion.setStatusBar
+import meow.softer.mydiary.ui.home.ContactScreen
+import meow.softer.mydiary.ui.home.MainViewModel
 import java.util.Locale
 
 class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetailCallback,
@@ -44,12 +41,12 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
      * UI
      */
     private var themeManager: ThemeManager? = null
-    private var RL_contacts_content: RelativeLayout? = null
-    private var IV_contacts_title: TextView? = null
-    private var EDT_main_contacts_search: EditText? = null
-    private var STL_contacts: LetterSortLayout? = null
-    private var IV_contacts_add: ImageView? = null
-    private var TV_contact_short_sort: TextView? = null
+//    private var RL_contacts_content: RelativeLayout? = null
+//    private var IV_contacts_title: TextView? = null
+//    private var EDT_main_contacts_search: EditText? = null
+//    private var STL_contacts: LetterSortLayout? = null
+//    private var IV_contacts_add: ImageView? = null
+//    private var TV_contact_short_sort: TextView? = null
 
     /**
      * DB
@@ -65,13 +62,52 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
 
     //Contacts list from DB
     private var contactsNamesList: MutableList<ContactsEntity>? = null
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_contacts)
-         
-        setStatusBar(this, true)
-        setStatusBarBgColor()
+//        setContentView(R.layout.activity_contacts)
+        setContent {
+            val contactTitle = viewModel.contactTitle.collectAsStateWithLifecycle().value
+            val contactsData = viewModel.contacts.collectAsStateWithLifecycle().value
+            ContactScreen(
+                headerName = contactTitle,
+                data = contactsData,
+                onAddContact = {
+                    val contactsDetailDialogFragment =
+                        newInstance(
+                            ContactsDetailDialogFragment.ADD_NEW_CONTACTS,
+                            "", "", topicId
+                        )
+                    contactsDetailDialogFragment.show(
+                        supportFragmentManager,
+                        "contactsDetailDialogFragment"
+                    )
+                },
+                onClickContact = {
+                    val callDialogFragment =
+                        CallDialogFragment.newInstance(
+                            it.name,
+                            it.number
+                        )
+                    callDialogFragment.show(supportFragmentManager, "callDialogFragment")
+                },
+                onLongPressContact = {
+                    val contactsDetailDialogFragment =
+                        newInstance(
+                            it.id,
+                            it.name,
+                            it.number,
+                            topicId
+                        )
+                    contactsDetailDialogFragment.show(
+                        supportFragmentManager,
+                        "contactsDetailDialogFragment"
+                    )
+                },
+            )
+            //todo: update background
+        }
 
         themeManager = instance
         initLanguageStr()
@@ -83,39 +119,39 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
         /**
          * init UI
          */
-        RL_contacts_content = findViewById<RelativeLayout>(R.id.RL_contacts_content)
-        RL_contacts_content!!.background = themeManager!!.getContactsBgDrawable(this, topicId)
+//        RL_contacts_content = findViewById<RelativeLayout>(R.id.RL_contacts_content)
+//        RL_contacts_content!!.background = themeManager!!.getContactsBgDrawable(this, topicId) todo
 
-        TV_contact_short_sort = findViewById<TextView>(R.id.TV_contact_short_sort)
-        TV_contact_short_sort!!.setBackgroundColor(themeManager!!.getThemeDarkColor(this@ContactsActivity))
+//        TV_contact_short_sort = findViewById<TextView>(R.id.TV_contact_short_sort)
+//        TV_contact_short_sort!!.setBackgroundColor(themeManager!!.getThemeDarkColor(this@ContactsActivity))
 
-        STL_contacts = findViewById<LetterSortLayout>(R.id.STL_contacts)
-        STL_contacts!!.setSortTextView(TV_contact_short_sort)
-        STL_contacts!!.setOnTouchingLetterChangedListener(this)
+//        STL_contacts = findViewById<LetterSortLayout>(R.id.STL_contacts)
+//        STL_contacts!!.setSortTextView(TV_contact_short_sort)
+//        STL_contacts!!.setOnTouchingLetterChangedListener(this)
 
-        EDT_main_contacts_search = findViewById<EditText>(R.id.EDT_main_contacts_search)
-        IV_contacts_add = findViewById<ImageView>(R.id.IV_contacts_add)
-        IV_contacts_add!!.setOnClickListener(this)
+//        EDT_main_contacts_search = findViewById<EditText>(R.id.EDT_main_contacts_search)
+//        IV_contacts_add = findViewById<ImageView>(R.id.IV_contacts_add)
+//        IV_contacts_add!!.setOnClickListener(this) todo
 
-        IV_contacts_title = findViewById<TextView>(R.id.IV_contacts_title)
+//        IV_contacts_title = findViewById<TextView>(R.id.IV_contacts_title)
         var diaryTitle = intent.getStringExtra("diaryTitle")
         if (diaryTitle == null) {
             diaryTitle = "Contacts"
         }
-        IV_contacts_title!!.text = diaryTitle
-
+//        IV_contacts_title!!.text = diaryTitle
+        viewModel.updateContactTitle(diaryTitle)
 
         /**
          * init RecyclerVie
          */
-        STL_contacts = findViewById<LetterSortLayout>(R.id.STL_contacts)
-        RecyclerView_contacts = findViewById<RecyclerView>(R.id.RecyclerView_contacts)
+//        STL_contacts = findViewById<LetterSortLayout>(R.id.STL_contacts)
+//        RecyclerView_contacts = findViewById<RecyclerView>(R.id.RecyclerView_contacts)
         contactsNamesList = ArrayList<ContactsEntity>()
         dbManager = DBManager(this@ContactsActivity)
 
-        initTopbar()
+//        initTopbar()
         loadContacts()
-        initTopicAdapter()
+//        initTopicAdapter()
     }
 
     private fun initLanguageStr() {
@@ -124,14 +160,14 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
         BN = Locale("bn", "").language
     }
 
-    private fun initTopbar() {
-        EDT_main_contacts_search!!.background.setColorFilter(
-            themeManager!!.getThemeMainColor(this),
-            PorterDuff.Mode.SRC_ATOP
-        )
-        IV_contacts_title!!.setTextColor(themeManager!!.getThemeMainColor(this))
-        IV_contacts_add!!.setColorFilter(themeManager!!.getThemeMainColor(this))
-    }
+//    private fun initTopbar() {
+//        EDT_main_contacts_search!!.background.setColorFilter(
+//            themeManager!!.getThemeMainColor(this),
+//            PorterDuff.Mode.SRC_ATOP
+//        )
+//        IV_contacts_title!!.setTextColor(themeManager!!.getThemeMainColor(this))
+//        IV_contacts_add!!.setColorFilter(themeManager!!.getThemeMainColor(this))
+//    }
 
     private fun loadContacts() {
         contactsNamesList!!.clear()
@@ -161,6 +197,7 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
             }
         }
         contactsNamesList!!.sortWith(LetterComparator())
+        viewModel.updateContactData(contactsNamesList)
     }
 
     private fun sortContactsCN(contactsEntity: ContactsEntity, sortString: String): String {
@@ -189,40 +226,42 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
         layoutManager = LinearLayoutManager(this)
         RecyclerView_contacts!!.setLayoutManager(layoutManager)
         RecyclerView_contacts!!.setHasFixedSize(true)
-        contactsAdapter = ContactsAdapter(this@ContactsActivity,
-            contactsNamesList as MutableList<ContactsEntity?>, topicId, this)
+        contactsAdapter = ContactsAdapter(
+            this@ContactsActivity,
+            contactsNamesList as MutableList<ContactsEntity?>, topicId, this
+        )
         RecyclerView_contacts!!.setAdapter(contactsAdapter)
     }
 
     override fun onClick(v: View) {
-        when (v.id) {
-            R.id.IV_contacts_add -> {
-                val contactsDetailDialogFragment =
-                    newInstance(
-                        ContactsDetailDialogFragment.ADD_NEW_CONTACTS,
-                        "", "", topicId
-                    )
-                contactsDetailDialogFragment.show(
-                    supportFragmentManager,
-                    "contactsDetailDialogFragment"
-                )
-            }
-        }
+//        when (v.id) {
+//            R.id.IV_contacts_add -> {
+//                val contactsDetailDialogFragment =
+//                    newInstance(
+//                        ContactsDetailDialogFragment.ADD_NEW_CONTACTS,
+//                        "", "", topicId
+//                    )
+//                contactsDetailDialogFragment.show(
+//                    supportFragmentManager,
+//                    "contactsDetailDialogFragment"
+//                )
+//            }
+//        }
     }
 
     override fun addContacts() {
         loadContacts()
-        contactsAdapter!!.notifyDataSetChanged()
+//        contactsAdapter!!.notifyDataSetChanged()
     }
 
     override fun updateContacts() {
         loadContacts()
-        contactsAdapter!!.notifyDataSetChanged()
+//        contactsAdapter!!.notifyDataSetChanged()
     }
 
     override fun deleteContacts() {
         loadContacts()
-        contactsAdapter!!.notifyDataSetChanged()
+//        contactsAdapter!!.notifyDataSetChanged()
     }
 
     override fun onTouchingLetterChanged(s: String?) {
@@ -268,8 +307,8 @@ class ContactsActivity : FragmentActivity(), View.OnClickListener, ContactsDetai
         return context.createConfigurationContext(configuration)
     }
 
-    private fun setStatusBarBgColor() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        window.statusBarColor = Color.WHITE
-    }
+//    private fun setStatusBarBgColor() {
+//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+//        window.statusBarColor = Color.WHITE
+//    }
 }

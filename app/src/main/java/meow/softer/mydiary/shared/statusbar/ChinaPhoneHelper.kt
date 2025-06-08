@@ -12,7 +12,6 @@ class ChinaPhoneHelper {
         var deviceStatusBarType = PhoneModel.UNSPECIFIED
             private set
 
-
         fun setStatusBar(activity: Activity, lightMode: Boolean) {
             var result = PhoneModel.OTHER
             if (MIUIHelper().setStatusBarLightMode(activity, lightMode)) {
@@ -25,5 +24,4 @@ class ChinaPhoneHelper {
             }
         }
     }
-
 }

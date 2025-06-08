@@ -124,7 +124,6 @@ class DiaryDialogFragment : DialogFragment() {
         this.dialog!!.setCanceledOnTouchOutside(true)
         val rootView: View = inflater.inflate(R.layout.dialog_fragment_your_name, container)
         val composeView = rootView.findViewById<ComposeView>(R.id.composeView)
-
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {

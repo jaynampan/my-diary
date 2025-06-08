@@ -31,16 +31,12 @@ class ExportAsyncTask(
         fun onExportCompiled(backupZipFilePath: String?)
     }
 
-
     private val backupManager: BackupManager
     private val sdf = SimpleDateFormat("yyyyMMdd_HHmmss")
     private val backupJsonFilePath: String?
     private val backupZipRootPath: String?
     private val backupZipFileName: String
 
-    /*
-     * DB
-     */
     private val dbManager: DBManager
 
     private val progressDialog: ProgressDialog
@@ -62,7 +58,6 @@ class ExportAsyncTask(
             BackupManager.Companion.BACKUP_ZIP_FILE_HEADER + sdf.format(Date()) + BackupManager.Companion.BACKUP_ZIP_FILE_SUB_FILE_NAME
         this.callBack = callBack
         this.progressDialog = ProgressDialog(mContext)
-
         //Init progressDialog
         progressDialog.setMessage(mContext.getString(R.string.process_dialog_loading))
         progressDialog.setCancelable(false)
@@ -218,8 +213,7 @@ class ExportAsyncTask(
                     j++
                 }
                 diaryEntriesCursor.close()
-
-                //Create the BUDiary
+                //Create the BU Diary
                 topic = BackupTopicListBean(
                     topicCursor.getLong(0), topicCursor.getString(1),
                     topicCursor.getInt(7), topicCursor.getInt(5)
@@ -246,7 +240,7 @@ class ExportAsyncTask(
                     j++
                 }
                 contactsEntriesCursor.close()
-                //Create the BUmemo
+                //Create the BU memo
                 topic = BackupTopicListBean(
                     topicCursor.getLong(0), topicCursor.getString(1),
                     topicCursor.getInt(7), topicCursor.getInt(5)

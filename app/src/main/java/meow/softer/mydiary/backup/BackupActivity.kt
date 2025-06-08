@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.Utils
 import meow.softer.mydiary.MainActivity
@@ -52,11 +53,12 @@ class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
                     .padding(5.dp)
 
             ) {
-                Text(text = stringResource(R.string.backup_title),
+                Text(
+                    text = stringResource(R.string.backup_title),
                     fontSize = 28.sp,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(top  = dimensionResource(R.dimen.setting_group_margin_top))
+                        .padding(top = dimensionResource(R.dimen.setting_group_margin_top))
                 )
                 Spacer(Modifier.height(10.dp))
                 Text(
@@ -105,22 +107,24 @@ class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
                         }
                 )
                 Spacer(Modifier.height(10.dp))
+                val backUpPath = viewModel.exportPath.collectAsStateWithLifecycle().value
                 DiaryButton(
                     onClick = {
                         ExportAsyncTask(
                             this@BackupActivity,
                             this@BackupActivity,
-                            viewModel.getBackUpPath()
+                            backUpPath
                         ).execute()
                     },
                     content = {
                         Text(stringResource(R.string.backup_export_button))
                     },
                 )
-                Spacer(Modifier
-                    .height(2.dp)
-                    .padding(horizontal = 5.dp)
-                    .fillMaxWidth()
+                Spacer(
+                    Modifier
+                        .height(2.dp)
+                        .padding(horizontal = 5.dp)
+                        .fillMaxWidth()
 
                 )
                 DashedLine(Modifier.fillMaxWidth())
@@ -146,11 +150,15 @@ class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
                         .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                         .padding(4.dp)
                         .clickable {
-                            val importIntent = Intent(this@BackupActivity, MyDirectoryPickerActivity::class.java)
+                            val importIntent =
+                                Intent(this@BackupActivity, MyDirectoryPickerActivity::class.java)
 
                             importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
                             importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false)
-                            importIntent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE)
+                            importIntent.putExtra(
+                                FilePickerActivity.EXTRA_MODE,
+                                FilePickerActivity.MODE_FILE
+                            )
                             importIntent.putExtra(
                                 FilePickerActivity.EXTRA_START_PATH,
                                 Environment.getExternalStorageDirectory().path
@@ -159,22 +167,24 @@ class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
                         }
                 )
                 Spacer(Modifier.height(10.dp))
+                val importPath = viewModel.importPath.collectAsStateWithLifecycle().value
                 DiaryButton(
                     onClick = {
                         ImportAsyncTask(
                             this@BackupActivity,
                             this@BackupActivity,
-                            viewModel.getImportPath()
+                            importPath
                         ).execute()
                     },
                     content = {
                         Text(stringResource(R.string.backup_import_button))
                     },
                 )
-                Spacer(Modifier
-                    .height(2.dp)
-                    .padding(horizontal = 5.dp)
-                    .fillMaxWidth()
+                Spacer(
+                    Modifier
+                        .height(2.dp)
+                        .padding(horizontal = 5.dp)
+                        .fillMaxWidth()
 
                 )
             }
@@ -213,7 +223,6 @@ class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
             }
         }
     }
-
 
 
     override fun onImportCompiled(importSuccessful: Boolean) {

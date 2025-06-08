@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import com.yalantis.ucrop.UCrop
 import meow.softer.mydiary.R
 import meow.softer.mydiary.shared.ColorTools
@@ -23,11 +24,9 @@ import meow.softer.mydiary.shared.PermissionHelper
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 import java.io.File
 import java.io.IOException
 import kotlin.system.exitProcess
-import androidx.core.graphics.drawable.toDrawable
 
 class SettingActivity : AppCompatActivity(), View.OnClickListener,
     SettingColorPickerFragment.colorPickerCallback, AdapterView.OnItemSelectedListener {

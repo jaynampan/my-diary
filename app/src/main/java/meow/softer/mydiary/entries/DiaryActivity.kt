@@ -56,6 +56,7 @@ class DiaryActivity : FragmentActivity() {
      */
     private var mPagerAdapter: ScreenSlidePagerAdapter? = null
     private var selectedIdx by mutableIntStateOf(0)
+
     /**
      * The diary list for every fragment
      */
@@ -69,6 +70,7 @@ class DiaryActivity : FragmentActivity() {
         if (topicId == -1L) {
             finish()
         }
+
         /**
          * init UI
          */
