@@ -89,6 +89,7 @@ dependencies {
 
     //lib
     implementation(libs.activity.ktx)
+    implementation(libs.activity) //currently added for back press
     implementation(libs.constraintlayout.compose)
 
 
