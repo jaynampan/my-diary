@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
@@ -91,6 +93,27 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
                 }
             )
         }
+        // set back press handler
+        val callback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (!isExit) {
+                    isExit = true
+                    Toast.makeText(this@MainActivity, getString(R.string.main_activity_exit_app), Toast.LENGTH_SHORT)
+                        .show()
+                    val task = object : TimerTask() {
+                        override fun run() {
+                            isExit = false
+                        }
+                    }
+                    backTimer.schedule(task, 2000)
+                }else{
+                    finish()
+                }
+            }
+
+
+        }
+        onBackPressedDispatcher.addCallback(this,callback)
 
         //set status bar
 
@@ -236,24 +259,8 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
 
     override fun onDestroy() {
         mainTopicAdapter = null
+        backTimer.cancel()
         super.onDestroy()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (!isExit) {
-            isExit = true
-            Toast.makeText(this, getString(R.string.main_activity_exit_app), Toast.LENGTH_SHORT)
-                .show()
-            val task = object : TimerTask() {
-                override fun run() {
-                    isExit = false
-                }
-            }
-            backTimer.schedule(task, 2000)
-        } else {
-            super.onBackPressed()
-        }
     }
 
     private fun initProfile() {
@@ -375,7 +382,7 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
         newTopicTitle: String?,
         color: Int,
         topicBgStatus: Int,
-        newTopicBgFileName: String?
+        newBgFileName: String?
     ) {
         val dbManager = DBManager(this)
         dbManager.openDB()
@@ -390,7 +397,7 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
         mainTopicAdapter!!.getList()[position]?.color = color
         mainTopicAdapter!!.notifyDataSetChanged(false)
 
-        updateTopicBg(position, topicBgStatus, newTopicBgFileName)
+        updateTopicBg(position, topicBgStatus, newBgFileName)
 
     }
 
@@ -407,7 +414,9 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
     private fun updateBaseContextLocale(context: Context): Context? {
         val locale = MyDiaryApplication.mLocale
         Log.e("Mytest", "main mLocale:$locale")
-        Locale.setDefault(locale)
+        if (locale != null) {
+            Locale.setDefault(locale)
+        }
         val configuration = context.resources.configuration
         configuration.setLocale(locale)
         return context.createConfigurationContext(configuration)
