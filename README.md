@@ -1,6 +1,8 @@
 ### Introduction
 
-Android diary app with a theme matching the diary app in popular anime movie *Your Name*
+Android diary app with a theme matching the diary app in popular anime movie *Your Name* based on
+MyDiary project by DaxiaK which is unfortunately not maintained anymore. This project wants to offer
+a recreation and enhancement of it with modern architecture and tech stack.
 
 ### Features
 
