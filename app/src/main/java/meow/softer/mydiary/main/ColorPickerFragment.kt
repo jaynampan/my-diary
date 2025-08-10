@@ -13,7 +13,7 @@ import com.larswerkman.holocolorpicker.SVBar
 import meow.softer.mydiary.R
 
 class ColorPickerFragment : DialogFragment(), View.OnClickListener {
-    interface colorPickerCallback {
+    interface ColorPickerCallback {
         fun onColorChange(colorCode: Int, viewId: Int)
     }
 
@@ -25,7 +25,7 @@ class ColorPickerFragment : DialogFragment(), View.OnClickListener {
     private var But_setting_change_color: Button? = null
     private var But_setting_cancel: Button? = null
 
-    private var callback: colorPickerCallback? = null
+    private var callback: ColorPickerCallback? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         // request a window without the title
@@ -62,7 +62,7 @@ class ColorPickerFragment : DialogFragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (callback == null) {
-            callback = targetFragment as colorPickerCallback?
+            callback = targetFragment as ColorPickerCallback?
         }
     }
 
