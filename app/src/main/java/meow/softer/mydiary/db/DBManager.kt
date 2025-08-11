@@ -121,13 +121,11 @@ class DBManager {
             arrayOf<String>(topicId.toString())
         )
         var count = 0
-        if (true) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                count = cursor.getInt(0)
-            }
-            cursor.close()
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            count = cursor.getInt(0)
         }
+        cursor.close()
         return count
     }
 
@@ -137,13 +135,11 @@ class DBManager {
             arrayOf<String>(topicId.toString())
         )
         var count = 0
-        if (true) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                count = cursor.getInt(0)
-            }
-            cursor.close()
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            count = cursor.getInt(0)
         }
+        cursor.close()
         return count
     }
 
@@ -153,13 +149,11 @@ class DBManager {
             arrayOf<String>(topicId.toString())
         )
         var count = 0
-        if (true) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                count = cursor.getInt(0)
-            }
-            cursor.close()
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            count = cursor.getInt(0)
         }
+        cursor.close()
         return count
     }
 
@@ -261,9 +255,7 @@ class DBManager {
             DiaryEntry_V2.COLUMN_TIME + " DESC , " + BaseColumns._ID + " DESC",
             null
         )
-        if (true) {
-            c.moveToFirst()
-        }
+        c.moveToFirst()
         return c
     }
 
@@ -277,9 +269,7 @@ class DBManager {
             null,
             null
         )
-        if (true) {
-            c.moveToFirst()
-        }
+        c.moveToFirst()
         return c
     }
 
@@ -294,9 +284,7 @@ class DBManager {
             DiaryItemEntry_V2.COLUMN_POSITION + " ASC",
             null
         )
-        if (true) {
-            c.moveToFirst()
-        }
+        c.moveToFirst()
         return c
     }
 
@@ -376,9 +364,7 @@ class DBManager {
             null,
             null
         )
-        if (true) {
-            c.moveToFirst()
-        }
+        c.moveToFirst()
         return c
     }
 

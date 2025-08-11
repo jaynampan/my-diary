@@ -29,7 +29,7 @@ fun TopicList(
     onClick: (ITopic) -> Unit
 ) {
     LazyColumn(modifier.fillMaxWidth()) {
-        items(topicList) {
+        items(topicList) { it ->
             TopicItem(topic = it) {  onClick(it)}
         }
     }

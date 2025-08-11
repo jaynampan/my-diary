@@ -56,7 +56,7 @@ class ImportAsyncTask(context: Context, callBack: ImportCallBack, backupZieFileP
     }
 
     override fun doInBackground(vararg voids: Void?): Boolean {
-        var importSuccessful = true
+        var importSuccessful: Boolean
         try {
             val zipManager = ZipManager(mContext)
 

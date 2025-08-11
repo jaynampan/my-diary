@@ -47,7 +47,7 @@ class PhotoOverviewActivity : AppCompatActivity() {
         //Load the data
         loadDiaryImageData(topicId, diaryId)
         //Check any image is exist
-        if (diaryPhotoFileList!!.size > 0) {
+        if (diaryPhotoFileList!!.isNotEmpty()) {
             initRecyclerView()
         } else {
             RLDiaryPhotoOverviewNoImages!!.visibility = View.VISIBLE
@@ -56,8 +56,7 @@ class PhotoOverviewActivity : AppCompatActivity() {
 
     private fun loadDiaryImageData(topicId: Long, diaryId: Long) {
         val diaryRoot = FileManager(this@PhotoOverviewActivity, FileManager.DIARY_ROOT_DIR)
-        val topicRootFile: File?
-        topicRootFile = if (diaryId != -1L) {
+        val topicRootFile = if (diaryId != -1L) {
             File(diaryRoot.dirAbsolutePath + "/" + topicId + "/" + diaryId)
         } else {
             File(diaryRoot.dirAbsolutePath + "/" + topicId)

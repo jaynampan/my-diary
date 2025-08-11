@@ -48,10 +48,8 @@ import meow.softer.mydiary.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.entries.EditDiaryBackDialogFragment
 import meow.softer.mydiary.entries.EditDiaryBackDialogFragment.BackDialogCallback
-import meow.softer.mydiary.entries.diary.ClearDialogFragment
 import meow.softer.mydiary.entries.diary.CopyPhotoTask
 import meow.softer.mydiary.entries.diary.CopyPhotoTask.CopyPhotoCallBack
-import meow.softer.mydiary.entries.diary.DiaryFragment
 import meow.softer.mydiary.entries.diary.DiaryInfoHelper.getWeatherResourceId
 import meow.softer.mydiary.entries.diary.DiaryInfoHelper.moodArray
 import meow.softer.mydiary.entries.diary.DiaryInfoHelper.weatherArray
@@ -382,11 +380,8 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
                 //Make ths ProgressBar show 0.7s+.
                 loadDiaryHandler = Handler()
                 initHandlerOrTaskIsRunning = true
-                loadDiaryHandler!!.postDelayed(object : Runnable {
-                    override fun run() {
-                        //Copy the file into editCash
-                        mTask!!.execute((activity as DiaryActivity).topicId, diaryId)
-                    }
+                loadDiaryHandler!!.postDelayed({ //Copy the file into editCash
+                    mTask!!.execute((activity as DiaryActivity).topicId, diaryId)
                 }, 700)
             } else {
                 diaryFileManager = FileManager(
@@ -457,8 +452,7 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         //Modify dialog size
         val dialog = getDialog()
         if (dialog != null) {
-            val dialogHeight: Int
-            dialogHeight = if (ChinaPhoneHelper.deviceStatusBarType== PhoneModel.OTHER) {
+            val dialogHeight: Int = if (ChinaPhoneHelper.deviceStatusBarType== PhoneModel.OTHER) {
                 (ScreenHelper.getScreenHeight(requireContext())
                         - ScreenHelper.getStatusBarHeight(requireContext())
                         - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 10))

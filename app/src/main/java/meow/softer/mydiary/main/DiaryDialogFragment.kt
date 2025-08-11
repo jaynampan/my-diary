@@ -16,8 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
@@ -25,7 +23,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.ComposeView
@@ -36,13 +33,11 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.yalantis.ucrop.UCrop
-import meow.softer.mydiary.MainActivity
 import meow.softer.mydiary.R
 import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.shared.ViewTools
 import meow.softer.mydiary.ui.home.MainViewModel
 import java.io.File
 

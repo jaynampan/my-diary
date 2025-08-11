@@ -10,11 +10,8 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import meow.softer.mydiary.contacts.ContactsDetailDialogFragment.Companion.newInstance
 import meow.softer.mydiary.contacts.ContactsDetailDialogFragment.ContactsDetailCallback
-import meow.softer.mydiary.contacts.LetterSortLayout.OnTouchingLetterChangedListener
 import meow.softer.mydiary.db.DBManager
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.SPFManager.getLocalLanguageCode
@@ -199,8 +196,7 @@ class ContactsActivity : FragmentActivity(), ContactsDetailCallback {
      * Bangla = 3
      */
     private fun checkLanguage(): String? {
-        val language: String?
-        language = when (getLocalLanguageCode(this)) {
+        val language: String? = when (getLocalLanguageCode(this)) {
             1 -> EN
             2 ->                 // CHINESE;
                 ZH
@@ -220,7 +216,7 @@ class ContactsActivity : FragmentActivity(), ContactsDetailCallback {
 
     private fun updateBaseContextLocale(context: Context): Context? {
         val locale = MyDiaryApplication.mLocale
-        Log.e("Mytest", "contacts mLocale:" + locale)
+        Log.e("Mytest", "contacts mLocale:$locale")
         Locale.setDefault(locale)
         val configuration = context.resources.configuration
         configuration.setLocale(locale)

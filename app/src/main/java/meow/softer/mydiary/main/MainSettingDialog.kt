@@ -11,8 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import meow.softer.mydiary.R
-import meow.softer.mydiary.shared.MyDiaryApplication
-import meow.softer.mydiary.shared.ThemeManager
 
 
 @Composable

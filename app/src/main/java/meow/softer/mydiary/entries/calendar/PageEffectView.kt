@@ -156,10 +156,8 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
         else mWidth
         mCornerY = if (y <= mHeight / 2) 0
         else mHeight
-        mIsRTandLB = if ((mCornerX == 0 && mCornerY == mHeight)
-            || (mCornerX == mWidth && mCornerY == 0)
-        ) true
-        else false
+        mIsRTandLB = ((mCornerX == 0 && mCornerY == mHeight)
+                || (mCornerX == mWidth && mCornerY == 0))
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -436,8 +434,7 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
      * Description : 绘制翻起页的阴影
      */
     fun drawCurrentPageShadow(canvas: Canvas) {
-        val degree: Double
-        degree = if (mIsRTandLB) {
+        val degree: Double = if (mIsRTandLB) {
             (Math.PI
                     / 4
                     - atan2(
@@ -456,8 +453,7 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
         val d1 = 25f * 1.414 * cos(degree)
         val d2 = 25f * 1.414 * sin(degree)
         val x = (mTouch.x + d1).toFloat()
-        val y: Float
-        y = if (mIsRTandLB) {
+        val y: Float = if (mIsRTandLB) {
             (mTouch.y + d2).toFloat()
         } else {
             (mTouch.y - d2).toFloat()
@@ -526,8 +522,7 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
             )
         ).toFloat()
         canvas.rotate(rotateDegrees, mBezierControl2.x, mBezierControl2.y)
-        val temp: Float
-        temp = if (mBezierControl2.y < 0) {
+        val temp: Float = if (mBezierControl2.y < 0) {
             mBezierControl2.y - mHeight
         } else {
             mBezierControl2.y
@@ -625,16 +620,14 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
     }
 
     private fun startAnimation(delayMillis: Int) {
-        val dx: Int
-        val dy: Int
         // dx 水平方向滑动的距离，负值会使滚动向左滚动
         // dy 垂直方向滑动的距离，负值会使滚动向上滚动
-        dx = if (mCornerX > 0) {
+        val dx: Int = if (mCornerX > 0) {
             -(mWidth + mTouch.x).toInt()
         } else {
             (mWidth - mTouch.x + mWidth).toInt()
         }
-        dy = if (mCornerY > 0) {
+        val dy: Int = if (mCornerY > 0) {
             (mHeight - mTouch.y).toInt()
         } else {
             (1 - mTouch.y).toInt() // 防止mTouch.y最终变为0

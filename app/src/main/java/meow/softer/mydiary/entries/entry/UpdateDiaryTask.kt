@@ -23,7 +23,7 @@ class UpdateDiaryTask(
     }
 
     private val mContext: Context
-    private val dbManager: DBManager
+    private val dbManager: DBManager = DBManager(context)
     private val time: Long
     private val title: String?
     private val moodPosition: Int
@@ -38,7 +38,6 @@ class UpdateDiaryTask(
     private val callBack: UpdateDiaryCallBack
 
     init {
-        this.dbManager = DBManager(context)
         this.mContext = context
         this.time = time
         this.title = title

@@ -17,7 +17,7 @@ import meow.softer.mydiary.entries.photo.PhotoOverviewAdapter.SimpleViewHolder
 import meow.softer.mydiary.shared.ScreenHelper
 
 class PhotoOverviewAdapter(
-    private val mContext: Context,
+    mContext: Context,
     private val diaryPhotoFileList: ArrayList<Uri?>
 ) : RecyclerView.Adapter<SimpleViewHolder?>() {
     interface OnItemClickListener {

@@ -15,19 +15,14 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 class ZipManager(context: Context) {
-    private val diaryFileManager: FileManager
+    //Copy data form diary
+    private val diaryFileManager: FileManager = FileManager(context, FileManager.DIARY_ROOT_DIR)
     private val BUFFER_SIZE = 2048
-
-
-    init {
-        //Copy data form diary
-        diaryFileManager = FileManager(context, FileManager.DIARY_ROOT_DIR)
-    }
 
     fun zipFileAtPath(backupJsonFilePath: String?, toLocation: String?): Boolean {
         val sourceFile = diaryFileManager.dir
         try {
-            var origin: BufferedInputStream? = null
+            var origin: BufferedInputStream?
             val dest = FileOutputStream(toLocation)
             val out = ZipOutputStream(
                 BufferedOutputStream(
@@ -80,7 +75,7 @@ class ZipManager(context: Context) {
         basePathLength: Int
     ) {
         val fileList = folder.listFiles()
-        var origin: BufferedInputStream? = null
+        var origin: BufferedInputStream?
         for (file in fileList!!) {
             if (file.isDirectory()) {
                 zipSubFolder(out, file, basePathLength)
