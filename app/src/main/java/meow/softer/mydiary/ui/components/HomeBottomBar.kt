@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -41,9 +42,10 @@ fun HomeBottomBar(
         Icon(
             modifier = Modifier
                 .padding(end = 12.dp)
-                .clickable { onSettingClick() },
+                .clickable { onSettingClick() }
+                .testTag("home_bottom_bar_setting"),
             painter = painterResource(R.drawable.ic_settings_black_24dp),
-            contentDescription = null,
+            contentDescription = "Setting Icon",
             tint = primaryLight
         )
     }
