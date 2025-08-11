@@ -33,6 +33,8 @@ android {
         }
         debug {
             isMinifyEnabled = false
+            applicationIdSuffix = ".debug" // for installing release and debug builds side by side
+            versionNameSuffix = "-DEBUG"
         }
     }
     compileOptions {
@@ -90,7 +92,6 @@ dependencies {
 
     //lib
     implementation(libs.activity.ktx)
-    implementation(libs.activity) //currently added for back press
     implementation(libs.constraintlayout.compose)
 
 
