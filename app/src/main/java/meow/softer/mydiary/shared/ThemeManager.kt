@@ -107,7 +107,7 @@ class ThemeManager private constructor() {
 
     fun getProfileBgDrawable(context: Context): Drawable? {
         val bgDrawable: Drawable?
-        Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme)
+        Log.e("Mytest", "getProfileBgDrawable currentTheme:$currentTheme")
         when (currentTheme) {
             TAKI -> {
                 Log.e("Mytest", "getProfileBgDrawable currentTheme:" + currentTheme + "TAKI")
@@ -144,7 +144,7 @@ class ThemeManager private constructor() {
     }
 
     fun getProfilePictureDrawable(context: Context): Drawable? {
-        var pictureDrawable: Drawable? = try {
+        val pictureDrawable: Drawable? = try {
             val settingFM = FileManager(context, FileManager.SETTING_DIR)
             val pictureFile = File(
                 (settingFM.dirAbsolutePath

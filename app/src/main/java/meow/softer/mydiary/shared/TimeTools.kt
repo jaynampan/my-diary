@@ -4,11 +4,10 @@ import android.content.Context
 import meow.softer.mydiary.R
 
 class TimeTools private constructor(context: Context) {
-    val monthsFullName: Array<String?>?
+    val monthsFullName: Array<String?>? = context.resources.getStringArray(R.array.months_full_name)
     val daysFullName: Array<String?>?
 
     init {
-        monthsFullName = context.resources.getStringArray(R.array.months_full_name)
         daysFullName = context.resources.getStringArray(R.array.days_full_name)
     }
 

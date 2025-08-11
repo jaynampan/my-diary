@@ -1,6 +1,5 @@
 package meow.softer.mydiary.main
 
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import meow.softer.mydiary.R
 
+
+@Composable
+fun MainSettingDialogWrapper(modifier: Modifier = Modifier) {
+
+}
 @Composable
 fun MainSettingDialog(
     bgColor: Color,

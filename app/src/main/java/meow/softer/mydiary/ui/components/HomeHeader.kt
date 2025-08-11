@@ -24,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,8 +45,10 @@ fun HomeHeader(
     ) {
         Image(
             painter = bgPainter,
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            contentDescription = "profile background picture",
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag("home_header_bg")
         )
         UserProfileArea(
             modifier = Modifier

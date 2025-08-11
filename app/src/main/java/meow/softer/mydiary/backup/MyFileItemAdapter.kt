@@ -36,11 +36,10 @@ class MyFileItemAdapter(dirNames: MutableList<String?>) :
 
      inner class FileItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ll_file_item: LinearLayout? = itemView.findViewById<LinearLayout?>(R.id.file_item_container)
-         private val iv_item_icon: ImageView?
+         private val iv_item_icon: ImageView? = itemView.findViewById<ImageView?>(R.id.file_item_icon)
          val tv_item_name: TextView
 
         init {
-            this.iv_item_icon = itemView.findViewById<ImageView?>(R.id.file_item_icon)
             this.tv_item_name = itemView.findViewById<TextView>(R.id.file_item_name)
         }
     }

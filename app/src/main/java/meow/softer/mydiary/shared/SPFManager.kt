@@ -71,7 +71,7 @@ object SPFManager {
         PE.commit()
         // note here it must use commit for immediate writing,because the thread will
         // be destroyed soon but apply is async,will do its job when the system is free
-        Log.e("Mytest", "language code was set to" + languageCode)
+        Log.e("Mytest", "language code was set to$languageCode")
     }
 
     /**

@@ -148,8 +148,8 @@ class ContactsDetailDialogFragment : DialogFragment(), View.OnClickListener {
     }
 
     private fun buttonOkEvent() {
-        if (EDT_contacts_detail_name!!.getText().toString().length > 0
-            && EDT_contacts_detail_phone_number!!.getText().toString().length > 0
+        if (EDT_contacts_detail_name!!.getText().toString().isNotEmpty()
+            && EDT_contacts_detail_phone_number!!.getText().toString().isNotEmpty()
         ) {
             if (isEditMode) {
                 updateContacts()

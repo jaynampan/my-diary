@@ -104,11 +104,7 @@ class PasswordActivity : AppCompatActivity(), View.OnClickListener {
         But_password_key_0!!.setOnClickListener(this)
         But_password_key_backspace!!.setOnClickListener(this)
 
-        But_password_key_cancel!!.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                finish()
-            }
-        })
+        But_password_key_cancel!!.setOnClickListener { finish() }
 
         clearUiPassword()
         initUI()

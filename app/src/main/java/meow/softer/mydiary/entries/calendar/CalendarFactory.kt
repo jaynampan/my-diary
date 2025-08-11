@@ -12,7 +12,7 @@ import meow.softer.mydiary.shared.TimeTools
 import java.util.Calendar
 
 class CalendarFactory(
-    private val mContext: Context,
+    mContext: Context,
     private val calendar: Calendar,
     width: Int,
     height: Int
@@ -24,7 +24,7 @@ class CalendarFactory(
     private val datePaint: Paint
     private val dayPaint: Paint
 
-    private val textRect: Rect
+    private val textRect: Rect = Rect(0, 0, width, height)
     private val textBaseX: Int
     private val centerBaseLine: Float
     private val monthBaseLine: Float
@@ -35,7 +35,6 @@ class CalendarFactory(
 
 
     init {
-        textRect = Rect(0, 0, width, height)
         scale = mContext.resources.displayMetrics.density
 
         //init Color

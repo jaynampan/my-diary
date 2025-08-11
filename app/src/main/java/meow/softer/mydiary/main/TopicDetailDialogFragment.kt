@@ -32,7 +32,7 @@ import meow.softer.mydiary.shared.gui.MyDiaryButton
 import java.io.File
 
 class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
-    ColorPickerFragment.colorPickerCallback {
+    ColorPickerFragment.ColorPickerCallback {
     interface TopicCreatedCallback {
         fun TopicCreated(topicTitle: String?, type: Int, color: Int)
 

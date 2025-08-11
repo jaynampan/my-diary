@@ -28,10 +28,10 @@ class DiaryItemHelper(private val itemContentLayout: LinearLayout) : Observable(
         if (diaryItem is DiaryPhoto) {
             nowPhotoCount++
         }
-        Log.e("Mytest", "DiaryItemHelper diaryItem:" + diaryItem.toString())
+        Log.e("Mytest", "DiaryItemHelper diaryItem:$diaryItem")
         diaryItemList.add(diaryItem)
-        Log.e("Mytest", "DiaryItemHelper diaryItemL.list:" + diaryItemList.toString())
-        Log.e("Mytest", "DiaryItemHelper itemContentLayout:" + itemContentLayout.toString())
+        Log.e("Mytest", "DiaryItemHelper diaryItemL.list:$diaryItemList")
+        Log.e("Mytest", "DiaryItemHelper itemContentLayout:$itemContentLayout")
         itemContentLayout.addView(diaryItemList[diaryItemList.size - 1]!!.view)
         if (diaryItemList.size == 1) {
             setChanged()
@@ -104,8 +104,7 @@ class DiaryItemHelper(private val itemContentLayout: LinearLayout) : Observable(
         fun getVisibleHeight(context: Context): Int {
             val topbarHeight =
                 context.resources.getDimensionPixelOffset(R.dimen.top_bar_height)
-            val imageHeight: Int
-            imageHeight = if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
+            val imageHeight: Int = if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
                 (ScreenHelper.getScreenHeight(context)
                         - ScreenHelper.getStatusBarHeight(context) //diary activity top bar  -( diary info + diary bottom bar + diary padding+ photo padding)
                         - topbarHeight - ScreenHelper.dpToPixel(

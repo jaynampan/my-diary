@@ -93,15 +93,13 @@ class MemoActivity : FragmentActivity(), View.OnClickListener, MemoCallback, OnS
         rootView = findViewById<View>(R.id.Layout_memo_item_add)
         TV_memo_item_add = rootView!!.findViewById<TextView>(R.id.TV_memo_item_add)
         TV_memo_item_add!!.setTextColor(ThemeManager.instance!!.getThemeDarkColor(this))
-        TV_memo_item_add!!.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                val editMemoDialogFragment = newInstance(
-                    topicId, -1, true, ""
-                )
+        TV_memo_item_add!!.setOnClickListener {
+            val editMemoDialogFragment = newInstance(
+                topicId, -1, true, ""
+            )
 
-                editMemoDialogFragment.show(supportFragmentManager, "editMemoDialogFragment")
-            }
-        })
+            editMemoDialogFragment.show(supportFragmentManager, "editMemoDialogFragment")
+        }
         memoList = ArrayList<MemoEntity>()
         dbManager = DBManager(this@MemoActivity)
 

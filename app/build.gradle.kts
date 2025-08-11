@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.dependency.checker) // check for dependency updates
 }
 
 android {
@@ -41,8 +42,8 @@ android {
 
     }
 
-    kotlin{
-        compilerOptions{
+    kotlin {
+        compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }

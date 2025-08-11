@@ -10,7 +10,7 @@ class MIUIHelper : IStatusBarFontHelper {
         if (window != null) {
             try {
                 val clazz: Class<*> = window.javaClass
-                var darkModeFlag = 0
+                var darkModeFlag: Int
                 val layoutParams = Class.forName("android.view.MiuiWindowManager\$LayoutParams")
                 val field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE")
                 darkModeFlag = field.getInt(layoutParams)
