@@ -26,7 +26,7 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemView
 import meow.softer.mydiary.MainActivity
 import meow.softer.mydiary.R
 import meow.softer.mydiary.contacts.ContactsActivity
-import meow.softer.mydiary.db.DBManager
+import meow.softer.mydiary.data.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.main.TopicDetailDialogFragment.Companion.newInstance
 import meow.softer.mydiary.main.topic.ITopic

@@ -13,7 +13,7 @@ import meow.softer.mydiary.backup.obj.BUContactsEntries
 import meow.softer.mydiary.backup.obj.BUDiaryEntries
 import meow.softer.mydiary.backup.obj.BUDiaryItem
 import meow.softer.mydiary.backup.obj.BUMemoEntries
-import meow.softer.mydiary.db.DBManager
+import meow.softer.mydiary.data.db.DBManager
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.shared.FileManager
 import java.io.FileWriter

@@ -1,4 +1,4 @@
-package meow.softer.mydiary.db
+package meow.softer.mydiary.data.db
 
 import android.content.ContentValues
 import android.content.Context
@@ -6,14 +6,14 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
 import android.provider.BaseColumns
-import meow.softer.mydiary.db.DBStructure.ContactsEntry
-import meow.softer.mydiary.db.DBStructure.DiaryEntry
-import meow.softer.mydiary.db.DBStructure.DiaryEntry_V2
-import meow.softer.mydiary.db.DBStructure.DiaryItemEntry_V2
-import meow.softer.mydiary.db.DBStructure.MemoEntry
-import meow.softer.mydiary.db.DBStructure.MemoOrderEntry
-import meow.softer.mydiary.db.DBStructure.TopicEntry
-import meow.softer.mydiary.db.DBStructure.TopicOrderEntry
+import meow.softer.mydiary.data.db.DBStructure.ContactsEntry
+import meow.softer.mydiary.data.db.DBStructure.DiaryEntry
+import meow.softer.mydiary.data.db.DBStructure.DiaryEntry_V2
+import meow.softer.mydiary.data.db.DBStructure.DiaryItemEntry_V2
+import meow.softer.mydiary.data.db.DBStructure.MemoEntry
+import meow.softer.mydiary.data.db.DBStructure.MemoOrderEntry
+import meow.softer.mydiary.data.db.DBStructure.TopicEntry
+import meow.softer.mydiary.data.db.DBStructure.TopicOrderEntry
 import meow.softer.mydiary.entries.diary.item.IDiaryRow
 
 class DBHelper(context: Context?) :

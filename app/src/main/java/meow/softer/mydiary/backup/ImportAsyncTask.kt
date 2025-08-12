@@ -8,7 +8,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import meow.softer.mydiary.R
 import meow.softer.mydiary.backup.BackupManager.BackupTopicListBean
-import meow.softer.mydiary.db.DBManager
+import meow.softer.mydiary.data.db.DBManager
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.shared.FileManager
 import org.apache.commons.io.FileUtils

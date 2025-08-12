@@ -21,8 +21,10 @@ materialCalendarview = "1.4.3"
 recyclerviewAnimators = "4.0.2"
 playServicesPlaces = "17.1.0"
 photodraweeview = "2.1.0"
+room = "2.7.2"
 ucrop = "2.2.0"
 kotlin = "2.2.0"
+ksp = "2.2.0-2.0.2"
 coreKtx = "1.16.0"
 lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
@@ -32,6 +34,8 @@ navigationCompose = "2.9.3"
 gradleVersionPlugin = "0.52.0"
 
 [libraries]
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 material3 = { module = "androidx.compose.material3:material3" }
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 ui = { module = "androidx.compose.ui:ui" }
@@ -76,3 +80,4 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dependency-checker = {id = "com.github.ben-manes.versions",version.ref = "gradleVersionPlugin"}
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } #ksp needs to match major version with kotlin

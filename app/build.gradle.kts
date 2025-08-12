@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dependency.checker) // check for dependency updates
 }
 
@@ -67,6 +68,11 @@ java {
     }
 }
 
+// Set Room Schema export location
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     // kotlin & compose
     implementation(libs.lifecycle.runtime.ktx)
@@ -119,6 +125,9 @@ dependencies {
     implementation(libs.recyclerview.animators)
     implementation(libs.play.services.places)
     implementation(libs.photodraweeview)
+    // room database
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
     // desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
