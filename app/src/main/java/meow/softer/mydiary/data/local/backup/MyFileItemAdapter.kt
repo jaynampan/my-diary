@@ -1,4 +1,4 @@
-package meow.softer.mydiary.backup
+package meow.softer.mydiary.data.local.backup
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import meow.softer.mydiary.R
-import meow.softer.mydiary.backup.MyFileItemAdapter.FileItemViewHolder
+import meow.softer.mydiary.data.local.backup.MyFileItemAdapter.FileItemViewHolder
 
 class MyFileItemAdapter(dirNames: MutableList<String?>) :
     RecyclerView.Adapter<FileItemViewHolder?>() {

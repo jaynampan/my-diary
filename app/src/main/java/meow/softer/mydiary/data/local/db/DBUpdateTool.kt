@@ -1,10 +1,10 @@
-package meow.softer.mydiary.data.db
+package meow.softer.mydiary.data.local.db
 
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
-import meow.softer.mydiary.data.db.DBStructure.TopicEntry
+import meow.softer.mydiary.data.local.db.DBStructure.TopicEntry
 
 class DBUpdateTool(private val db: SQLiteDatabase) {
     /*

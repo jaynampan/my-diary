@@ -44,7 +44,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlacePicker
 import meow.softer.mydiary.R
-import meow.softer.mydiary.data.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.entries.EditDiaryBackDialogFragment
 import meow.softer.mydiary.entries.EditDiaryBackDialogFragment.BackDialogCallback

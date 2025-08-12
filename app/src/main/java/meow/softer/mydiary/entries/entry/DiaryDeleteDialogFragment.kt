@@ -3,7 +3,7 @@ package meow.softer.mydiary.entries.entry
 import android.os.Bundle
 import android.view.View
 import meow.softer.mydiary.R
-import meow.softer.mydiary.data.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.gui.CommonDialogFragment
 import org.apache.commons.io.FileUtils

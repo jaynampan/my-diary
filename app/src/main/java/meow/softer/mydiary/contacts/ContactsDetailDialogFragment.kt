@@ -12,7 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import meow.softer.mydiary.R
-import meow.softer.mydiary.data.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.shared.ThemeManager.Companion.instance
 import meow.softer.mydiary.shared.gui.MyDiaryButton
 

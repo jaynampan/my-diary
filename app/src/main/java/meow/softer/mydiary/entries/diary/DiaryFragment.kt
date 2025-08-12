@@ -37,8 +37,8 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.gson.Gson
 import meow.softer.mydiary.R
-import meow.softer.mydiary.backup.obj.BUDiaryEntries
-import meow.softer.mydiary.backup.obj.BUDiaryItem
+import meow.softer.mydiary.data.local.backup.obj.BUDiaryEntries
+import meow.softer.mydiary.data.local.backup.obj.BUDiaryItem
 import meow.softer.mydiary.entries.BaseDiaryFragment
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.entries.diary.ClearDialogFragment.ClearDialogCallback

@@ -1,4 +1,4 @@
-package meow.softer.mydiary.data.db
+package meow.softer.mydiary.data.local.db
 
 import android.content.ContentValues
 import android.content.Context
@@ -7,13 +7,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.provider.BaseColumns
 import android.util.Log
-import meow.softer.mydiary.data.db.DBStructure.ContactsEntry
-import meow.softer.mydiary.data.db.DBStructure.DiaryEntry_V2
-import meow.softer.mydiary.data.db.DBStructure.DiaryItemEntry_V2
-import meow.softer.mydiary.data.db.DBStructure.MemoEntry
-import meow.softer.mydiary.data.db.DBStructure.MemoOrderEntry
-import meow.softer.mydiary.data.db.DBStructure.TopicEntry
-import meow.softer.mydiary.data.db.DBStructure.TopicOrderEntry
+import meow.softer.mydiary.data.local.db.DBStructure.ContactsEntry
+import meow.softer.mydiary.data.local.db.DBStructure.DiaryEntry_V2
+import meow.softer.mydiary.data.local.db.DBStructure.DiaryItemEntry_V2
+import meow.softer.mydiary.data.local.db.DBStructure.MemoEntry
+import meow.softer.mydiary.data.local.db.DBStructure.MemoOrderEntry
+import meow.softer.mydiary.data.local.db.DBStructure.TopicEntry
+import meow.softer.mydiary.data.local.db.DBStructure.TopicOrderEntry
 
 class DBManager {
     private var context: Context? = null
@@ -541,9 +541,7 @@ class DBManager {
             DBStructure.DiaryEntry.TABLE_NAME, null, null, null,
             null, null, null, null
         )
-        if (c != null) {
-            c.moveToFirst()
-        }
+        c.moveToFirst()
         return c
     }
 

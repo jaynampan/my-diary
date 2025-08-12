@@ -12,7 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
 import meow.softer.mydiary.contacts.ContactsActivity
-import meow.softer.mydiary.data.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.main.DiaryDialogFragment
 import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback

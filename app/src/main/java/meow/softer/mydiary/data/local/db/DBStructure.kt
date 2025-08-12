@@ -1,4 +1,4 @@
-package meow.softer.mydiary.data.db
+package meow.softer.mydiary.data.local.db
 
 import android.provider.BaseColumns
 

@@ -7,5 +7,4 @@ plugins {
     alias(libs.plugins.dependency.checker) apply false
     // room database
     alias(libs.plugins.devtools.ksp) apply false
-
 }

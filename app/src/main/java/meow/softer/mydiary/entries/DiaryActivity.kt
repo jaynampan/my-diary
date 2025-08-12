@@ -23,7 +23,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import meow.softer.mydiary.R
-import meow.softer.mydiary.data.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.entries.calendar.CalendarFragment
 import meow.softer.mydiary.entries.diary.DiaryFragment
 import meow.softer.mydiary.entries.diary.item.IDiaryRow

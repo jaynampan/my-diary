@@ -69,17 +69,17 @@
             android:name="meow.softer.mydiary.security.PasswordActivity"
             android:theme="@style/Theme_NoActionBar_FullScreen" />
         <activity
-            android:name="meow.softer.mydiary.backup.BackupActivity"
+            android:name="meow.softer.mydiary.data.local.backup.BackupActivity"
             android:theme="@style/Theme_NoActionBar_FullScreen" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="meow.softer.mydiary.backup.MyDirectoryPickerActivity"
+            android:name="meow.softer.mydiary.data.local.backup.MyDirectoryPickerActivity"
             android:theme="@style/Theme_NoActionBar_FullScreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="meow.softer.mydiary.backup.DirectoryPickerActivity"
+            android:name="meow.softer.mydiary.data.local.backup.DirectoryPickerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />

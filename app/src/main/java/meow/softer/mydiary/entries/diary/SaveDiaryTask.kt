@@ -6,7 +6,7 @@ import android.os.AsyncTask
 import android.util.Log
 import android.widget.Toast
 import meow.softer.mydiary.R
-import meow.softer.mydiary.data.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.entries.diary.item.DiaryItemHelper
 import meow.softer.mydiary.entries.diary.item.IDiaryRow
 import meow.softer.mydiary.shared.FileManager

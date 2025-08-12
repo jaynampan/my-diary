@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import meow.softer.mydiary.R
-import meow.softer.mydiary.data.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.memo.EditMemoDialogFragment.Companion.newInstance
 import meow.softer.mydiary.memo.EditMemoDialogFragment.MemoCallback
 import meow.softer.mydiary.shared.MyDiaryApplication
