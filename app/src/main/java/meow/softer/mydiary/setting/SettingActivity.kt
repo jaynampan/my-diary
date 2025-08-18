@@ -24,6 +24,8 @@ import meow.softer.mydiary.shared.PermissionHelper
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
+import meow.softer.mydiary.util.debug
+import meow.softer.mydiary.util.error
 import java.io.File
 import java.io.IOException
 import kotlin.system.exitProcess
@@ -257,6 +259,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
 
     @SuppressLint("UseKtx")
     override fun onColorChange(colorCode: Int, viewId: Int) {
+        debug(TAG,"colorCode = ${colorCode.toHexString()} , viewId= viewID")
         when (viewId) {
             R.id.IV_setting_theme_main_color -> {
                 tempMainColorCode = colorCode
@@ -271,6 +274,9 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
             R.id.IV_setting_theme_dark_color -> IV_setting_theme_dark_color!!.setImageDrawable(
                 ColorDrawable(colorCode)
             )
+            else->{
+                error(TAG,"got unknown view Id in onColorChange")
+            }
         }
     }
 
@@ -406,6 +412,7 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     companion object {
+        private const val TAG ="SettingActivity"
         private const val SELECT_PROFILE_BG = 0
     }
 }

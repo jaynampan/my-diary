@@ -107,40 +107,40 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
         }
 
         val rootView = inflater.inflate(R.layout.dialog_fragment_topic_detail, container)
-        LL_topic_detail_content = rootView.findViewById<LinearLayout?>(R.id.LL_topic_detail_content)
+        LL_topic_detail_content = rootView.findViewById(R.id.LL_topic_detail_content)
         LL_topic_detail_content!!.setBackgroundColor(
             ThemeManager.instance!!.getThemeMainColor(requireContext())
         )
 
-        EDT_topic_detail_title = rootView.findViewById<EditText?>(R.id.EDT_topic_detail_title)
-        IV_topic_color = rootView.findViewById<ImageView?>(R.id.IV_topic_color)
+        EDT_topic_detail_title = rootView.findViewById(R.id.EDT_topic_detail_title)
+        IV_topic_color = rootView.findViewById(R.id.IV_topic_color)
         IV_topic_color!!.setOnClickListener(this)
         setTextColor(topicColorCode)
 
-        But_topic_detail_ok = rootView.findViewById<MyDiaryButton?>(R.id.But_topic_detail_ok)
+        But_topic_detail_ok = rootView.findViewById(R.id.But_topic_detail_ok)
         But_topic_detail_ok!!.setOnClickListener(this)
         But_topic_detail_cancel =
-            rootView.findViewById<MyDiaryButton?>(R.id.But_topic_detail_cancel)
+            rootView.findViewById(R.id.But_topic_detail_cancel)
         But_topic_detail_cancel!!.setOnClickListener(this)
 
         if (isEditMode) {
             RL_topic_detail_topic_bg =
-                rootView.findViewById<RelativeLayout?>(R.id.RL_topic_detail_topic_bg)
+                rootView.findViewById(R.id.RL_topic_detail_topic_bg)
             RL_topic_detail_topic_bg!!.visibility = View.VISIBLE
 
             LL_topic_detail_default_bg =
-                rootView.findViewById<LinearLayout?>(R.id.LL_topic_detail_default_bg)
+                rootView.findViewById(R.id.LL_topic_detail_default_bg)
             LL_topic_detail_default_bg!!.visibility = View.VISIBLE
 
             IV_topic_detail_topic_bg =
-                rootView.findViewById<ImageView?>(R.id.IV_topic_detail_topic_bg)
+                rootView.findViewById(R.id.IV_topic_detail_topic_bg)
             IV_topic_detail_topic_bg!!.setImageDrawable(
                 ThemeManager.instance!!.getTopicBgDrawable(requireContext(), topicId, topicType)
             )
             IV_topic_detail_topic_bg!!.setOnClickListener(this)
 
             But_topic_detail_default_bg =
-                rootView.findViewById<MyDiaryButton?>(R.id.But_topic_detail_default_bg)
+                rootView.findViewById(R.id.But_topic_detail_default_bg)
             But_topic_detail_default_bg!!.visibility = View.VISIBLE
             But_topic_detail_default_bg!!.setOnClickListener(this)
             //Check current topic bg is default or not.
@@ -148,7 +148,7 @@ class TopicDetailDialogFragment : DialogFragment(), View.OnClickListener,
 
             EDT_topic_detail_title!!.setText(title)
         } else {
-            SP_topic_detail_type = rootView.findViewById<Spinner?>(R.id.SP_topic_detail_type)
+            SP_topic_detail_type = rootView.findViewById(R.id.SP_topic_detail_type)
             SP_topic_detail_type!!.visibility = View.VISIBLE
             initTopicTypeSpinner()
         }
