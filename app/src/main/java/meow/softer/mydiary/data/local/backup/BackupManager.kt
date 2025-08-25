@@ -1,9 +1,9 @@
-package meow.softer.mydiary.backup
+package meow.softer.mydiary.data.local.backup
 
 import android.os.Build
-import meow.softer.mydiary.backup.obj.BUContactsEntries
-import meow.softer.mydiary.backup.obj.BUDiaryEntries
-import meow.softer.mydiary.backup.obj.BUMemoEntries
+import meow.softer.mydiary.data.local.backup.obj.BUContactsEntries
+import meow.softer.mydiary.data.local.backup.obj.BUDiaryEntries
+import meow.softer.mydiary.data.local.backup.obj.BUMemoEntries
 
 class BackupManager {
     var create_time: Long = 0

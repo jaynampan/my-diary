@@ -1,4 +1,4 @@
-package meow.softer.mydiary.backup.obj
+package meow.softer.mydiary.data.local.backup.obj
 
 class BUMemoEntries(
     val memoEntriesContent: String?,

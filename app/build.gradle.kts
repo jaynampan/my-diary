@@ -1,9 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dependency.checker) // check for dependency updates
 }
 
@@ -33,6 +35,8 @@ android {
         }
         debug {
             isMinifyEnabled = false
+            applicationIdSuffix = ".debug" // for installing release and debug builds side by side
+            versionNameSuffix = "-DEBUG"
         }
     }
     compileOptions {
@@ -50,6 +54,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
 }
@@ -63,6 +68,11 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+// Set Room Schema export location
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -90,7 +100,6 @@ dependencies {
 
     //lib
     implementation(libs.activity.ktx)
-    implementation(libs.activity) //currently added for back press
     implementation(libs.constraintlayout.compose)
 
 
@@ -118,6 +127,23 @@ dependencies {
     implementation(libs.recyclerview.animators)
     implementation(libs.play.services.places)
     implementation(libs.photodraweeview)
+    // room database
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
     // desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+}
+
+// Configure the dependencyUpdates Gradle Plugin to check for stable releases only
+// https://github.com/ben-manes/gradle-versions-plugin
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return isStable.not()
+}
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+        isNonStable(candidate.version) && !isNonStable(currentVersion)
+    }
 }

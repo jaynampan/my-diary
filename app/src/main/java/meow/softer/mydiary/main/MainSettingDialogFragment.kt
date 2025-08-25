@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import meow.softer.mydiary.R
-import meow.softer.mydiary.backup.BackupActivity
+import meow.softer.mydiary.data.local.backup.BackupActivity
 import meow.softer.mydiary.security.PasswordActivity
 import meow.softer.mydiary.setting.SettingActivity
 import meow.softer.mydiary.shared.MyDiaryApplication

@@ -1,18 +1,29 @@
 package meow.softer.mydiary.main
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.DialogFragment
-import com.larswerkman.holocolorpicker.ColorPicker
-import com.larswerkman.holocolorpicker.SVBar
-import meow.softer.mydiary.R
+import meow.softer.mydiary.ui.components.DiaryButton
+import meow.softer.mydiary.util.debug
 
-class ColorPickerFragment : DialogFragment(), View.OnClickListener {
+class ColorPickerFragment : DialogFragment() {
     interface ColorPickerCallback {
         fun onColorChange(colorCode: Int, viewId: Int)
     }
@@ -20,10 +31,6 @@ class ColorPickerFragment : DialogFragment(), View.OnClickListener {
     private var oldColor = 0
     private var viewId = 0
 
-    private var picker: ColorPicker? = null
-    private var svBar: SVBar? = null
-    private var But_setting_change_color: Button? = null
-    private var But_setting_cancel: Button? = null
 
     private var callback: ColorPickerCallback? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -39,24 +46,26 @@ class ColorPickerFragment : DialogFragment(), View.OnClickListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        this.dialog!!.setCanceledOnTouchOutside(true)
+    ): View {
+        dialog?.setCanceledOnTouchOutside(true)
         if (viewId == View.NO_ID) {
             dismiss()
         }
-        val rootView = inflater.inflate(R.layout.dialog_fragment_color_picker, container)
-        picker = rootView.findViewById<View?>(R.id.picker) as ColorPicker
-        svBar = rootView.findViewById<View?>(R.id.svbar) as SVBar?
-        But_setting_change_color =
-            rootView.findViewById<View?>(R.id.But_setting_change_color) as Button
-        But_setting_cancel = rootView.findViewById<View?>(R.id.But_setting_cancel) as Button
-
-        picker!!.addSVBar(svBar)
-        picker!!.setOldCenterColor(oldColor)
-
-        But_setting_change_color!!.setOnClickListener(this)
-        But_setting_cancel!!.setOnClickListener(this)
-        return rootView
+        debug(TAG, "onCreate View")
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                ColorPickerDialog(
+                    onConfirm = {
+                        callback!!.onColorChange(Color.HSVToColor(it), viewId = viewId)
+                        dismiss()
+                    },
+                    onCancel = {
+                        dismiss()
+                    }
+                )
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,18 +75,8 @@ class ColorPickerFragment : DialogFragment(), View.OnClickListener {
         }
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.But_setting_change_color -> {
-                callback!!.onColorChange(picker!!.color, viewId)
-                dismiss()
-            }
-
-            R.id.But_setting_cancel -> dismiss()
-        }
-    }
-
     companion object {
+        private const val TAG = "ColorPickerFragment"
         fun newInstance(oldColor: Int, viewId: Int): ColorPickerFragment {
             val args = Bundle()
             val fragment = ColorPickerFragment()

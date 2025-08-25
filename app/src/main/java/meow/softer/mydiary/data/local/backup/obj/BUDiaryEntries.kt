@@ -1,4 +1,4 @@
-package meow.softer.mydiary.backup.obj
+package meow.softer.mydiary.data.local.backup.obj
 
 class BUDiaryEntries(
     val diaryEntriesId: Long, val diaryEntriesTime: Long, val diaryEntriesTitle: String?,

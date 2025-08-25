@@ -1,6 +1,6 @@
 [versions]
 advrecyclerview = "1.0.0"
-androidGradlePlugin = "8.12.0"
+androidGradlePlugin = "8.12.1"
 androidSegmented = "1.0.6"
 appcompat = "1.7.1"
 circleimageview = "3.1.0"
@@ -21,17 +21,21 @@ materialCalendarview = "1.4.3"
 recyclerviewAnimators = "4.0.2"
 playServicesPlaces = "17.1.0"
 photodraweeview = "2.1.0"
+room = "2.7.2"
 ucrop = "2.2.0"
-kotlin = "2.2.0"
-coreKtx = "1.16.0"
+kotlin = "2.2.10"
+ksp = "2.2.10-2.0.2" #ksp needs to match major version with kotlin
+coreKtx = "1.17.0"
 lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
-composeBom = "2025.07.00"
+composeBom = "2025.08.00"
 constraintlayoutCompose = "1.1.1"
 navigationCompose = "2.9.3"
 gradleVersionPlugin = "0.52.0"
 
 [libraries]
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 material3 = { module = "androidx.compose.material3:material3" }
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 ui = { module = "androidx.compose.ui:ui" }
@@ -43,7 +47,6 @@ ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityCompose" }
-activity = { module = "androidx.activity:activity", version.ref = "activityCompose" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 
 advrecyclerview = { module = "com.h6ah4i.android.widget.advrecyclerview:advrecyclerview", version.ref = "advrecyclerview" }
@@ -76,3 +79,4 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dependency-checker = {id = "com.github.ben-manes.versions",version.ref = "gradleVersionPlugin"}
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

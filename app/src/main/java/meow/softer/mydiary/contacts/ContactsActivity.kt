@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import meow.softer.mydiary.contacts.ContactsDetailDialogFragment.Companion.newInstance
 import meow.softer.mydiary.contacts.ContactsDetailDialogFragment.ContactsDetailCallback
-import meow.softer.mydiary.db.DBManager
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.SPFManager.getLocalLanguageCode
 import meow.softer.mydiary.shared.ThemeManager

@@ -1,4 +1,4 @@
-package meow.softer.mydiary.backup
+package meow.softer.mydiary.data.local.backup
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -8,12 +8,12 @@ import android.util.Log
 import android.widget.Toast
 import com.google.gson.GsonBuilder
 import meow.softer.mydiary.R
-import meow.softer.mydiary.backup.BackupManager.BackupTopicListBean
-import meow.softer.mydiary.backup.obj.BUContactsEntries
-import meow.softer.mydiary.backup.obj.BUDiaryEntries
-import meow.softer.mydiary.backup.obj.BUDiaryItem
-import meow.softer.mydiary.backup.obj.BUMemoEntries
-import meow.softer.mydiary.db.DBManager
+import meow.softer.mydiary.data.local.backup.BackupManager.BackupTopicListBean
+import meow.softer.mydiary.data.local.backup.obj.BUContactsEntries
+import meow.softer.mydiary.data.local.backup.obj.BUDiaryEntries
+import meow.softer.mydiary.data.local.backup.obj.BUDiaryItem
+import meow.softer.mydiary.data.local.backup.obj.BUMemoEntries
+import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.shared.FileManager
 import java.io.FileWriter
