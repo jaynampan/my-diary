@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import meow.softer.mydiary.contacts.ContactsActivity
 import meow.softer.mydiary.data.local.db.DBManager
@@ -72,6 +73,7 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContent {
             DiaryNav(
                 mainViewModel = mainViewModel,

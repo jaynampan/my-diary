@@ -127,6 +127,8 @@ dependencies {
     implementation(libs.recyclerview.animators)
     implementation(libs.play.services.places)
     implementation(libs.photodraweeview)
+    // splash screen
+    implementation(libs.splash.screen)
     // room database
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

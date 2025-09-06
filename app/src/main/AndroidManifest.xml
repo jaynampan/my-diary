@@ -23,17 +23,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyDiary">
+        android:theme="@style/Theme.MyDiary.Splash">
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme_NoActionBar_FullScreen">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".init.InitActivity"
             android:exported="true"
             android:theme="@style/Theme_NoActionBar_FullScreen">
             <intent-filter>
