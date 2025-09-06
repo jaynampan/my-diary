@@ -26,8 +26,7 @@
         android:theme="@style/Theme.MyDiary.Splash">
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme_NoActionBar_FullScreen">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,34 +40,26 @@
             android:name="meow.softer.mydiary.entries.DiaryActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="meow.softer.mydiary.entries.photo.PhotoOverviewActivity"
-            android:theme="@style/Theme_NoActionBar_FullScreen" />
+            android:name="meow.softer.mydiary.entries.photo.PhotoOverviewActivity"/>
         <activity
-            android:name="meow.softer.mydiary.entries.photo.PhotoDetailViewerActivity"
-            android:theme="@style/Theme_NoActionBar_FullScreen" />
+            android:name="meow.softer.mydiary.entries.photo.PhotoDetailViewerActivity"/>
         <activity
             android:name="meow.softer.mydiary.memo.MemoActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="meow.softer.mydiary.setting.SettingActivity"
-            android:theme="@style/Theme_NoActionBar_FullScreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="meow.softer.mydiary.main.AboutActivity"
-            android:theme="@style/Theme_NoActionBar_FullScreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="meow.softer.mydiary.security.PasswordActivity"
-            android:theme="@style/Theme_NoActionBar_FullScreen" />
+            android:name="meow.softer.mydiary.security.PasswordActivity"/>
         <activity
-            android:name="meow.softer.mydiary.data.local.backup.BackupActivity"
-            android:theme="@style/Theme_NoActionBar_FullScreen" />
+            android:name="meow.softer.mydiary.data.local.backup.BackupActivity"/>
         <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:name="com.yalantis.ucrop.UCropActivity"/>
         <activity
             android:name="meow.softer.mydiary.data.local.backup.MyDirectoryPickerActivity"
-            android:theme="@style/Theme_NoActionBar_FullScreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="meow.softer.mydiary.data.local.backup.DirectoryPickerActivity"

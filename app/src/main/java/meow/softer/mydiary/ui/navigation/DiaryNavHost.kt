@@ -8,13 +8,13 @@ import androidx.navigation.compose.rememberNavController
 import meow.softer.mydiary.main.ProfileDialogWrapper
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.ui.home.AboutScreen
-import meow.softer.mydiary.ui.home.HomeWrapper
-import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.home.HomeScreen
+import meow.softer.mydiary.ui.home.HomeViewModel
 
 
 @Composable
 fun DiaryNav(
-    mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
     onTopicClick: (ITopic) -> Unit,
     onSettingClick: () -> Unit,
     onProfileClick: () -> Unit
@@ -26,8 +26,8 @@ fun DiaryNav(
         startDestination = "Home"
     ) {
         composable(route = "Home") {
-            HomeWrapper(
-                mainViewModel = mainViewModel,
+            HomeScreen(
+                homeViewModel = homeViewModel,
                 onProfileClick = { onProfileClick() },
                 onSettingClick = {
                     onSettingClick()
@@ -40,7 +40,7 @@ fun DiaryNav(
         }
         dialog(route = "ProfileDialog") {
             ProfileDialogWrapper(
-                mainViewModel = mainViewModel,
+                homeViewModel = homeViewModel,
                 onClick = { it ->
                     when (it) {
                         "Dismiss" -> {

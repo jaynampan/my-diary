@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
@@ -31,7 +32,7 @@ import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.home.HomeViewModel
 import meow.softer.mydiary.ui.navigation.DiaryNav
 import org.apache.commons.io.FileUtils
 import java.io.File
@@ -69,14 +70,15 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
     private var themeManager: ThemeManager? = null
     private var EDT_main_topic_search: EditText? = null
 
-    private val mainViewModel: MainViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
+        enableEdgeToEdge()
         setContent {
             DiaryNav(
-                mainViewModel = mainViewModel,
+                homeViewModel = homeViewModel,
                 onTopicClick = { gotoTopic(it) },
                 onSettingClick = {
                     val mainSettingDialogFragment = MainSettingDialogFragment()
@@ -270,9 +272,9 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
             YourNameIs = themeManager!!.getThemeUserName(this@MainActivity)
         }
         //TV_main_profile_username!!.text = YourNameIs
-        mainViewModel.updateUserName(YourNameIs)
+        homeViewModel.updateUserName(YourNameIs)
         //LL_main_profile!!.background = themeManager!!.getProfileBgDrawable(this)
-        mainViewModel.updateHeaderBgPic(themeManager!!.getProfileBgPainter(this))
+        homeViewModel.updateHeaderBgPic(themeManager!!.getProfileBgPainter(this))
     }
 
     private fun loadTopic() {
@@ -306,12 +308,12 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
             topicCursor.moveToNext()
         }
         topicCursor.close()
-        mainViewModel.updateTopicData(topicList!!)
+        homeViewModel.updateTopicData(topicList!!)
     }
 
     private fun loadProfilePicture() {
         //IV_main_profile_picture!!.setImageDrawable(themeManager!!.getProfilePictureDrawable(this))
-        mainViewModel.updateUserPic(themeManager!!.getProfilePicPainter(this))
+        homeViewModel.updateUserPic(themeManager!!.getProfilePicPainter(this))
 
     }
 

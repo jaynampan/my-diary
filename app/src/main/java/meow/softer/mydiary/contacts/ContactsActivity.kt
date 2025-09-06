@@ -19,7 +19,7 @@ import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.ThemeManager.Companion.instance
 import meow.softer.mydiary.shared.gui.LetterComparator
 import meow.softer.mydiary.ui.home.ContactScreen
-import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.home.HomeViewModel
 import java.util.Locale
 
 class ContactsActivity : FragmentActivity(), ContactsDetailCallback {
@@ -38,7 +38,7 @@ class ContactsActivity : FragmentActivity(), ContactsDetailCallback {
 
     //Contacts list from DB
     private var contactList: MutableList<ContactsEntity>? = null
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

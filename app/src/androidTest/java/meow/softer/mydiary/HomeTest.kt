@@ -9,21 +9,14 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.NoMatchingRootException
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.Root
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.AssertionFailedError
-import meow.softer.mydiary.ui.App
-import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.home.HomeViewModel
 import meow.softer.mydiary.ui.navigation.DiaryNav
-import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,12 +27,12 @@ class HomeTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val mainViewModel = MainViewModel()
+    private val homeViewModel = HomeViewModel()
     @Before
     fun setup(){
         composeTestRule.setContent {
             DiaryNav(
-                mainViewModel = mainViewModel,
+                homeViewModel = homeViewModel,
                 onTopicClick = {},
                 onSettingClick = {},
                 onProfileClick = {},

@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import meow.softer.mydiary.contacts.ContactsEntity
 import meow.softer.mydiary.main.topic.ITopic
 
-class MainViewModel : ViewModel() {
+class HomeViewModel : ViewModel() {
     val userName = MutableStateFlow("User")
     val userPainter = MutableStateFlow<Painter?>(null)
     val headerBgPainter = MutableStateFlow<Painter?>(null)
     val topicData = MutableStateFlow<List<ITopic>>(listOf())
-    val contactTitle = MutableStateFlow<String>("")
-    val importPath = MutableStateFlow<String>("")
-    val exportPath = MutableStateFlow<String>("")
+    val contactTitle = MutableStateFlow("")
+    val importPath = MutableStateFlow("")
+    val exportPath = MutableStateFlow("")
     val contacts = MutableStateFlow<List<ContactGroup>>(emptyList())
     val contactBackgroundPainter = MutableStateFlow<Painter?>(null)
 

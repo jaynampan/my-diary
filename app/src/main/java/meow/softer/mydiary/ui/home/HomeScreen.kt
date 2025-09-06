@@ -1,33 +1,42 @@
 package meow.softer.mydiary.ui.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import meow.softer.mydiary.R
+import meow.softer.mydiary.main.topic.Diary
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.ui.components.HomeBottomBar
 import meow.softer.mydiary.ui.components.HomeHeader
 import meow.softer.mydiary.ui.components.TopicList
 import meow.softer.mydiary.ui.theme.DiaryTheme
+import meow.softer.mydiary.util.debug
 
 @Composable
-fun HomeWrapper(
-    mainViewModel: MainViewModel,
-    onProfileClick: () -> Unit,
-    onSettingClick: () -> Unit,
-    onTopicClick: (ITopic) -> Unit,
+fun HomeScreen(
+    homeViewModel: HomeViewModel,
+    onProfileClick: () -> Unit = {},
+    onSettingClick: () -> Unit = {},
+    onTopicClick: (ITopic) -> Unit = {},
 ) {
-    val userName = mainViewModel.userName.collectAsStateWithLifecycle().value
-    val profilePic = mainViewModel.userPainter.collectAsStateWithLifecycle().value
+    val userName = homeViewModel.userName.collectAsStateWithLifecycle().value
+    val profilePic = homeViewModel.userPainter.collectAsStateWithLifecycle().value
         ?: painterResource(R.drawable.ic_person_picture_default)
-    val bgPainter = mainViewModel.headerBgPainter.collectAsStateWithLifecycle().value
+    val headerBg = homeViewModel.headerBgPainter.collectAsStateWithLifecycle().value
+    debug("HomeScreen", "headerBg: $headerBg")
+    val bgPainter = headerBg
         ?: painterResource(R.drawable.profile_theme_bg_taki)
-    val topicListData = mainViewModel.topicData.collectAsStateWithLifecycle().value
+    debug("HomeScreen", "bgPainter: $bgPainter, ")
+    val topicListData = homeViewModel.topicData.collectAsStateWithLifecycle().value
     DiaryTheme {
-        HomeScreen(
+        HomeScreenContent(
             profilePic = profilePic,
             bgPainter = bgPainter,
             userName = userName,
@@ -46,7 +55,7 @@ fun HomeWrapper(
 }
 
 @Composable
-fun HomeScreen(
+fun HomeScreenContent(
     profilePic: Painter,
     bgPainter: Painter,
     userName: String,
@@ -55,7 +64,7 @@ fun HomeScreen(
     onSettingClick: () -> Unit,
     onTopicClick: (ITopic) -> Unit
 ) {
-    Column {
+    Column(modifier = Modifier.statusBarsPadding()) {
         HomeHeader(
             profilePic = profilePic,
             bgPainter = bgPainter,
@@ -69,6 +78,33 @@ fun HomeScreen(
         )
         HomeBottomBar(
             onSettingClick = { onSettingClick() }
+        )
+    }
+}
+
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+
+    )
+@Composable
+private fun HomeScreenContentPreview() {
+    DiaryTheme {
+        HomeScreenContent(
+            profilePic = painterResource(R.drawable.ic_person_picture_default),
+            bgPainter = painterResource(R.drawable.profile_theme_bg_taki),
+            userName = "Hello User",
+            topics = listOf(
+                Diary(
+                    id = 1,
+                    title = "Sample Diary",
+                    color = Color.Red.toArgb()
+                ).apply { count = 8L }
+            ),
+            onProfileClick = {},
+            onSettingClick = {},
+            onTopicClick = {}
         )
     }
 }

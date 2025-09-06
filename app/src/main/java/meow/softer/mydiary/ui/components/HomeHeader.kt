@@ -48,7 +48,8 @@ fun HomeHeader(
             contentDescription = "profile background picture",
             modifier = Modifier
                 .fillMaxSize()
-                .testTag("home_header_bg")
+                .testTag("home_header_bg"),
+            contentScale = androidx.compose.ui.layout.ContentScale.Crop
         )
         UserProfileArea(
             modifier = Modifier

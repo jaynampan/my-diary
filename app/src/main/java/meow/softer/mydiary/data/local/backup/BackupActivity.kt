@@ -35,7 +35,7 @@ import meow.softer.mydiary.data.local.backup.ExportAsyncTask.ExportCallBack
 import meow.softer.mydiary.data.local.backup.ImportAsyncTask.ImportCallBack
 import meow.softer.mydiary.ui.components.DashedLine
 import meow.softer.mydiary.ui.components.DiaryButton
-import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.home.HomeViewModel
 import java.io.File
 
 class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
@@ -43,7 +43,7 @@ class BackupActivity : AppCompatActivity(), ExportCallBack, ImportCallBack {
     private val IMPORT_SRC_PICKER_CODE = 1
 
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

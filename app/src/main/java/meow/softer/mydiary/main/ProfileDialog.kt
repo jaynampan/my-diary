@@ -34,18 +34,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import meow.softer.mydiary.R
 import meow.softer.mydiary.ui.components.DiaryButton
-import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.home.HomeViewModel
 import meow.softer.mydiary.ui.theme.primaryLight
 
 @Composable
 fun ProfileDialogWrapper(
-    mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
     onClick: (String) -> Unit
 ) {
 
-    val profilePainter = mainViewModel.userPainter.collectAsStateWithLifecycle().value
+    val profilePainter = homeViewModel.userPainter.collectAsStateWithLifecycle().value
         ?: painterResource(R.drawable.ic_person_picture_default)
-    val userName = mainViewModel.userName.collectAsStateWithLifecycle().value
+    val userName = homeViewModel.userName.collectAsStateWithLifecycle().value
     ProfileDialog(
         painter = profilePainter,
         userName = userName ,
@@ -53,7 +53,7 @@ fun ProfileDialogWrapper(
         onConfirm = { onClick("Confirm") },
         onChooseProfile = { onClick("Photo") },
         onResetProfile = { onClick("Reset") },
-        updateUserName = {mainViewModel.updateUserName(it)},
+        updateUserName = {homeViewModel.updateUserName(it)},
     )
 
 }

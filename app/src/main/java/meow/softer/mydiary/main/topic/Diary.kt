@@ -13,7 +13,4 @@ class Diary(
     override var isPinned: Boolean = false
 ) : ITopic {
     override var count: Long = 0
-
-
-
 }

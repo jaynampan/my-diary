@@ -53,7 +53,8 @@ fun TopicItem(
         ) {
             Icon(
                 painter = painterResource(topic.icon),
-                contentDescription = null
+                contentDescription = null,
+                tint = Color(topic.color)
             )
             Spacer(Modifier.width(10.dp))
             Text(

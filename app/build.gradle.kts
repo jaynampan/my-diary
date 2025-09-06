@@ -129,6 +129,8 @@ dependencies {
     implementation(libs.photodraweeview)
     // splash screen
     implementation(libs.splash.screen)
+    // data store preferences
+    implementation(libs.datastore.preferences)
     // room database
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

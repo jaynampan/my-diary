@@ -38,7 +38,7 @@ import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.ui.home.MainViewModel
+import meow.softer.mydiary.ui.home.HomeViewModel
 import java.io.File
 
 
@@ -70,7 +70,7 @@ class DiaryDialogFragment : DialogFragment() {
      * UI
      */
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: HomeViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -83,7 +83,7 @@ class DiaryDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         var YourNameIs = SPFManager.getYourName(requireContext())
         if (YourNameIs.isEmpty()) {
             YourNameIs = ThemeManager.instance!!.getThemeUserName(requireContext())
@@ -123,7 +123,7 @@ class DiaryDialogFragment : DialogFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ProfileDialogWrapper(
-                    mainViewModel = viewModel,
+                    homeViewModel = viewModel,
                     onClick = { it ->
                         when (it) {
                             "Dismiss" -> {
