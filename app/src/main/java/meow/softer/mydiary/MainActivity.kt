@@ -41,16 +41,9 @@ import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 
-class MainActivity : FragmentActivity(), TopicCreatedCallback,
-    YourNameCallback,
+class MainActivity : FragmentActivity(),
     TopicDeleteDialogFragment.DeleteCallback {
-    private var isExit: Boolean
 
-    init {
-        // Back button event
-        isExit = false
-
-    }
 
 
     private var mainTopicAdapter: MainTopicAdapter? = null
@@ -60,9 +53,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
      * DB
      */
     private var dbManager: DBManager? = null
-
-
-    private val backTimer = Timer()
 
     /*
      * UI
@@ -96,27 +86,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
                 }
             )
         }
-        // set back press handler
-        val callback = object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                if (!isExit) {
-                    isExit = true
-                    Toast.makeText(this@MainActivity, getString(R.string.main_activity_exit_app), Toast.LENGTH_SHORT)
-                        .show()
-                    val task = object : TimerTask() {
-                        override fun run() {
-                            isExit = false
-                        }
-                    }
-                    backTimer.schedule(task, 2000)
-                }else{
-                    finish()
-                }
-            }
-
-
-        }
-        onBackPressedDispatcher.addCallback(this,callback)
 
         //set status bar
 
@@ -127,8 +96,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
         dbManager = DBManager(this@MainActivity)
 
         initProfile()
-        //initBottomBar()
-        //initTopicAdapter()
         loadProfilePicture()
 
 
@@ -136,8 +103,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
         dbManager!!.openDB()
         loadTopic()
         dbManager!!.closeDB()
-
-        SPFManager.setFirstRun(this, false)
 
     }
 
@@ -262,7 +227,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
 
     override fun onDestroy() {
         mainTopicAdapter = null
-        backTimer.cancel()
         super.onDestroy()
     }
 
@@ -334,81 +298,6 @@ class MainActivity : FragmentActivity(), TopicCreatedCallback,
         dbManager!!.closeDB()
         //mWrappedAdapter!!.notifyDataSetChanged()
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun TopicCreated(topicTitle: String?, type: Int, color: Int) {
-        dbManager!!.openDB()
-        //Create newTopic into List first
-        val newTopicId = dbManager!!.insertTopic(topicTitle, type, color)
-        //This ITopic is temp object to order
-        topicList!!.add(
-            0,
-            element = object : ITopic {
-
-                override var title: String?
-                    get() = topicTitle
-                    set(value) {}
-                override val type: Int
-                    get() = type
-                override val id: Long
-                    get() = newTopicId
-                override val icon: Int
-                    get() = 0
-                override var count: Long
-                    get() = 0
-                    set(value) {}
-                override var color: Int
-                    get() = color
-                    set(value) {}
-                override var isPinned: Boolean
-                    get() = false
-                    set(value) {}
-            })
-        //Get size
-        var orderNumber = topicList!!.size
-        //Remove this topic order
-        dbManager!!.deleteAllCurrentTopicOrder()
-        //sort the topic order
-        for (topic in topicList!!) {
-            dbManager!!.insertTopicOrder(topic.id, (--orderNumber).toLong())
-        }
-        loadTopic()
-        dbManager!!.closeDB()
-        mainTopicAdapter!!.notifyDataSetChanged(true)
-        //Clear the filter
-        EDT_main_topic_search!!.setText("")
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun TopicUpdated(
-        position: Int,
-        newTopicTitle: String?,
-        color: Int,
-        topicBgStatus: Int,
-        newBgFileName: String?
-    ) {
-        val dbManager = DBManager(this)
-        dbManager.openDB()
-        dbManager.updateTopic(
-            mainTopicAdapter!!.getList()[position]!!.id,
-            newTopicTitle,
-            color
-        )
-        dbManager.closeDB()
-        //Update filter list
-        mainTopicAdapter!!.getList()[position]?.title = newTopicTitle
-        mainTopicAdapter!!.getList()[position]?.color = color
-        mainTopicAdapter!!.notifyDataSetChanged(false)
-
-        updateTopicBg(position, topicBgStatus, newBgFileName)
-
-    }
-
-    override fun updateName() {
-        initProfile()
-        loadProfilePicture()
-    }
-
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(updateBaseContextLocale(base))
