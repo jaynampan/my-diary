@@ -2,12 +2,12 @@ package meow.softer.mydiary.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import meow.softer.mydiary.data.local.dao.ContactDao
-import meow.softer.mydiary.data.local.dao.DiaryDao
-import meow.softer.mydiary.data.local.dao.DiaryItemDao
-import meow.softer.mydiary.data.local.dao.MemoDao
-import meow.softer.mydiary.data.local.dao.MemoOrderDao
-import meow.softer.mydiary.data.local.dao.TopicDao
+import meow.softer.mydiary.data.local.db.dao.ContactDao
+import meow.softer.mydiary.data.local.db.dao.DiaryDao
+import meow.softer.mydiary.data.local.db.dao.DiaryItemDao
+import meow.softer.mydiary.data.local.db.dao.MemoDao
+import meow.softer.mydiary.data.local.db.dao.MemoOrderDao
+import meow.softer.mydiary.data.local.db.dao.TopicDao
 import meow.softer.mydiary.data.entity.ContactEntry
 import meow.softer.mydiary.data.entity.DiaryEntry
 import meow.softer.mydiary.data.entity.DiaryItem
@@ -15,7 +15,7 @@ import meow.softer.mydiary.data.entity.MemoEntry
 import meow.softer.mydiary.data.entity.MemoOrder
 import meow.softer.mydiary.data.entity.TopicEntry
 import meow.softer.mydiary.data.entity.TopicOrder
-import meow.softer.mydiary.data.local.dao.TopicOrderDao
+import meow.softer.mydiary.data.local.db.dao.TopicOrderDao
 
 const val DatabaseVersion = 1
 

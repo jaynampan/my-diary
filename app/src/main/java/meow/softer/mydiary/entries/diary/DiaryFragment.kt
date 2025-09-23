@@ -35,10 +35,7 @@ import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.gms.location.places.ui.PlacePicker
-import com.google.gson.Gson
 import meow.softer.mydiary.R
-import meow.softer.mydiary.data.local.backup.obj.BUDiaryEntries
-import meow.softer.mydiary.data.local.backup.obj.BUDiaryItem
 import meow.softer.mydiary.entries.BaseDiaryFragment
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.entries.diary.ClearDialogFragment.ClearDialogCallback
@@ -283,7 +280,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
         diaryItemHelper = DiaryItemHelper(LL_diary_item_content!!)
         clearDiaryPage()
         //Revert the auto saved diary
-        revertAutoSaveDiary()
+//        revertAutoSaveDiary()
     }
 
     override fun onStart() {
@@ -309,7 +306,7 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
     override fun onPause() {
         super.onPause()
         //Auto Save the diary
-        autoSaveDiary()
+//        autoSaveDiary()
     }
 
     override fun onStop() {
@@ -487,101 +484,103 @@ class DiaryFragment : BaseDiaryFragment(), View.OnClickListener, PhotoCallBack, 
         SPFManager.clearDiaryAutoSave(requireContext(), topicId)
     }
 
-    private fun autoSaveDiary() {
-        if (diaryItemHelper!!.itemSize > 0) {
-            val diaryItemItemList: MutableList<BUDiaryItem?> = ArrayList<BUDiaryItem?>()
-            for (x in 0..<diaryItemHelper!!.itemSize) {
-                diaryItemItemList.add(
-                    BUDiaryItem(
-                        diaryItemHelper!!.get(x)!!.type,
-                        diaryItemHelper!!.get(x)!!.position,
-                        diaryItemHelper!!.get(x)!!.content
-                    )
-                )
-            }
-            var locationName = TV_diary_location!!.getText().toString()
-            if (noLocation == locationName) {
-                locationName = ""
-            }
-            val autoSaveDiary = BUDiaryEntries(
-                BUDiaryEntries.NO_BU_DIARY_ID, BUDiaryEntries.NO_BU_DIARY_TIME,
-                EDT_diary_title!!.getText().toString(),
-                SP_diary_mood!!.selectedItemPosition,
-                SP_diary_weather!!.selectedItemPosition,
-                diaryItemHelper!!.nowPhotoCount > 0,
-                locationName, diaryItemItemList
-            )
-            SPFManager.setDiaryAutoSave(requireContext(), topicId, Gson().toJson(autoSaveDiary))
-        }
-    }
+//    private fun autoSaveDiary() {
+//        if (diaryItemHelper!!.itemSize > 0) {
+//            val diaryItemItemList: MutableList<BUDiaryItem?> = ArrayList<BUDiaryItem?>()
+//            for (x in 0..<diaryItemHelper!!.itemSize) {
+//                diaryItemItemList.add(
+//                    BUDiaryItem(
+//                        diaryItemHelper!!.get(x)!!.type,
+//                        diaryItemHelper!!.get(x)!!.position,
+//                        diaryItemHelper!!.get(x)!!.content
+//                    )
+//                )
+//            }
+//            var locationName = TV_diary_location!!.getText().toString()
+//            if (noLocation == locationName) {
+//                locationName = ""
+//            }
+//            val autoSaveDiary = BUDiaryEntries(
+//                BUDiaryEntries.NO_BU_DIARY_ID, BUDiaryEntries.NO_BU_DIARY_TIME,
+//                EDT_diary_title!!.getText().toString(),
+//                SP_diary_mood!!.selectedItemPosition,
+//                SP_diary_weather!!.selectedItemPosition,
+//                diaryItemHelper!!.nowPhotoCount > 0,
+//                locationName, diaryItemItemList
+//            )
+//            SPFManager.setDiaryAutoSave(requireContext(), topicId, Gson().toJson(autoSaveDiary))
+//        }
+//    }
+    //todo: update
 
-    /**
-     * Revert diray from SPF
-     */
-    private fun revertAutoSaveDiary() {
-        if (SPFManager.getDiaryAutoSave(requireContext(), topicId) != null) {
-            try {
-                val autoSaveDiary = Gson().fromJson<BUDiaryEntries>(
-                    SPFManager.getDiaryAutoSave(requireContext(), topicId),
-                    BUDiaryEntries::class.java
-                )
-                //Title
-                EDT_diary_title!!.setText(autoSaveDiary.diaryEntriesTitle)
-
-                //load location
-                val locationName = autoSaveDiary.diaryEntriesLocation
-                if (locationName != null && "" != locationName) {
-                    isLocation = true
-                    TV_diary_location!!.text = locationName
-                } else {
-                    isLocation = false
-                }
-                initLocationIcon()
-                setIcon(autoSaveDiary.diaryEntriesMood, autoSaveDiary.diaryEntriesWeather)
-                loadDiaryItemContent(autoSaveDiary)
-            } catch (e: Exception) {
-                Log.e(TAG, "Load auto save fail", e)
-            }
-            TV_diary_item_content_hint!!.visibility = View.INVISIBLE
-        } else {
-            TV_diary_item_content_hint!!.visibility = View.VISIBLE
-        }
-    }
+//    /**
+//     * Revert diray from SPF
+//     */
+//    private fun revertAutoSaveDiary() {
+//        if (SPFManager.getDiaryAutoSave(requireContext(), topicId) != null) {
+//            try {
+//                val autoSaveDiary = Gson().fromJson<BUDiaryEntries>(
+//                    SPFManager.getDiaryAutoSave(requireContext(), topicId),
+//                    BUDiaryEntries::class.java
+//                )
+//                //Title
+//                EDT_diary_title!!.setText(autoSaveDiary.diaryEntriesTitle)
+//
+//                //load location
+//                val locationName = autoSaveDiary.diaryEntriesLocation
+//                if (locationName != null && "" != locationName) {
+//                    isLocation = true
+//                    TV_diary_location!!.text = locationName
+//                } else {
+//                    isLocation = false
+//                }
+//                initLocationIcon()
+//                setIcon(autoSaveDiary.diaryEntriesMood, autoSaveDiary.diaryEntriesWeather)
+//                loadDiaryItemContent(autoSaveDiary)
+//            } catch (e: Exception) {
+//                Log.e(TAG, "Load auto save fail", e)
+//            }
+//            TV_diary_item_content_hint!!.visibility = View.INVISIBLE
+//        } else {
+//            TV_diary_item_content_hint!!.visibility = View.VISIBLE
+//        }
+//    }
+    //todo: update
 
     private fun setIcon(mood: Int, weather: Int) {
         SP_diary_mood!!.setSelection(mood)
         SP_diary_weather!!.setSelection(weather)
     }
 
-    private fun loadDiaryItemContent(autoSaveDiary: BUDiaryEntries) {
-        for (i in autoSaveDiary.diaryItemList!!.indices) {
-            var diaryItem: IDiaryRow? = null
-            var content: String? = ""
-            if (autoSaveDiary.diaryItemList[i]
-                !!.diaryItemType == IDiaryRow.TYPE_PHOTO
-            ) {
-                diaryItem = DiaryPhoto(requireActivity(), null, IDiaryRow.TYPE_PHOTO, null)
-                content = FileManager.FILE_HEADER +
-                        diaryTempFileManager!!.dirAbsolutePath + "/" +
-                        autoSaveDiary.diaryItemList[i]!!.diaryItemContent
-                diaryItem.setDeleteClickListener(this)
-                //For get the right file name
-                diaryItem.setPhotoFileName(
-                    autoSaveDiary.diaryItemList[i]!!.diaryItemContent
-                )
-            } else if (autoSaveDiary.diaryItemList[i]
-                !!.diaryItemType == IDiaryRow.TYPE_TEXT
-            ) {
-                diaryItem = DiaryText(requireActivity(), null, IDiaryRow.TYPE_TEXT, null)
-                content = autoSaveDiary.diaryItemList[i]!!.diaryItemContent
-            }
-            //In this page , it always is  edit mode.
-            diaryItem!!.setEditMode(true)
-            diaryItem.content = content
-            diaryItem.position = i
-            diaryItemHelper!!.createItem(diaryItem)
-        }
-    }
+//    private fun loadDiaryItemContent(autoSaveDiary: BUDiaryEntries) {
+//        for (i in autoSaveDiary.diaryItemList!!.indices) {
+//            var diaryItem: IDiaryRow? = null
+//            var content: String? = ""
+//            if (autoSaveDiary.diaryItemList[i]
+//                !!.diaryItemType == IDiaryRow.TYPE_PHOTO
+//            ) {
+//                diaryItem = DiaryPhoto(requireActivity(), null, IDiaryRow.TYPE_PHOTO, null)
+//                content = FileManager.FILE_HEADER +
+//                        diaryTempFileManager!!.dirAbsolutePath + "/" +
+//                        autoSaveDiary.diaryItemList[i]!!.diaryItemContent
+//                diaryItem.setDeleteClickListener(this)
+//                //For get the right file name
+//                diaryItem.setPhotoFileName(
+//                    autoSaveDiary.diaryItemList[i]!!.diaryItemContent
+//                )
+//            } else if (autoSaveDiary.diaryItemList[i]
+//                !!.diaryItemType == IDiaryRow.TYPE_TEXT
+//            ) {
+//                diaryItem = DiaryText(requireActivity(), null, IDiaryRow.TYPE_TEXT, null)
+//                content = autoSaveDiary.diaryItemList[i]!!.diaryItemContent
+//            }
+//            //In this page , it always is  edit mode.
+//            diaryItem!!.setEditMode(true)
+//            diaryItem.content = content
+//            diaryItem.position = i
+//            diaryItemHelper!!.createItem(diaryItem)
+//        }
+//    }
 
     private fun saveDiary() {
         //Create locationName

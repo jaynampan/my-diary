@@ -55,21 +55,7 @@
         <activity
             android:name="meow.softer.mydiary.security.PasswordActivity"/>
         <activity
-            android:name="meow.softer.mydiary.data.local.backup.BackupActivity"/>
-        <activity
             android:name="com.yalantis.ucrop.UCropActivity"/>
-        <activity
-            android:name="meow.softer.mydiary.data.local.backup.MyDirectoryPickerActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="meow.softer.mydiary.data.local.backup.DirectoryPickerActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

@@ -1,4 +1,4 @@
-package meow.softer.mydiary.data.local.dao
+package meow.softer.mydiary.data.local.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
