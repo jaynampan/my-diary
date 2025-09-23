@@ -120,10 +120,10 @@ class MainTopicAdapter(
                     filteredTopicList[position]!!.type,
                     filteredTopicList[position]!!.color
                 )
-            createTopicDialogFragment.show(
-                activity.supportFragmentManager,
-                "createTopicDialogFragment"
-            )
+//            createTopicDialogFragment.show(
+//                activity.supportFragmentManager,
+//                "createTopicDialogFragment"
+//            )
         }
 
         holder.IV_topic_left_setting_delete?.setOnClickListener { v ->
@@ -132,10 +132,10 @@ class MainTopicAdapter(
                     position,
                     filteredTopicList[position]!!.title
                 )
-            topicDeleteDialogFragment.show(
-                activity.supportFragmentManager,
-                "topicDeleteDialogFragment"
-            )
+//            topicDeleteDialogFragment.show(
+//                activity.supportFragmentManager,
+//                "topicDeleteDialogFragment"
+//            )
         }
     }
 

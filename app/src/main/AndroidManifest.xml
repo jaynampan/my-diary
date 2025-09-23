@@ -33,38 +33,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="meow.softer.mydiary.contacts.ContactsActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="meow.softer.mydiary.entries.DiaryActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="meow.softer.mydiary.entries.photo.PhotoOverviewActivity"/>
-        <activity
-            android:name="meow.softer.mydiary.entries.photo.PhotoDetailViewerActivity"/>
-        <activity
-            android:name="meow.softer.mydiary.memo.MemoActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="meow.softer.mydiary.setting.SettingActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="meow.softer.mydiary.main.AboutActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="meow.softer.mydiary.security.PasswordActivity"/>
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"/>
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
     </application>
 
 </manifest>
