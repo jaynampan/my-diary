@@ -35,23 +35,23 @@ fun HomeScreen(
         ?: painterResource(R.drawable.profile_theme_bg_taki)
     debug("HomeScreen", "bgPainter: $bgPainter, ")
     val topicListData = homeViewModel.topicData.collectAsStateWithLifecycle().value
-    DiaryTheme {
-        HomeScreenContent(
-            profilePic = profilePic,
-            bgPainter = bgPainter,
-            userName = userName,
-            topics = topicListData,
-            onProfileClick = {
-                onProfileClick()
-            },
-            onSettingClick = {
-                onSettingClick()
-            },
-            onTopicClick = {
-                onTopicClick(it)
-            }
-        )
-    }
+
+    HomeScreenContent(
+        profilePic = profilePic,
+        bgPainter = bgPainter,
+        userName = userName,
+        topics = topicListData,
+        onProfileClick = {
+            onProfileClick()
+        },
+        onSettingClick = {
+            onSettingClick()
+        },
+        onTopicClick = {
+            onTopicClick(it)
+        }
+    )
+
 }
 
 @Composable

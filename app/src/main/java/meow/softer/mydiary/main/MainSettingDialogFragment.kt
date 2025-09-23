@@ -11,9 +11,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import meow.softer.mydiary.R
-//import meow.softer.mydiary.data.local.backup.BackupActivity
 import meow.softer.mydiary.security.PasswordActivity
-import meow.softer.mydiary.setting.SettingActivity
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.ThemeManager
 
@@ -36,7 +34,7 @@ class MainSettingDialogFragment : BottomSheetDialogFragment() {
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MainSettingDialog(
+                BottomSettingDialog(
                     ThemeManager.instance!!.getThemeColor(requireContext()),
                     hasPassword = (requireActivity().application as MyDiaryApplication).isHasPassword
                 ) { it ->
@@ -59,9 +57,9 @@ class MainSettingDialogFragment : BottomSheetDialogFragment() {
                         }
 
                         "Setting" -> {
-                            val settingPageIntent = Intent(activity, SettingActivity::class.java)
-                            requireActivity().startActivity(settingPageIntent)
-                            dismiss()
+//                            val settingPageIntent = Intent(activity, SettingActivity::class.java)
+//                            requireActivity().startActivity(settingPageIntent)
+//                            dismiss()
                         }
 
                         "Lock" -> {

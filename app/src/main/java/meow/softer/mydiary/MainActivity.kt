@@ -1,17 +1,13 @@
 package meow.softer.mydiary
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.ui.App
 import meow.softer.mydiary.ui.home.HomeViewModel
-import java.util.Locale
 
 class MainActivity : ComponentActivity() {
 
@@ -30,13 +26,6 @@ class MainActivity : ComponentActivity() {
                 homeViewModel = homeViewModel,
                 onTopicClick = {
                     //gotoTopic(it)
-                },
-                onSettingClick = {
-//                    val mainSettingDialogFragment = MainSettingDialogFragment()
-//                    mainSettingDialogFragment.show(
-//                        supportFragmentManager,
-//                        "mainSettingDialogFragment"
-//                    )
                 },
                 onProfileClick = {
 //                    val diaryDialogFragment = DiaryDialogFragment()
