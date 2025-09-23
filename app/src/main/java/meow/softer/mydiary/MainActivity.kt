@@ -1,13 +1,10 @@
 package meow.softer.mydiary
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -17,12 +14,9 @@ import meow.softer.mydiary.contacts.ContactsActivity
 import meow.softer.mydiary.data.local.db.DBManager
 import meow.softer.mydiary.entries.DiaryActivity
 import meow.softer.mydiary.main.DiaryDialogFragment
-import meow.softer.mydiary.main.DiaryDialogFragment.YourNameCallback
 import meow.softer.mydiary.main.MainSettingDialogFragment
 import meow.softer.mydiary.main.MainTopicAdapter
-import meow.softer.mydiary.main.TopicDeleteDialogFragment
 import meow.softer.mydiary.main.TopicDetailDialogFragment
-import meow.softer.mydiary.main.TopicDetailDialogFragment.TopicCreatedCallback
 import meow.softer.mydiary.main.topic.Contacts
 import meow.softer.mydiary.main.topic.Diary
 import meow.softer.mydiary.main.topic.ITopic
@@ -38,28 +32,13 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 import java.util.Locale
-import java.util.Timer
-import java.util.TimerTask
 
-class MainActivity : FragmentActivity(),
-    TopicDeleteDialogFragment.DeleteCallback {
-
-
+class MainActivity : FragmentActivity() {
 
     private var mainTopicAdapter: MainTopicAdapter? = null
     private var topicList: MutableList<ITopic>? = null
-
-    /*
-     * DB
-     */
     private var dbManager: DBManager? = null
-
-    /*
-     * UI
-     */
     private var themeManager: ThemeManager? = null
-    private var EDT_main_topic_search: EditText? = null
-
     private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,75 +128,6 @@ class MainActivity : FragmentActivity(),
             }
         }
     }
-
-
-    override fun onTopicDelete(position: Int) {
-        val dbManager = DBManager(this@MainActivity)
-        dbManager.openDB()
-        when (mainTopicAdapter!!.getList()[position]!!.type) {
-            ITopic.TYPE_CONTACTS -> dbManager.delAllContactsInTopic(
-                mainTopicAdapter!!.getList()[position]!!.id
-            )
-
-            ITopic.TYPE_MEMO -> {
-                dbManager.delAllMemoInTopic(mainTopicAdapter!!.getList()[position]!!.id)
-                dbManager.deleteAllCurrentMemoOrder(
-                    mainTopicAdapter!!.getList()[position]!!.id
-                )
-            }
-
-            ITopic.TYPE_DIARY -> {
-                //Clear the auto save content
-                SPFManager.clearDiaryAutoSave(
-                    this,
-                    mainTopicAdapter!!.getList()[position]!!.id
-                )
-                //Because FOREIGN key is not work in this version,
-                //so delete diary item first , then delete diary
-                val diaryCursor =
-                    dbManager.selectDiaryList(mainTopicAdapter!!.getList()[position]!!.id)
-                var i = 0
-                while (i < diaryCursor.count) {
-                    dbManager.delAllDiaryItemByDiaryId(diaryCursor.getLong(0))
-                    diaryCursor.moveToNext()
-                    i++
-                }
-                diaryCursor.close()
-                dbManager.delAllDiaryInTopic(mainTopicAdapter!!.getList()[position]!!.id)
-            }
-        }
-        //Delete the dir if it exist.
-        try {
-            FileUtils.deleteDirectory(
-                FileManager(
-                    this@MainActivity,
-                    mainTopicAdapter!!.getList()[position]!!.type,
-                    mainTopicAdapter!!.getList()[position]!!.id
-                ).dir
-            )
-        } catch (e: IOException) {
-            //Do nothing if delete fail
-            e.printStackTrace()
-        }
-        dbManager.delTopic(mainTopicAdapter!!.getList()[position]!!.id)
-        //Don't delete the topic order, it will be refreshed next moving time.
-        dbManager.closeDB()
-        //Search for remove the topiclist
-        for (i in topicList!!.indices) {
-            if (topicList!![i].id == mainTopicAdapter!!.getList()[position]!!.id) {
-                topicList!!.removeAt(i)
-                break
-            }
-        }
-        //remove the filter list
-        mainTopicAdapter!!.getList().removeAt(position)
-        //Notify recycle view
-        mainTopicAdapter!!.notifyItemRemoved(position)
-        mainTopicAdapter!!.notifyItemRangeChanged(position, mainTopicAdapter!!.itemCount)
-        //Clear the filter
-        EDT_main_topic_search!!.setText("")
-    }
-
 
     override fun onStart() {
         super.onStart()
