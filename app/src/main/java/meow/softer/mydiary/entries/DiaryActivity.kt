@@ -31,7 +31,7 @@ import meow.softer.mydiary.entries.entry.EntriesEntity
 import meow.softer.mydiary.entries.entry.EntriesFragment
 import meow.softer.mydiary.shared.MyDiaryApplication
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.ui.components.DiaryHeadGroup
+import meow.softer.mydiary.ui.component.DiaryHeadGroup
 import java.util.Date
 import java.util.Locale
 import kotlin.math.min

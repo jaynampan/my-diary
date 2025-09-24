@@ -38,7 +38,8 @@ import meow.softer.mydiary.shared.FileManager
 import meow.softer.mydiary.shared.SPFManager
 import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
-import meow.softer.mydiary.ui.home.HomeViewModel
+import meow.softer.mydiary.ui.dialog.ProfileDialogWrapper
+import meow.softer.mydiary.ui.screen.HomeViewModel
 import java.io.File
 
 

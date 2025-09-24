@@ -15,10 +15,11 @@
     </style>
 
     <!--    Splash screen theme-->
-    <style name="Theme.MyDiary.Splash" parent="Theme.SplashScreen">
+    <style name="Theme.MyDiary.Splash" parent="Theme.SplashScreen.IconBackground">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_round</item>
-        <item name="windowSplashScreenAnimationDuration">300</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/ic_launcher_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+<!--        <item name="windowSplashScreenAnimationDuration">300</item>-->
         <item name="postSplashScreenTheme">@style/Theme.MyDiary</item>
     </style>
 </resources>

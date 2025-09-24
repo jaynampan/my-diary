@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
 import meow.softer.mydiary.R
-import meow.softer.mydiary.ui.components.CommonDialog
+import meow.softer.mydiary.ui.component.CommonDialog
 
 abstract class CommonDialogFragment : DialogFragment() {
     protected var content :String =""

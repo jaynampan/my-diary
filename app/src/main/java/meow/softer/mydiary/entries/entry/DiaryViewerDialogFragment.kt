@@ -74,7 +74,7 @@ import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.TimeTools
 import meow.softer.mydiary.shared.ViewTools
-import meow.softer.mydiary.ui.components.DiaryBottom
+import meow.softer.mydiary.ui.component.DiaryBottom
 import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat

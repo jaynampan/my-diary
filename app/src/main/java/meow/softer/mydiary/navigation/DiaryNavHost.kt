@@ -5,24 +5,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import meow.softer.mydiary.main.BottomSettingDialog
-import meow.softer.mydiary.main.BottomSettingSheet
-import meow.softer.mydiary.main.ProfileDialogWrapper
+import meow.softer.mydiary.ui.dialog.BottomSettingSheet
+import meow.softer.mydiary.ui.dialog.ProfileDialogWrapper
 import meow.softer.mydiary.main.topic.ITopic
-import meow.softer.mydiary.ui.home.AboutScreen
-import meow.softer.mydiary.ui.home.BackupScreen
-import meow.softer.mydiary.ui.home.HomeScreen
-import meow.softer.mydiary.ui.home.HomeViewModel
-import meow.softer.mydiary.ui.home.SecurityScreen
-import meow.softer.mydiary.ui.home.SettingScreen
+import meow.softer.mydiary.ui.screen.AboutScreen
+import meow.softer.mydiary.ui.screen.BackupScreen
+import meow.softer.mydiary.ui.screen.HomeScreen
+import meow.softer.mydiary.ui.screen.HomeViewModel
+import meow.softer.mydiary.ui.screen.SecurityScreen
+import meow.softer.mydiary.ui.screen.SettingScreen
 
 
 @Composable
 fun DiaryNav(
     homeViewModel: HomeViewModel,
-    onTopicClick: (ITopic) -> Unit,
-    onProfileClick: () -> Unit
-
+    onTopicClick: (ITopic) -> Unit
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -32,7 +29,7 @@ fun DiaryNav(
         composable(route = HomeScreen.route) {
             HomeScreen(
                 homeViewModel = homeViewModel,
-                onProfileClick = { onProfileClick() },
+                onProfileClick = { navController.navigate(ProfileDialog.route) },
                 onSettingClick = {
                     navController.navigate(BottomSettingDialog.route)
                 },
@@ -57,7 +54,7 @@ fun DiaryNav(
                 onClick = { it ->
                     when (it) {
                         "Dismiss" -> {
-
+                            navController.popBackStack()
                         }
 
                         "Confirm" -> {

@@ -15,7 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.AssertionFailedError
-import meow.softer.mydiary.ui.home.HomeViewModel
+import meow.softer.mydiary.ui.screen.HomeViewModel
 import meow.softer.mydiary.navigation.DiaryNav
 import org.junit.Before
 import org.junit.Rule
