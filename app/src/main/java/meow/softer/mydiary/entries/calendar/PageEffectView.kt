@@ -17,7 +17,6 @@ import android.view.View
 import android.widget.Scroller
 import meow.softer.mydiary.R
 import meow.softer.mydiary.shared.ScreenHelper
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
 import java.util.Calendar
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -26,7 +25,6 @@ import kotlin.math.hypot
 import kotlin.math.min
 import kotlin.math.sin
 import androidx.core.graphics.createBitmap
-import meow.softer.mydiary.shared.statusbar.PhoneModel
 
 class PageEffectView(context: Context, calendar: Calendar) : View(context) {
     private var calendarFactory: CalendarFactory? = null
@@ -129,15 +127,11 @@ class PageEffectView(context: Context, calendar: Calendar) : View(context) {
 
     private fun setScreen(context: Context) {
         mWidth = ScreenHelper.getScreenWidth(context)
-        mHeight = if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
-            ((ScreenHelper.getScreenHeight(context) - ScreenHelper.getStatusBarHeight(context)
-                    - context.resources.getDimension(R.dimen.top_bar_height))
-                    * 0.7).toInt()
-        } else {
+        mHeight =
             ((ScreenHelper.getScreenHeight(context) -
                     context.resources.getDimension(R.dimen.top_bar_height))
                     * 0.7).toInt()
-        }
+
         calendarRect = Rect(0, 0, mWidth, mHeight)
         mMaxLength = hypot(mWidth.toDouble(), mHeight.toDouble()).toFloat()
         minSize = mWidth / 10

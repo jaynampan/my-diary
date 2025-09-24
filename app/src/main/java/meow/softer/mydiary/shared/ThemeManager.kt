@@ -23,9 +23,6 @@ import meow.softer.mydiary.shared.SPFManager.setTheme
 import meow.softer.mydiary.shared.ScreenHelper.dpToPixel
 import meow.softer.mydiary.shared.ScreenHelper.getScreenHeight
 import meow.softer.mydiary.shared.ScreenHelper.getScreenWidth
-import meow.softer.mydiary.shared.ScreenHelper.getStatusBarHeight
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper.Companion.deviceStatusBarType
-import meow.softer.mydiary.shared.statusbar.PhoneModel
 import java.io.File
 
 class ThemeManager private constructor() {
@@ -38,14 +35,9 @@ class ThemeManager private constructor() {
 
     fun getTopicBgHeight(context: Context): Int {
         val topbarHeight = context.resources.getDimensionPixelOffset(R.dimen.top_bar_height)
-        val bgHeight: Int = if (deviceStatusBarType == PhoneModel.OTHER) {
-            getScreenHeight(context) -
-                    getStatusBarHeight(context) -  //diary activity top bar  + edit bottom bar
-                    dpToPixel(context.resources, 40) - topbarHeight
-        } else {
+        val bgHeight: Int =
             getScreenHeight(context) -  //diary activity top bar  + edit bottom bar
                     dpToPixel(context.resources, 40) - topbarHeight
-        }
         return bgHeight
     }
 

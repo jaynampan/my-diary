@@ -74,8 +74,6 @@ import meow.softer.mydiary.shared.ScreenHelper
 import meow.softer.mydiary.shared.ThemeManager
 import meow.softer.mydiary.shared.TimeTools
 import meow.softer.mydiary.shared.ViewTools
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
-import meow.softer.mydiary.shared.statusbar.PhoneModel
 import meow.softer.mydiary.ui.components.DiaryBottom
 import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
@@ -452,14 +450,10 @@ class DiaryViewerDialogFragment : DialogFragment(), View.OnClickListener,
         //Modify dialog size
         val dialog = getDialog()
         if (dialog != null) {
-            val dialogHeight: Int = if (ChinaPhoneHelper.deviceStatusBarType== PhoneModel.OTHER) {
-                (ScreenHelper.getScreenHeight(requireContext())
-                        - ScreenHelper.getStatusBarHeight(requireContext())
-                        - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 10))
-            } else {
+            val dialogHeight: Int =
                 (ScreenHelper.getScreenHeight(requireContext())
                         - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 10))
-            }
+
             val dialogWidth = (ScreenHelper.getScreenWidth(requireContext())
                     - ScreenHelper.dpToPixel(requireActivity().resources, 2 * 5))
             dialog.window!!.setLayout(dialogWidth, dialogHeight)

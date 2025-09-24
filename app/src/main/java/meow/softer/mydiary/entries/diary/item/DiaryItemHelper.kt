@@ -5,8 +5,6 @@ import android.util.Log
 import android.widget.LinearLayout
 import meow.softer.mydiary.R
 import meow.softer.mydiary.shared.ScreenHelper
-import meow.softer.mydiary.shared.statusbar.ChinaPhoneHelper
-import meow.softer.mydiary.shared.statusbar.PhoneModel
 import java.util.Observable
 
 class DiaryItemHelper(private val itemContentLayout: LinearLayout) : Observable() {
@@ -104,20 +102,13 @@ class DiaryItemHelper(private val itemContentLayout: LinearLayout) : Observable(
         fun getVisibleHeight(context: Context): Int {
             val topbarHeight =
                 context.resources.getDimensionPixelOffset(R.dimen.top_bar_height)
-            val imageHeight: Int = if (ChinaPhoneHelper.deviceStatusBarType == PhoneModel.OTHER) {
-                (ScreenHelper.getScreenHeight(context)
-                        - ScreenHelper.getStatusBarHeight(context) //diary activity top bar  -( diary info + diary bottom bar + diary padding+ photo padding)
-                        - topbarHeight - ScreenHelper.dpToPixel(
-                    context.resources,
-                    120 + 40 + (2 * 5) + (2 * 5)
-                ))
-            } else {
+            val imageHeight: Int =
                 (ScreenHelper.getScreenHeight(context) //diary activity top bar  -( diary info + diary bottom bar + diary padding + photo padding)
                         - topbarHeight - ScreenHelper.dpToPixel(
                     context.resources,
                     120 + 40 + (2 * 5) + (2 * 5)
                 ))
-            }
+
             return imageHeight
         }
 
