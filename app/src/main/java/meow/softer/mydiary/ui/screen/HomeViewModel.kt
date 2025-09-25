@@ -3,10 +3,18 @@ package meow.softer.mydiary.ui.screen
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import meow.softer.mydiary.data.repository.SettingsRepo
 import meow.softer.mydiary.main.topic.ITopic
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val settingsRepo: SettingsRepo
+) : ViewModel() {
     val userName = MutableStateFlow("User")
     val userPainter = MutableStateFlow<Painter?>(null)
     val headerBgPainter = MutableStateFlow<Painter?>(null)
@@ -18,8 +26,22 @@ class HomeViewModel : ViewModel() {
     val contactBackgroundPainter = MutableStateFlow<Painter?>(null)
 
 
+    init {
+        refresh()
+    }
+
+    private  fun refresh() {
+        viewModelScope.launch {
+            val appSettings = settingsRepo.getUserSettings()
+            userName.value = appSettings.username
+        }
+    }
+
     fun updateUserName(value: String) {
         userName.value = value
+        viewModelScope.launch {
+            settingsRepo.updateUsername(value)
+        }
     }
 
     fun updateUserPic(value: Painter) {

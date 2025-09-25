@@ -34,6 +34,7 @@ navigationCompose = "2.9.4"
 gradleVersionPlugin = "0.52.0"
 splashScreen = "1.2.0-rc01"
 datastore = "1.1.7"
+hilt = "2.57.1"
 
 [libraries]
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -76,7 +77,9 @@ ultimaterecyclerview-library = { module = "com.marshalchen.ultimaterecyclerview:
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 splash-screen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
-datastore-preferences ={module ="androidx.datastore:datastore-preferences-android" , version.ref= "datastore"}
+datastore-preferences = { module = "androidx.datastore:datastore-preferences-android", version.ref = "datastore" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -84,3 +87,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dependency-checker = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionPlugin" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

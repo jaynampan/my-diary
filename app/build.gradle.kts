@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dependency.checker) // check for dependency updates
+    alias(libs.plugins.dagger.hilt)//hilt dependency injection
 }
 
 android {
@@ -134,6 +135,9 @@ dependencies {
     // room database
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+    // hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
     // desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

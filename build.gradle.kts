@@ -2,9 +2,10 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.compose.compiler)  apply false
+    alias(libs.plugins.compose.compiler) apply false
     // for checking dependency updates
     alias(libs.plugins.dependency.checker) apply false
     // room database
     alias(libs.plugins.devtools.ksp) apply false
+    alias(libs.plugins.dagger.hilt) apply false
 }
