@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import meow.softer.mydiary.data.entity.TopicOrder
+import meow.softer.mydiary.data.local.db.entity.TopicOrder
 
 @Dao
 interface TopicOrderDao {

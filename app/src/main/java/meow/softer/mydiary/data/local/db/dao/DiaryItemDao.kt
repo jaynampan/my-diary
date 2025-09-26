@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import meow.softer.mydiary.data.entity.DiaryItem
+import meow.softer.mydiary.data.local.db.entity.DiaryItem
 
 @Dao
 interface DiaryItemDao {

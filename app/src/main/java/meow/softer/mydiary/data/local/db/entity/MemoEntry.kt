@@ -1,4 +1,4 @@
-package meow.softer.mydiary.data.entity
+package meow.softer.mydiary.data.local.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
