@@ -1,7 +1,12 @@
-package meow.softer.mydiary.data.local
+package meow.softer.mydiary.data.local.db
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import meow.softer.mydiary.data.local.db.dao.ContactDao
 import meow.softer.mydiary.data.local.db.dao.DiaryDao
 import meow.softer.mydiary.data.local.db.dao.DiaryItemDao
@@ -39,4 +44,32 @@ abstract class DiaryDatabase : RoomDatabase() {
     abstract fun diaryItemDao(): DiaryItemDao
     abstract fun memoOrderDao(): MemoOrderDao
     abstract fun topicOrderDao(): TopicOrderDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: DiaryDatabase? = null
+        private const val DB_NAME = "my_diary.db"
+
+        fun getDatabase(context: Context): DiaryDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    DiaryDatabase::class.java,
+                    DB_NAME
+                ).addCallback(
+                    object : Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            db.execSQL(InitialDataSQL)
+                        }
+                    }
+                )
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }
+
+const val InitialDataSQL = "insert into topic_entry(id,name,type) values(1,\"Example Memo\",2);"

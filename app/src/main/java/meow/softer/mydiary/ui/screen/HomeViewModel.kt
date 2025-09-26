@@ -1,19 +1,26 @@
 package meow.softer.mydiary.ui.screen
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import meow.softer.mydiary.data.local.db.DiaryDatabase
 import meow.softer.mydiary.data.repository.SettingsRepo
 import meow.softer.mydiary.main.topic.ITopic
+import meow.softer.mydiary.main.topic.Memo
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val settingsRepo: SettingsRepo
+    private val settingsRepo: SettingsRepo,
+    private val db: DiaryDatabase
 ) : ViewModel() {
     val userName = MutableStateFlow("User")
     val userPainter = MutableStateFlow<Painter?>(null)
@@ -30,11 +37,27 @@ class HomeViewModel @Inject constructor(
         refresh()
     }
 
-    private  fun refresh() {
-        viewModelScope.launch {
-            val appSettings = settingsRepo.getUserSettings()
-            userName.value = appSettings.username
+    private suspend fun loadData() {
+        withContext(Dispatchers.IO) {
+            val entries = db.topicDao().getAll()
+            val topics = mutableListOf<ITopic>()
+            entries.forEach {
+                topics.add(Memo(id = it.id.toLong(), title = it.name, color = Color.Red.toArgb()))
+            }
+            topicData.value = topics
         }
+    }
+
+    private fun refresh() {
+        viewModelScope.launch {
+            loadSettings()
+            loadData()
+        }
+    }
+
+    private suspend fun loadSettings() {
+        val appSettings = settingsRepo.getUserSettings()
+        userName.value = appSettings.username
     }
 
     fun updateUserName(value: String) {
