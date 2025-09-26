@@ -15,6 +15,7 @@ import meow.softer.mydiary.data.local.db.DiaryDatabase
 import meow.softer.mydiary.data.repository.SettingsRepo
 import meow.softer.mydiary.main.topic.ITopic
 import meow.softer.mydiary.main.topic.Memo
+import meow.softer.mydiary.util.debug
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +42,7 @@ class HomeViewModel @Inject constructor(
         withContext(Dispatchers.IO) {
             val entries = db.topicDao().getAll()
             val topics = mutableListOf<ITopic>()
+            debug("HomeViewModel", "size: ${entries.size}")
             entries.forEach {
                 topics.add(Memo(id = it.id.toLong(), title = it.name, color = Color.Red.toArgb()))
             }
