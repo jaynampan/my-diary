@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import meow.softer.mydiary.main.ColorPicker
+import meow.softer.mydiary.ui.component.ColorPicker
 import meow.softer.mydiary.ui.component.DiaryButton
 
 

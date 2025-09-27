@@ -28,10 +28,23 @@ object BackupScreen : DiaryDestination {
     override val route = "BackupScreen"
 }
 
+object MemoScreen : DiaryDestination {
+    override val route = "MemoScreen"
+}
+
+object DiaryScreen : DiaryDestination {
+    override val route = "DiaryScreen"
+}
+
+
 object BottomSettingDialog : DiaryDestination {
     override val route = "BottomSettingDialog"
 }
 
 object ProfileDialog : DiaryDestination {
     override val route = "ProfileDialog"
+}
+
+object ContactDetailDialog : DiaryDestination {
+    override val route = "ContactDetailDialog"
 }

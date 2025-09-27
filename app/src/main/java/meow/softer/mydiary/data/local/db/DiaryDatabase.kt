@@ -19,7 +19,7 @@ import meow.softer.mydiary.data.local.db.entity.MemoEntry
 import meow.softer.mydiary.data.local.db.entity.MemoOrder
 import meow.softer.mydiary.data.local.db.entity.TopicEntry
 import meow.softer.mydiary.data.local.db.entity.TopicOrder
-import meow.softer.mydiary.main.topic.ITopic
+import meow.softer.mydiary.ui.models.ITopic
 
 const val DatabaseVersion = 1
 

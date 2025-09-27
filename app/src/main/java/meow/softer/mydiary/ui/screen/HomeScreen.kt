@@ -11,8 +11,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import meow.softer.mydiary.R
-import meow.softer.mydiary.main.topic.Diary
-import meow.softer.mydiary.main.topic.ITopic
+import meow.softer.mydiary.ui.models.Diary
+import meow.softer.mydiary.ui.models.ITopic
 import meow.softer.mydiary.ui.component.HomeBottomBar
 import meow.softer.mydiary.ui.component.HomeHeader
 import meow.softer.mydiary.ui.component.TopicList

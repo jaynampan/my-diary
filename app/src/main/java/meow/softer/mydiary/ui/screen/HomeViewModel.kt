@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import meow.softer.mydiary.data.local.db.DiaryDatabase
 import meow.softer.mydiary.data.repository.SettingsRepo
-import meow.softer.mydiary.main.topic.ITopic
-import meow.softer.mydiary.main.topic.Memo
+import meow.softer.mydiary.ui.models.ITopic
+import meow.softer.mydiary.ui.models.Memo
 import meow.softer.mydiary.util.debug
 import javax.inject.Inject
 

@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import meow.softer.mydiary.R
-import meow.softer.mydiary.main.topic.ITopic
+import meow.softer.mydiary.ui.models.ITopic
 
 @Composable
 fun TopicList(

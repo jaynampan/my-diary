@@ -41,8 +41,8 @@ fun ContactScreen(
     modifier: Modifier = Modifier, headerName: String, data: List<ContactGroup>,
     backgroundPainter: Painter? = null,
     onAddContact: () -> Unit,
-    onClickContact: (ContactInfo) -> Unit,
-    onLongPressContact: (ContactInfo) -> Unit,
+    onClickContact: (ContactInfo) -> Unit, // show detail dialog
+    onLongPressContact: (ContactInfo) -> Unit, // copy the number
 ) {
     Column(modifier) {
         ContactHeader(

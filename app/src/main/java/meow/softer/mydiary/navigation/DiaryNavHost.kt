@@ -7,11 +7,15 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import meow.softer.mydiary.ui.dialog.BottomSettingSheet
 import meow.softer.mydiary.ui.dialog.ProfileDialogWrapper
-import meow.softer.mydiary.main.topic.ITopic
+import meow.softer.mydiary.ui.models.ITopic
+import meow.softer.mydiary.ui.dialog.ContactDetailDialog
 import meow.softer.mydiary.ui.screen.AboutScreen
 import meow.softer.mydiary.ui.screen.BackupScreen
+import meow.softer.mydiary.ui.screen.ContactScreen
+import meow.softer.mydiary.ui.screen.DiaryScreen
 import meow.softer.mydiary.ui.screen.HomeScreen
 import meow.softer.mydiary.ui.screen.HomeViewModel
+import meow.softer.mydiary.ui.screen.MemoScreen
 import meow.softer.mydiary.ui.screen.SecurityScreen
 import meow.softer.mydiary.ui.screen.SettingScreen
 
@@ -48,6 +52,24 @@ fun DiaryNav(
         composable(route = SecurityScreen.route) {
             SecurityScreen()
         }
+        composable(route = MemoScreen.route) {
+            MemoScreen()
+        }
+        composable(route = DiaryScreen.route) {
+            DiaryScreen()
+        }
+        composable(route = ContactScreen.route) {
+            //todo:update
+            ContactScreen(
+                headerName = "",
+                data = listOf(),
+                onAddContact = {},
+                onClickContact = {
+
+                }
+
+            ) {}
+        }
         dialog(route = ProfileDialog.route) {
             ProfileDialogWrapper(
                 homeViewModel = homeViewModel,
@@ -80,6 +102,9 @@ fun DiaryNav(
             ) {
                 navController.navigate(it)
             }
+        }
+        dialog(route = ContactDetailDialog.route) {
+            ContactDetailDialog()
         }
     }
 }
