@@ -6,5 +6,10 @@ import meow.softer.mydiary.navigation.MemoScreen
 
 @Composable
 fun MemoScreen(modifier: Modifier = Modifier) {
+        MemoScreenContent()
+}
+
+@Composable
+fun MemoScreenContent(){
 
 }

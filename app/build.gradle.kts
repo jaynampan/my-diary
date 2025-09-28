@@ -99,11 +99,8 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
-    //lib
     implementation(libs.activity.ktx)
     implementation(libs.constraintlayout.compose)
-
-
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
@@ -112,22 +109,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //libs
-//    implementation(libs.commons.io)
-//    implementation(libs.material.calendarview)
-//    implementation(libs.android.segmented)
-//    implementation(libs.fresco)
-//    implementation(libs.holocolorpicker)
-//    implementation(libs.filepicker)
-//    implementation(libs.library)
-//    implementation(libs.advrecyclerview)
-//    implementation(libs.gson)
-//    implementation(libs.ucrop)
-//    implementation(libs.circleimageview)
-//    implementation(libs.ultimaterecyclerview.library)
-//    implementation(libs.recyclerview.animators)
-//    implementation(libs.play.services.places)
-//    implementation(libs.photodraweeview)
     // splash screen
     implementation(libs.splash.screen)
     // data store preferences
