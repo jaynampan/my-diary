@@ -1,5 +1,6 @@
 package meow.softer.mydiary.ui.screen
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -36,6 +37,8 @@ class HomeViewModel @Inject constructor(
     val exportPath = MutableStateFlow("")
     val contacts = MutableStateFlow<List<ContactGroup>>(emptyList())
     val contactBackgroundPainter = MutableStateFlow<Painter?>(null)
+    val isCroppingState = MutableStateFlow<Boolean>(false)
+    val croppingBitmap = MutableStateFlow<Bitmap?>(null)
 
 
     init {
@@ -63,7 +66,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun loadUserProfile() {
-        debug(TAG,"loading user profile...")
+        debug(TAG, "loading user profile...")
         filesRepo.getUserPic()?.asImageBitmap()?.let {
             userPainter.value = BitmapPainter(it)
             debug(TAG, "user profile loaded!")
@@ -85,10 +88,23 @@ class HomeViewModel @Inject constructor(
     fun updateUserProfilePic(uri: Uri) {
         viewModelScope.launch {
             val userPicBitmap = filesRepo.saveUserPic(uri)
-            userPicBitmap?.asImageBitmap()?.let {
-                userPainter.value = BitmapPainter(it)
+            userPicBitmap?.let {
+                userPainter.value = BitmapPainter(it.asImageBitmap())
+                croppingBitmap.value = it
+                isCroppingState.value = true
             }
         }
+    }
+
+    fun updateCroppedUserProfile(bitmap: Bitmap) {
+        viewModelScope.launch {
+            userPainter.value = BitmapPainter(bitmap.asImageBitmap())
+            filesRepo.saveUserPicBitmap(bitmap)
+        }
+    }
+
+    fun closeCropping() {
+        isCroppingState.value = false
     }
 
     fun updateHeaderBgPic(value: Painter) {

@@ -80,7 +80,7 @@ fun DiaryNav(
                         }
 
                         "Confirm" -> {
-
+                            navController.popBackStack()
                         }
 
                         "Photo" -> {

@@ -64,4 +64,13 @@ class FilesRepo @Inject constructor(
 
         }
     }
+
+    fun saveUserPicBitmap(bitmap: Bitmap) {
+        val file = File(context.filesDir, userPictureFile)
+        FileOutputStream(file).use { outputStream ->
+            // Compress bitmap to JPEG (or PNG if preferred)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.flush()
+        }
+    }
 }

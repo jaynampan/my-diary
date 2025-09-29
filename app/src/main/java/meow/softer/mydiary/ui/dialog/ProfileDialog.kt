@@ -1,5 +1,6 @@
 package meow.softer.mydiary.ui.dialog
 
+import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -10,12 +11,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -35,10 +40,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tanishranjan.cropkit.CropController
+import com.tanishranjan.cropkit.CropDefaults
+import com.tanishranjan.cropkit.CropOptions
+import com.tanishranjan.cropkit.CropRatio
+import com.tanishranjan.cropkit.CropShape
+import com.tanishranjan.cropkit.GridLinesType
+import com.tanishranjan.cropkit.ImageCropper
+import com.tanishranjan.cropkit.rememberCropController
 import meow.softer.mydiary.R
 import meow.softer.mydiary.ui.component.DiaryButton
 import meow.softer.mydiary.ui.screen.HomeViewModel
 import meow.softer.mydiary.ui.theme.primaryLight
+import kotlin.math.max
 
 @Composable
 fun ProfileDialogWrapper(
@@ -54,17 +68,53 @@ fun ProfileDialogWrapper(
             homeViewModel.updateUserProfilePic(it)
         }
     }
-
-    ProfileDialog(
-        painter = profilePainter,
-        userName = userName,
-        onDismiss = { onClick("Dismiss") },
-        onConfirm = { onClick("Confirm") },
-        onChooseProfile = {launcher.launch("image/*")},
-        onResetProfile = { onClick("Reset") },
-        updateUserName = { homeViewModel.updateUserName(it) },
-    )
-
+    val isCroppingState = homeViewModel.isCroppingState.collectAsStateWithLifecycle().value
+    val mBitmap: Bitmap? = homeViewModel.croppingBitmap.collectAsStateWithLifecycle().value
+    var cropController: CropController?
+    if (isCroppingState && mBitmap != null) {
+        cropController = rememberCropController(
+            bitmap = mBitmap,
+            cropOptions = CropDefaults.cropOptions(
+                cropShape = CropShape.AspectRatio(CropRatio.SQUARE),
+                gridLinesType = GridLinesType.GRID_AND_CIRCLE
+            )
+        )
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(bottom = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ImageCropper(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(24.dp),
+                cropController = cropController
+            )
+            Button(
+                modifier = Modifier
+                    .padding(horizontal = 36.dp)
+                    .fillMaxWidth(),
+                onClick = {
+                    val bitmap = cropController.crop()
+                    homeViewModel.updateCroppedUserProfile(bitmap)
+                    homeViewModel.closeCropping()
+                }) {
+                Text("Crop")
+            }
+        }
+    } else {
+        ProfileDialog(
+            painter = profilePainter,
+            userName = userName,
+            onDismiss = { onClick("Dismiss") },
+            onConfirm = { onClick("Confirm") },
+            onChooseProfile = { launcher.launch("image/*") },
+            onResetProfile = { onClick("Reset") },
+            updateUserName = { homeViewModel.updateUserName(it) },
+        )
+    }
 }
 
 @Composable
