@@ -1,8 +1,8 @@
 package meow.softer.mydiary.ui.screen
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import meow.softer.mydiary.navigation.MemoScreen
 
 @Composable
 fun MemoScreen(modifier: Modifier = Modifier) {
@@ -11,5 +11,5 @@ fun MemoScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun MemoScreenContent(){
-
+        Text("To be Implemented")
 }

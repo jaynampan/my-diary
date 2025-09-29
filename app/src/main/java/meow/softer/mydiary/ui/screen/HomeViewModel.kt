@@ -1,7 +1,5 @@
 package meow.softer.mydiary.ui.screen
 
-import android.content.Context
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -21,8 +19,6 @@ import meow.softer.mydiary.data.repository.SettingsRepo
 import meow.softer.mydiary.ui.models.ITopic
 import meow.softer.mydiary.ui.models.Memo
 import meow.softer.mydiary.util.debug
-import java.io.File
-import java.io.FileOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
