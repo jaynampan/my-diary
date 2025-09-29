@@ -1,6 +1,10 @@
 package meow.softer.mydiary.ui.screen
 
+import android.content.Context
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
@@ -12,16 +16,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import meow.softer.mydiary.data.local.db.DiaryDatabase
+import meow.softer.mydiary.data.repository.FilesRepo
 import meow.softer.mydiary.data.repository.SettingsRepo
 import meow.softer.mydiary.ui.models.ITopic
 import meow.softer.mydiary.ui.models.Memo
 import meow.softer.mydiary.util.debug
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val settingsRepo: SettingsRepo,
-    private val db: DiaryDatabase
+    private val db: DiaryDatabase,
+    private val filesRepo: FilesRepo
 ) : ViewModel() {
     val userName = MutableStateFlow("User")
     val userPainter = MutableStateFlow<Painter?>(null)
@@ -54,6 +62,15 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             loadSettings()
             loadData()
+            loadUserProfile()
+        }
+    }
+
+    private suspend fun loadUserProfile() {
+        debug(TAG,"loading user profile...")
+        filesRepo.getUserPic()?.asImageBitmap()?.let {
+            userPainter.value = BitmapPainter(it)
+            debug(TAG, "user profile loaded!")
         }
     }
 
@@ -69,8 +86,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateUserPic(value: Painter) {
-        userPainter.value = value
+    fun updateUserProfilePic(uri: Uri) {
+        viewModelScope.launch {
+            val userPicBitmap = filesRepo.saveUserPic(uri)
+            userPicBitmap?.asImageBitmap()?.let {
+                userPainter.value = BitmapPainter(it)
+            }
+        }
     }
 
     fun updateHeaderBgPic(value: Painter) {
@@ -96,5 +118,9 @@ class HomeViewModel @Inject constructor(
 
     fun updateContactBackground(painter: BitmapPainter) {
         contactBackgroundPainter.value = painter
+    }
+
+    companion object {
+        const val TAG = "HomeViewModel"
     }
 }

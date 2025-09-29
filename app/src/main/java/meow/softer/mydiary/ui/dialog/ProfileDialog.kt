@@ -1,5 +1,10 @@
 package meow.softer.mydiary.ui.dialog
 
+import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,7 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -46,14 +55,20 @@ fun ProfileDialogWrapper(
     val profilePainter = homeViewModel.userPainter.collectAsStateWithLifecycle().value
         ?: painterResource(R.drawable.ic_person_picture_default)
     val userName = homeViewModel.userName.collectAsStateWithLifecycle().value
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        it?.let {
+            homeViewModel.updateUserProfilePic(it)
+        }
+    }
+
     ProfileDialog(
         painter = profilePainter,
-        userName = userName ,
+        userName = userName,
         onDismiss = { onClick("Dismiss") },
         onConfirm = { onClick("Confirm") },
-        onChooseProfile = { onClick("Photo") },
+        onChooseProfile = {launcher.launch("image/*")},
         onResetProfile = { onClick("Reset") },
-        updateUserName = {homeViewModel.updateUserName(it)},
+        updateUserName = { homeViewModel.updateUserName(it) },
     )
 
 }
@@ -61,7 +76,7 @@ fun ProfileDialogWrapper(
 @Composable
 fun ProfileDialog(
     painter: Painter,
-    userName:String,
+    userName: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onChooseProfile: () -> Unit,
@@ -85,6 +100,7 @@ fun ProfileDialog(
                 Image(
                     painter = painter,
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
