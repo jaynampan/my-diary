@@ -100,7 +100,7 @@ private fun HomeScreenContentPreview() {
                     id = 1,
                     title = "Sample Diary",
                     color = Color.Red.toArgb()
-                ).apply { count = 8L }
+                ).apply { count = 8 }
             ),
             onProfileClick = {},
             onSettingClick = {},

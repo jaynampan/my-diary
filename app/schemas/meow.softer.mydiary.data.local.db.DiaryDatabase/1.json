@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "94c23dc27f0482a3422ba2b84348de9d",
+    "identityHash": "278614f6cf98af8cb386fbdf800d314b",
     "entities": [
       {
         "tableName": "diary_entry",
@@ -217,7 +217,7 @@
       },
       {
         "tableName": "topic_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` INTEGER NOT NULL, `subtitle` TEXT, `color` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `subtitle` TEXT, `type` INTEGER NOT NULL, `color` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -226,15 +226,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
+            "fieldPath": "title",
+            "columnName": "title",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "type",
-            "columnName": "type",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -243,9 +237,16 @@
             "affinity": "TEXT"
           },
           {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "color",
             "columnName": "color",
-            "affinity": "TEXT"
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -288,7 +289,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '94c23dc27f0482a3422ba2b84348de9d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '278614f6cf98af8cb386fbdf800d314b')"
     ]
   }
 }

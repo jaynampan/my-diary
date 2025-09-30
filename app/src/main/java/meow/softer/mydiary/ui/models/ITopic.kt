@@ -3,25 +3,19 @@ package meow.softer.mydiary.ui.models
 import androidx.annotation.DrawableRes
 
 interface ITopic {
-    /**
-     * For update topic
-     */
-    var title: String?
+    var title: String
 
     val type: Int
 
-    val id: Long
+    val id: Int
 
     @get:DrawableRes
     val icon: Int
 
-    /**
-     * For update count in Main Page
-     */
-    var count: Long
+    var count: Int
 
     /**
-     * For update topic
+     * ARGB Color
      */
     var color: Int
 

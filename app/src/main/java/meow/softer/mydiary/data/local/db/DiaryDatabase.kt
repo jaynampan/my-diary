@@ -1,6 +1,8 @@
 package meow.softer.mydiary.data.local.db
 
 import android.content.Context
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -75,18 +77,20 @@ abstract class DiaryDatabase : RoomDatabase() {
 
 const val mitsuhaMemoId = 1
 const val takiMemoId = 2
+val defaultColor = Color.Black.toArgb()
 val InitialDataSQLs = listOf(
-"insert into topic_entry(id,name,type) values($mitsuhaMemoId,\'ゼッタイ禁止\',${ITopic.TYPE_MEMO});",
-"insert into topic_entry(id,name,type) values($takiMemoId,\'禁止事項 Ver.5\',${ITopic.TYPE_MEMO});",
+    "insert into topic_entry(id,title,type,color) values($mitsuhaMemoId,\'ゼッタイ禁止\',${ITopic.TYPE_MEMO},$defaultColor);",
+    "insert into topic_entry(id,title,type,color) values($takiMemoId,\'禁止事項 Ver.5\',${ITopic.TYPE_MEMO},$defaultColor);",
 
-"insert into memo_entry(id,content,checked,ref_topic_id) values(1,\'女子にも触るな！\',false,$mitsuhaMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(2,\'男子に触るな！\',false,$mitsuhaMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(3,\'脚をひらくな！\',true,$mitsuhaMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(4,\'体は見ない！/触らない！！\',false,$mitsuhaMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(5,\'お風呂ぜっっったい禁止！！！！！！！\',true,$mitsuhaMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(1,\'女子にも触るな！\',false,$mitsuhaMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(2,\'男子に触るな！\',false,$mitsuhaMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(3,\'脚をひらくな！\',true,$mitsuhaMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(4,\'体は見ない！/触らない！！\',false,$mitsuhaMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(5,\'お風呂ぜっっったい禁止！！！！！！！\',true,$mitsuhaMemoId);",
 
-"insert into memo_entry(id,content,checked,ref_topic_id) values(6,\'司とベタベタするな.....\', true, $takiMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(7,\'奧寺先輩と馴れ馴れしくするな.....\', true, $takiMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(8,\'女言葉NG！\', false, $takiMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(9,\'遅刻するな！\', true, $takiMemoId);",
-"insert into memo_entry(id,content,checked,ref_topic_id) values(10,\'無駄つかい禁止！\', false, $takiMemoId);")
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(6,\'司とベタベタするな.....\', true, $takiMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(7,\'奧寺先輩と馴れ馴れしくするな.....\', true, $takiMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(8,\'女言葉NG！\', false, $takiMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(9,\'遅刻するな！\', true, $takiMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(10,\'無駄つかい禁止！\', false, $takiMemoId);"
+)

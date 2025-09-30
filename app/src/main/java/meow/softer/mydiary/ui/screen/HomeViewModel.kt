@@ -2,30 +2,25 @@ package meow.softer.mydiary.ui.screen
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import meow.softer.mydiary.data.local.db.DiaryDatabase
 import meow.softer.mydiary.data.repository.FilesRepo
 import meow.softer.mydiary.data.repository.SettingsRepo
+import meow.softer.mydiary.data.repository.TopicRepo
 import meow.softer.mydiary.ui.models.ITopic
-import meow.softer.mydiary.ui.models.Memo
 import meow.softer.mydiary.util.debug
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val settingsRepo: SettingsRepo,
-    private val db: DiaryDatabase,
+    private val topicRepo: TopicRepo,
     private val filesRepo: FilesRepo
 ) : ViewModel() {
     val userName = MutableStateFlow("User")
@@ -46,15 +41,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun loadData() {
-        withContext(Dispatchers.IO) {
-            val entries = db.topicDao().getAll()
-            val topics = mutableListOf<ITopic>()
-            debug("HomeViewModel", "size: ${entries.size}")
-            entries.forEach {
-                topics.add(Memo(id = it.id.toLong(), title = it.name, color = Color.Red.toArgb()))
-            }
-            topicData.value = topics
-        }
+        topicData.value = topicRepo.getAll()
     }
 
     private fun refresh() {

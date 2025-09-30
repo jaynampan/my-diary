@@ -3,13 +3,12 @@ package meow.softer.mydiary.ui.models
 import meow.softer.mydiary.R
 
 class Diary(
-    override val id: Long,
-    override var title: String?,
+    override val id: Int,
+    override var title: String,
     override var color: Int,
-    override val type: Int =
-        ITopic.Companion.TYPE_DIARY,
-    override val icon: Int = R.drawable.ic_topic_diary,
-    override var isPinned: Boolean = false
+    override var isPinned: Boolean = false,
+    override var count:Int = 0
 ) : ITopic {
-    override var count: Long = 0
+    override val type = ITopic.Companion.TYPE_DIARY
+    override val icon = R.drawable.ic_topic_diary
 }
