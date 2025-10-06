@@ -6,8 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "memo_order")
 data class MemoOrder(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 1,
     val order: Int,
-    @ColumnInfo(name = "ref_topic_id") val refTopicId: Int,
-    @ColumnInfo(name = "ref_memo_id") val refMemoId: Int
+    @ColumnInfo(name = "ref_memo_id") val refMemoId: Int // memo entry id
 )

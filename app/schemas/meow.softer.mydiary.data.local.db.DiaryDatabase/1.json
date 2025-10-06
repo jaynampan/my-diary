@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "278614f6cf98af8cb386fbdf800d314b",
+    "identityHash": "f933329219b027078512b44f9a782fd6",
     "entities": [
       {
         "tableName": "diary_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `mood` INTEGER, `weather` INTEGER, `attachment` TEXT, `location` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ref_topic_id` INTEGER NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `mood` INTEGER, `weather` INTEGER, `attachment` TEXT, `location` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -54,7 +54,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -62,7 +62,7 @@
       },
       {
         "tableName": "contact_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `phone_number` TEXT NOT NULL, `ref_topic_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `photo` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `phone_number` TEXT NOT NULL, `ref_topic_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `photo` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -95,7 +95,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -103,7 +103,7 @@
       },
       {
         "tableName": "diary_item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `type` INTEGER NOT NULL, `position` INTEGER NOT NULL, `content` TEXT NOT NULL, `ref_diary_id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` INTEGER NOT NULL, `position` INTEGER NOT NULL, `content` TEXT NOT NULL, `ref_diary_id` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -137,7 +137,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -145,7 +145,7 @@
       },
       {
         "tableName": "memo_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `content` TEXT NOT NULL, `checked` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `content` TEXT NOT NULL, `checked` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -173,7 +173,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -181,7 +181,7 @@
       },
       {
         "tableName": "memo_order",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `order` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL, `ref_memo_id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order` INTEGER NOT NULL, `ref_memo_id` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -196,12 +196,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "refTopicId",
-            "columnName": "ref_topic_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "refMemoId",
             "columnName": "ref_memo_id",
             "affinity": "INTEGER",
@@ -209,7 +203,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -217,7 +211,7 @@
       },
       {
         "tableName": "topic_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `subtitle` TEXT, `type` INTEGER NOT NULL, `color` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `subtitle` TEXT, `type` INTEGER NOT NULL, `color` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -250,7 +244,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -258,7 +252,7 @@
       },
       {
         "tableName": "topic_order",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `order` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -280,7 +274,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -289,7 +283,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '278614f6cf98af8cb386fbdf800d314b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f933329219b027078512b44f9a782fd6')"
     ]
   }
 }

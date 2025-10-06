@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "memo_entry")
 data class MemoEntry(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 1,
     val content: String,
     val checked: Boolean = false,
     @ColumnInfo(name = "ref_topic_id") val refTopicId: Int

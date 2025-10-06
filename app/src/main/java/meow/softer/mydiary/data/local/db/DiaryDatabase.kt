@@ -21,6 +21,7 @@ import meow.softer.mydiary.data.local.db.entity.MemoEntry
 import meow.softer.mydiary.data.local.db.entity.MemoOrder
 import meow.softer.mydiary.data.local.db.entity.TopicEntry
 import meow.softer.mydiary.data.local.db.entity.TopicOrder
+import meow.softer.mydiary.ui.models.DiaryInfoHelper
 import meow.softer.mydiary.ui.models.ITopic
 
 const val DatabaseVersion = 1
@@ -77,10 +78,17 @@ abstract class DiaryDatabase : RoomDatabase() {
 
 const val mitsuhaMemoId = 1
 const val takiMemoId = 2
+const val sampleDiaryId = 3
 val defaultColor = Color.Black.toArgb()
 val InitialDataSQLs = listOf(
     "insert into topic_entry(id,title,type,color) values($mitsuhaMemoId,\'ゼッタイ禁止\',${ITopic.TYPE_MEMO},$defaultColor);",
     "insert into topic_entry(id,title,type,color) values($takiMemoId,\'禁止事項 Ver.5\',${ITopic.TYPE_MEMO},$defaultColor);",
+    "insert into topic_entry(id,title,type,color) values($sampleDiaryId, \'Dairy\',${ITopic.TYPE_DIARY},$defaultColor)",
+
+    "insert into topic_order(`order`,ref_topic_id) values(0, $takiMemoId);",
+    "insert into topic_order(`order`,ref_topic_id) values(1, $mitsuhaMemoId);",
+    "insert into topic_order(`order`,ref_topic_id) values(3, $sampleDiaryId);",
+
 
     "insert into memo_entry(id,content,checked,ref_topic_id) values(1,\'女子にも触るな！\',false,$mitsuhaMemoId);",
     "insert into memo_entry(id,content,checked,ref_topic_id) values(2,\'男子に触るな！\',false,$mitsuhaMemoId);",
@@ -88,9 +96,38 @@ val InitialDataSQLs = listOf(
     "insert into memo_entry(id,content,checked,ref_topic_id) values(4,\'体は見ない！/触らない！！\',false,$mitsuhaMemoId);",
     "insert into memo_entry(id,content,checked,ref_topic_id) values(5,\'お風呂ぜっっったい禁止！！！！！！！\',true,$mitsuhaMemoId);",
 
+    "insert into memo_order(`order`,ref_memo_id) values(0,1);",
+    "insert into memo_order(`order`,ref_memo_id) values(2,2);",
+    "insert into memo_order(`order`,ref_memo_id) values(1,3);",
+    "insert into memo_order(`order`,ref_memo_id) values(3,4);",
+    "insert into memo_order(`order`,ref_memo_id) values(4,5);",
+
     "insert into memo_entry(id,content,checked,ref_topic_id) values(6,\'司とベタベタするな.....\', true, $takiMemoId);",
     "insert into memo_entry(id,content,checked,ref_topic_id) values(7,\'奧寺先輩と馴れ馴れしくするな.....\', true, $takiMemoId);",
     "insert into memo_entry(id,content,checked,ref_topic_id) values(8,\'女言葉NG！\', false, $takiMemoId);",
     "insert into memo_entry(id,content,checked,ref_topic_id) values(9,\'遅刻するな！\', true, $takiMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(10,\'無駄つかい禁止！\', false, $takiMemoId);"
+    "insert into memo_entry(id,content,checked,ref_topic_id) values(10,\'無駄つかい禁止！\', false, $takiMemoId);",
+
+    "insert into memo_order(`order`,ref_memo_id) values(4,6);",
+    "insert into memo_order(`order`,ref_memo_id) values(1,7);",
+    "insert into memo_order(`order`,ref_memo_id) values(3,8);",
+    "insert into memo_order(`order`,ref_memo_id) values(2,9);",
+    "insert into memo_order(`order`,ref_memo_id) values(0,10);",
+
+    "insert into diary_entry(id,ref_topic_id,time,title,mood,weather,location) " +
+            "values(1,$sampleDiaryId,${1475665800000L.toInt()},\'東京生活3❤\',${DiaryInfoHelper.MOOD_HAPPY}," +
+            "${DiaryInfoHelper.WEATHER_RAINY},\'Tokyo\')",
+//    "insert into diary_item(type,position,content,ref_diary_id) values(${})"
+// todo: diary items
+    //Insert sample topic
+//    long topicOnDiarySampleId = dbManager.insertTopic("DIARY", ITopic.TYPE_DIARY, Color.BLACK);
+//dbManager.insertTopicOrder(topicOnDiarySampleId, 2);
+//if (topicOnDiarySampleId != -1) {
+//    //Insert sample diary
+//    long diarySampleId = dbManager.insertDiaryInfo(1475665800000L, "東京生活3❤",
+//    DiaryInfoHelper.MOOD_HAPPY, DiaryInfoHelper.WEATHER_RAINY, true, topicOnDiarySampleId, "Tokyo");
+//    dbManager.insertDiaryContent(IDairyRow.TYPE_TEXT, 0, "There are many coffee shops in Tokyo!", diarySampleId);
+//}
+
+
 )
