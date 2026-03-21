@@ -1,11 +1,14 @@
 package meow.softer.mydiary.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import meow.softer.mydiary.ui.dialog.BottomSettingSheet
+import meow.softer.mydiary.ui.dialog.ColorPickerDialog
 import meow.softer.mydiary.ui.dialog.ProfileDialogWrapper
 import meow.softer.mydiary.ui.models.ITopic
 import meow.softer.mydiary.ui.dialog.ContactDetailDialog
@@ -105,6 +108,24 @@ fun DiaryNav(
         }
         dialog(route = ContactDetailDialog.route) {
             ContactDetailDialog()
+        }
+        dialog(route = ColorPickerDialog.route) {
+            ColorPickerDialog(
+                onConfirm = { colorArray ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(
+                            "color_key",
+                            Color.hsv(
+                                hue = colorArray[0],
+                                saturation = colorArray[1],
+                                value = colorArray[2]
+                            ).toArgb()
+                        )
+                    navController.popBackStack()
+                },
+                onCancel = { navController.popBackStack() },
+            )
         }
     }
 }

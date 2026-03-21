@@ -119,6 +119,10 @@ class HomeViewModel @Inject constructor(
         contactBackgroundPainter.value = painter
     }
 
+    fun addITopic(name: String, type: Int, color: Int) {
+        debug("HomeViewModel", "addITopic: $name, $type, $color")
+    }
+
     companion object {
         const val TAG = "HomeViewModel"
     }

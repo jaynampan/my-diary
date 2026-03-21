@@ -123,6 +123,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     // desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    //live data
+    implementation(libs.androidx.runtime.livedata) // Use your project's version
+
 }
 
 // Configure the dependencyUpdates Gradle Plugin to check for stable releases only
