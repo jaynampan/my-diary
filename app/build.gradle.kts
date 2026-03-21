@@ -1,12 +1,10 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.devtools.ksp)
-    alias(libs.plugins.dependency.checker) // check for dependency updates
     alias(libs.plugins.dagger.hilt)//hilt dependency injection
 }
 
@@ -124,20 +122,5 @@ dependencies {
     // desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     //live data
-    implementation(libs.androidx.runtime.livedata) // Use your project's version
-
-}
-
-// Configure the dependencyUpdates Gradle Plugin to check for stable releases only
-// https://github.com/ben-manes/gradle-versions-plugin
-fun isNonStable(version: String): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
-    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
-    val isStable = stableKeyword || regex.matches(version)
-    return isStable.not()
-}
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        isNonStable(candidate.version) && !isNonStable(currentVersion)
-    }
+    implementation(libs.androidx.runtime.livedata)
 }
