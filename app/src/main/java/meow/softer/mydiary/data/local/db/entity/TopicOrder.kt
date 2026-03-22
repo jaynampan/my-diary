@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "topic_order")
 data class TopicOrder(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
-    val order: Int,
-    @ColumnInfo(name = "ref_topic_id") val refTopicId: Int
+    @PrimaryKey @ColumnInfo(name = "ref_topic_id") val refTopicId: Int,
+    val order: Int
 )

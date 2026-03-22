@@ -1,5 +1,6 @@
 package meow.softer.mydiary.ui.dialog
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -46,8 +48,14 @@ fun NewTopicDialogWrapper(
     NewTopicDialog(
         onDismiss = { navController.navigateSingleTop(HomeScreen.route) },
         addTopic = { name, type, color ->
-            homeViewModel.addITopic(name, type, color)
-            navController.navigateSingleTop(HomeScreen.route)
+            if (name.isEmpty()) {
+                //show toast to tell user that topic name is empty
+                Toast.makeText(navController.context, "Topic name is empty", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                homeViewModel.addITopic(name, type, color)
+                navController.navigateSingleTop(HomeScreen.route)
+            }
         },
         navController = navController,
     )
@@ -145,7 +153,10 @@ fun NewTopicDialog(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White
                 ),
-                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable,true)
+                modifier = Modifier.menuAnchor(
+                    ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                    true
+                )
             )
             ExposedDropdownMenu(
                 expanded = expanded,

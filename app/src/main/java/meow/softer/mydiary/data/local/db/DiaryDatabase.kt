@@ -67,8 +67,7 @@ abstract class DiaryDatabase : RoomDatabase() {
                             }
                         }
                     }
-                )
-                    .build()
+                ).build()
                 INSTANCE = instance
                 instance
             }
@@ -117,17 +116,4 @@ val InitialDataSQLs = listOf(
     "insert into diary_entry(id,ref_topic_id,time,title,mood,weather,location) " +
             "values(1,$sampleDiaryId,${1475665800},\'東京生活3❤\',${DiaryInfoHelper.MOOD_HAPPY}," +
             "${DiaryInfoHelper.WEATHER_RAINY},\'Tokyo\')",
-//    "insert into diary_item(type,position,content,ref_diary_id) values(${})"
-// todo: diary items
-    //Insert sample topic
-//    long topicOnDiarySampleId = dbManager.insertTopic("DIARY", ITopic.TYPE_DIARY, Color.BLACK);
-//dbManager.insertTopicOrder(topicOnDiarySampleId, 2);
-//if (topicOnDiarySampleId != -1) {
-//    //Insert sample diary
-//    long diarySampleId = dbManager.insertDiaryInfo(1475665800000L, "東京生活3❤",
-//    DiaryInfoHelper.MOOD_HAPPY, DiaryInfoHelper.WEATHER_RAINY, true, topicOnDiarySampleId, "Tokyo");
-//    dbManager.insertDiaryContent(IDairyRow.TYPE_TEXT, 0, "There are many coffee shops in Tokyo!", diarySampleId);
-//}
-
-
 )

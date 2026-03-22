@@ -49,6 +49,12 @@ fun HomeScreen(
         },
         onTopicClick = {
             onTopicClick(it)
+        },
+        onMove = { from, to ->
+            homeViewModel.moveTopic(from, to)
+        },
+        onDragEnd = {
+            homeViewModel.saveTopicOrder()
         }
     )
 
@@ -62,7 +68,9 @@ fun HomeScreenContent(
     topics: List<ITopic>,
     onProfileClick: () -> Unit,
     onSettingClick: () -> Unit,
-    onTopicClick: (ITopic) -> Unit
+    onTopicClick: (ITopic) -> Unit,
+    onMove: (Int, Int) -> Unit = { _, _ -> },
+    onDragEnd: () -> Unit = {}
 ) {
     Column(modifier = Modifier.statusBarsPadding()) {
         HomeHeader(
@@ -75,6 +83,8 @@ fun HomeScreenContent(
             modifier = Modifier.weight(1f),
             topicList = topics,
             onClick = { onTopicClick(it) },
+            onMove = onMove,
+            onDragEnd = onDragEnd
         )
         HomeBottomBar(
             onSettingClick = { onSettingClick() }

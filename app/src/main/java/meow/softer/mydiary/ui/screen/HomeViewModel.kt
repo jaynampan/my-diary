@@ -10,8 +10,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import meow.softer.mydiary.data.local.db.entity.TopicEntry
 import meow.softer.mydiary.data.repository.FilesRepo
 import meow.softer.mydiary.data.repository.SettingsRepo
@@ -38,6 +42,7 @@ class HomeViewModel @Inject constructor(
     val isCroppingState = MutableStateFlow<Boolean>(false)
     val croppingBitmap = MutableStateFlow<Bitmap?>(null)
 
+    private var saveOrderJob: Job? = null
 
     init {
         refresh()
@@ -133,6 +138,31 @@ class HomeViewModel @Inject constructor(
                 color = color.toArgb()
             ))
             loadData()
+        }
+    }
+
+    fun moveTopic(fromIndex: Int, toIndex: Int) {
+        val list = topicData.value.toMutableList()
+        if (fromIndex < 0 || fromIndex >= list.size || toIndex < 0 || toIndex >= list.size) return
+        val item = list.removeAt(fromIndex)
+        list.add(toIndex, item)
+        topicData.value = list
+        
+        // Debounce database updates
+        saveOrderJob?.cancel()
+        saveOrderJob = viewModelScope.launch {
+            delay(1000) 
+            topicRepo.updateTopicOrders(list)
+        }
+    }
+
+    fun saveTopicOrder() {
+        saveOrderJob?.cancel()
+        val list = topicData.value
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                topicRepo.updateTopicOrders(list)
+            }
         }
     }
 

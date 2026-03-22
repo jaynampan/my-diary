@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b2dd17d8a8b9a9ecac36d37f02f15315",
+    "identityHash": "6fefb9d7f9ce608a6dbdefc16806f922",
     "entities": [
       {
         "tableName": "diary_entry",
@@ -258,11 +258,11 @@
       },
       {
         "tableName": "topic_order",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ref_topic_id` INTEGER NOT NULL, `order` INTEGER NOT NULL, PRIMARY KEY(`ref_topic_id`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "refTopicId",
+            "columnName": "ref_topic_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -271,25 +271,19 @@
             "columnName": "order",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "refTopicId",
-            "columnName": "ref_topic_id",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "ref_topic_id"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b2dd17d8a8b9a9ecac36d37f02f15315')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6fefb9d7f9ce608a6dbdefc16806f922')"
     ]
   }
 }
