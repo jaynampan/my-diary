@@ -23,6 +23,7 @@ splashScreen = "1.2.0"
 datastore = "1.2.1"
 hilt = "2.59.2"
 hiltNavigationCompose = "1.2.0"
+coil = "2.6.0"
 
 [libraries]
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -58,6 +59,7 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences-and
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

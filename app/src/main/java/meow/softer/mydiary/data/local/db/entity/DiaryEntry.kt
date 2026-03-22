@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "diary_entry")
 data class DiaryEntry(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "ref_topic_id") val refTopicId: Int,
     val time: Int,
     val title: String,
@@ -15,4 +15,3 @@ data class DiaryEntry(
     val attachment: String?,
     val location: String?
 )
-

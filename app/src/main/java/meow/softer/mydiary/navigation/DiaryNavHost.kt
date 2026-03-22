@@ -52,7 +52,7 @@ fun DiaryNav() {
                         }
 
                         ITopic.TYPE_DIARY -> {
-                            // navController.navigate("${DiaryScreen.route}/${topic.id}/${topic.title}")
+                            navController.navigate("${DiaryScreen.route}/${topic.id}/${topic.title}")
                         }
 
                         ITopic.TYPE_CONTACTS -> {
@@ -90,8 +90,20 @@ fun DiaryNav() {
                 topicName = topicName
             )
         }
-        composable(route = DiaryScreen.route) {
-            DiaryScreen()
+        composable(
+            route = DiaryScreen.routeWithArgs,
+            arguments = listOf(
+                navArgument(DiaryScreen.topicIdArg) { type = NavType.IntType },
+                navArgument(DiaryScreen.topicNameArg) { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val topicId = backStackEntry.arguments?.getInt(DiaryScreen.topicIdArg) ?: -1
+            val topicName = backStackEntry.arguments?.getString(DiaryScreen.topicNameArg) ?: ""
+
+            DiaryScreen(
+                topicId = topicId,
+                topicTitle = topicName
+            )
         }
         composable(route = ContactScreen.route) {
             //todo:update

@@ -126,4 +126,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     //live data
     implementation(libs.androidx.runtime.livedata)
+    // coil
+    implementation(libs.coil.compose)
 }

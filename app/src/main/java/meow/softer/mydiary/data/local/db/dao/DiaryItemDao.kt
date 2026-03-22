@@ -3,6 +3,7 @@ package meow.softer.mydiary.data.local.db.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import meow.softer.mydiary.data.local.db.entity.DiaryItem
@@ -11,16 +12,17 @@ import meow.softer.mydiary.data.local.db.entity.DiaryItem
 interface DiaryItemDao {
     @Query("SELECT * FROM diary_item")
     suspend fun getAll(): List<DiaryItem>
-    @Query("SELECT * FROM diary_item WHERE ref_diary_id = :diaryId")
+    
+    @Query("SELECT * FROM diary_item WHERE ref_diary_id = :diaryId ORDER BY position ASC")
     suspend fun getAllByDiaryId(diaryId: Int): List<DiaryItem>
 
     @Query("SELECT * FROM diary_item WHERE id = :id")
-    suspend fun getById(id: Int): DiaryItem
+    suspend fun getById(id: Int): DiaryItem?
 
-    @Insert
-    suspend fun add(diaryItem: DiaryItem)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun add(diaryItem: DiaryItem): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAll(vararg diaryItem: DiaryItem)
 
     @Update
@@ -34,5 +36,7 @@ interface DiaryItemDao {
 
     @Delete
     suspend fun deleteAll(vararg diaryItem: DiaryItem)
-
+    
+    @Query("DELETE FROM diary_item WHERE ref_diary_id = :diaryId")
+    suspend fun deleteByDiaryId(diaryId: Int)
 }

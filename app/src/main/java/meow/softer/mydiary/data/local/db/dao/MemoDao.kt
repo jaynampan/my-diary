@@ -15,6 +15,9 @@ interface MemoDao {
     @Query("SELECT * FROM memo_entry WHERE ref_topic_id = :topicId ORDER BY position ASC")
     suspend fun getAllByTopicId(topicId: Int): List<MemoEntry>
 
+    @Query("SELECT COUNT(*) FROM memo_entry WHERE ref_topic_id = :topicId")
+    suspend fun getCountByTopicId(topicId: Int): Int
+
     @Query("SELECT * FROM memo_entry WHERE id = :id")
     suspend fun getById(id: Int): MemoEntry
 
