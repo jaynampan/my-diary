@@ -12,7 +12,7 @@ interface MemoDao {
     @Query("SELECT * FROM memo_entry")
     suspend fun getAll(): List<MemoEntry>
 
-    @Query("SELECT * FROM memo_entry WHERE ref_topic_id = :topicId")
+    @Query("SELECT * FROM memo_entry WHERE ref_topic_id = :topicId ORDER BY position ASC")
     suspend fun getAllByTopicId(topicId: Int): List<MemoEntry>
 
     @Query("SELECT * FROM memo_entry WHERE id = :id")
@@ -28,13 +28,11 @@ interface MemoDao {
     suspend fun update(memoEntry: MemoEntry)
 
     @Update
-    suspend fun updateAll(vararg memoEntry: MemoEntry)
+    suspend fun updateAll(memoEntries: List<MemoEntry>)
 
     @Delete
     suspend fun delete(memoEntry: MemoEntry)
 
     @Delete
     suspend fun deleteAll(vararg memoEntry: MemoEntry)
-
-
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f933329219b027078512b44f9a782fd6",
+    "identityHash": "b2dd17d8a8b9a9ecac36d37f02f15315",
     "entities": [
       {
         "tableName": "diary_entry",
@@ -145,7 +145,7 @@
       },
       {
         "tableName": "memo_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `content` TEXT NOT NULL, `checked` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `content` TEXT NOT NULL, `checked` INTEGER NOT NULL, `ref_topic_id` INTEGER NOT NULL, `position` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -168,6 +168,12 @@
           {
             "fieldPath": "refTopicId",
             "columnName": "ref_topic_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -283,7 +289,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f933329219b027078512b44f9a782fd6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b2dd17d8a8b9a9ecac36d37f02f15315')"
     ]
   }
 }

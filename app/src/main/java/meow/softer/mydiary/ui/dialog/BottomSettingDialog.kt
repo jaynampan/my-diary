@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import meow.softer.mydiary.R
 import meow.softer.mydiary.navigation.AboutScreen
-import meow.softer.mydiary.navigation.AddTopicDialog
+import meow.softer.mydiary.navigation.NewTopicDialog
 import meow.softer.mydiary.navigation.BackupScreen
 import meow.softer.mydiary.navigation.SecurityScreen
 import meow.softer.mydiary.navigation.SettingScreen
@@ -57,7 +57,7 @@ fun BottomSettingDialog(
     ) {
         Icon(
             modifier = Modifier
-                .clickable { onClick(AddTopicDialog.route) },
+                .clickable { onClick(NewTopicDialog.route) },
             painter = painterResource(R.drawable.ic_add_white_36dp),
             tint = Color.White,
             contentDescription = null

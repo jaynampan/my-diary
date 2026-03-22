@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,13 +11,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import meow.softer.mydiary.ui.dialog.AddTopicDialog
-import meow.softer.mydiary.ui.dialog.AddTopicDialogWrapper
+import meow.softer.mydiary.ui.dialog.NewTopicDialogWrapper
 import meow.softer.mydiary.ui.dialog.BottomSettingSheet
 import meow.softer.mydiary.ui.dialog.ColorPickerDialog
+import meow.softer.mydiary.ui.dialog.ContactDetailDialog
 import meow.softer.mydiary.ui.dialog.ProfileDialogWrapper
 import meow.softer.mydiary.ui.models.ITopic
-import meow.softer.mydiary.ui.dialog.ContactDetailDialog
 import meow.softer.mydiary.ui.screen.AboutScreen
 import meow.softer.mydiary.ui.screen.BackupScreen
 import meow.softer.mydiary.ui.screen.ContactScreen
@@ -32,11 +30,10 @@ import meow.softer.mydiary.ui.screen.SettingScreen
 
 
 @Composable
-fun DiaryNav(
-    homeViewModel: HomeViewModel,
-    onTopicClick: (ITopic) -> Unit
-) {
+fun DiaryNav() {
     val navController = rememberNavController()
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val memoViewModel: MemoViewModel = hiltViewModel()
     NavHost(
         navController = navController,
         startDestination = HomeScreen.route
@@ -53,9 +50,11 @@ fun DiaryNav(
                         ITopic.TYPE_MEMO -> {
                             navController.navigate("${MemoScreen.route}/${topic.id}/${topic.title}")
                         }
+
                         ITopic.TYPE_DIARY -> {
                             // navController.navigate("${DiaryScreen.route}/${topic.id}/${topic.title}")
                         }
+
                         ITopic.TYPE_CONTACTS -> {
                             navController.navigate(ContactScreen.route)
                         }
@@ -84,7 +83,7 @@ fun DiaryNav(
         ) { backStackEntry ->
             val topicId = backStackEntry.arguments?.getInt(MemoScreen.topicIdArg) ?: -1
             val topicName = backStackEntry.arguments?.getString(MemoScreen.topicNameArg) ?: ""
-            val memoViewModel: MemoViewModel = hiltViewModel()
+
             MemoScreen(
                 memoViewModel = memoViewModel,
                 topicId = topicId,
@@ -109,7 +108,7 @@ fun DiaryNav(
         dialog(route = ProfileDialog.route) {
             ProfileDialogWrapper(
                 homeViewModel = homeViewModel,
-                onClick = { it ->
+                onClick = {
                     when (it) {
                         "Dismiss" -> {
                             navController.popBackStack()
@@ -160,8 +159,8 @@ fun DiaryNav(
                 onCancel = { navController.popBackStack() },
             )
         }
-        dialog(route = AddTopicDialog.route) {
-            AddTopicDialogWrapper(
+        dialog(route = NewTopicDialog.route) {
+            NewTopicDialogWrapper(
                 homeViewModel = homeViewModel,
                 navController = navController
             )
@@ -179,10 +178,5 @@ fun NavHostController.navigateSingleTop(route: String) {
         launchSingleTop = true
         // Restore state when re-selecting a previously selected item
         restoreState = true
-        // Optional: Pop up to the start destination of the graph to
-        // avoid building up a large stack of destinations
-//        popUpTo(this@navigateSingleTop.graph.findStartDestination().id) {
-//            saveState = true
-//        }
     }
 }

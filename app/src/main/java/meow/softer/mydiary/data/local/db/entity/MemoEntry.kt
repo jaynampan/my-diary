@@ -9,5 +9,6 @@ data class MemoEntry(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val content: String,
     val checked: Boolean = false,
-    @ColumnInfo(name = "ref_topic_id") val refTopicId: Int
+    @ColumnInfo(name = "ref_topic_id") val refTopicId: Int,
+    val position: Int = 0
 )

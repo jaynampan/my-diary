@@ -4,22 +4,17 @@ import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -42,17 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tanishranjan.cropkit.CropController
 import com.tanishranjan.cropkit.CropDefaults
-import com.tanishranjan.cropkit.CropOptions
 import com.tanishranjan.cropkit.CropRatio
 import com.tanishranjan.cropkit.CropShape
 import com.tanishranjan.cropkit.GridLinesType
 import com.tanishranjan.cropkit.ImageCropper
 import com.tanishranjan.cropkit.rememberCropController
 import meow.softer.mydiary.R
-import meow.softer.mydiary.ui.component.DiaryButton
+import meow.softer.mydiary.ui.component.CommonDialog
 import meow.softer.mydiary.ui.screen.HomeViewModel
-import meow.softer.mydiary.ui.theme.primaryLight
-import kotlin.math.max
 
 @Composable
 fun ProfileDialogWrapper(
@@ -127,80 +119,51 @@ fun ProfileDialog(
     onResetProfile: () -> Unit,
     updateUserName: (String) -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .height(250.dp)
-            .width(300.dp)
-            .background(primaryLight, RoundedCornerShape(3.dp))
-            .padding(10.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                contentAlignment = Alignment.TopEnd
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.White, shape = CircleShape)
-                        .clickable { onChooseProfile() }
-                )
-                Image(
-                    modifier = Modifier.clickable { onResetProfile() },
-                    painter = painterResource(R.drawable.ic_cancel_black_24dp),
-                    contentDescription = null
-                )
-            }
-
-            Spacer(Modifier.height(10.dp))
-            var textValue by remember { mutableStateOf(userName) }
-            TextField(
-                value = textValue,
-                onValueChange = { textValue = it },
-                colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.White,
-                    focusedIndicatorColor = Color.White,
-                    focusedTextColor = Color.White
-                ),
-                textStyle = TextStyle(
-                    textAlign = TextAlign.Center,
-                    color = Color.White
-                )
-            )
-
-            Spacer(Modifier.height(10.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DiaryButton(
-                    modifier = Modifier,
-                    onClick = { onDismiss() }
-                ) {
-                    Text("Cancel")
-                }
-                Spacer(Modifier.width(30.dp))
-                DiaryButton(
-                    modifier = Modifier,
-                    onClick = {
-                        updateUserName(textValue)
-                        onConfirm()
-                    }
-                ) {
-                    Text("Confirm")
-                }
-            }
-
+    var textValue by remember { mutableStateOf(userName) }
+    CommonDialog(
+        onConfirm = {
+            updateUserName(textValue)
+            onConfirm()
+        },
+        onCancel = {
+            onDismiss()
         }
+    ) {
+        Box(
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.White, shape = CircleShape)
+                    .clickable { onChooseProfile() }
+            )
+            Image(
+                modifier = Modifier.clickable { onResetProfile() },
+                painter = painterResource(R.drawable.ic_cancel_black_24dp),
+                contentDescription = null
+            )
+        }
+        Spacer(Modifier.height(10.dp))
+        TextField(
+            value = textValue,
+            onValueChange = { textValue = it },
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.White,
+                focusedIndicatorColor = Color.White,
+                focusedTextColor = Color.White
+            ),
+            textStyle = TextStyle(
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        )
     }
-
 }
 

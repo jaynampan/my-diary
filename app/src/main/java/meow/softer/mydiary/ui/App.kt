@@ -1,19 +1,12 @@
 package meow.softer.mydiary.ui
 
 import androidx.compose.runtime.Composable
-import meow.softer.mydiary.ui.screen.HomeViewModel
 import meow.softer.mydiary.navigation.DiaryNav
 import meow.softer.mydiary.ui.theme.DiaryTheme
 
 @Composable
-fun App(
-    homeViewModel: HomeViewModel,
-    onTopicClick: () -> Unit
-) {
+fun App() {
     DiaryTheme {
-        DiaryNav(
-            homeViewModel = homeViewModel,
-            onTopicClick = { onTopicClick() }
-        )
+        DiaryNav()
     }
 }

@@ -90,11 +90,11 @@ val InitialDataSQLs = listOf(
     "insert into topic_order(`order`,ref_topic_id) values(3, $sampleDiaryId);",
 
 
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(1,\'女子にも触るな！\',false,$mitsuhaMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(2,\'男子に触るな！\',false,$mitsuhaMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(3,\'脚をひらくな！\',true,$mitsuhaMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(4,\'体は見ない！/触らない！！\',false,$mitsuhaMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(5,\'お風呂ぜっっったい禁止！！！！！！！\',true,$mitsuhaMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(1,\'女子にも触るな！\',false,$mitsuhaMemoId,0);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(2,\'男子に触るな！\',false,$mitsuhaMemoId,2);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(3,\'脚をひらくな！\',true,$mitsuhaMemoId,1);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(4,\'体は見ない！/触らない！！\',false,$mitsuhaMemoId,3);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(5,\'お風呂ぜっっったい禁止！！！！！！！\',true,$mitsuhaMemoId,4);",
 
     "insert into memo_order(`order`,ref_memo_id) values(0,1);",
     "insert into memo_order(`order`,ref_memo_id) values(2,2);",
@@ -102,11 +102,11 @@ val InitialDataSQLs = listOf(
     "insert into memo_order(`order`,ref_memo_id) values(3,4);",
     "insert into memo_order(`order`,ref_memo_id) values(4,5);",
 
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(6,\'司とベタベタするな.....\', true, $takiMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(7,\'奧寺先輩と馴れ馴れしくするな.....\', true, $takiMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(8,\'女言葉NG！\', false, $takiMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(9,\'遅刻するな！\', true, $takiMemoId);",
-    "insert into memo_entry(id,content,checked,ref_topic_id) values(10,\'無駄つかい禁止！\', false, $takiMemoId);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(6,\'司とベタベタするな.....\', true, $takiMemoId,4);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(7,\'奧寺先輩と馴れ馴れしくするな.....\', true, $takiMemoId,1);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(8,\'女言葉NG！\', false, $takiMemoId,3);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(9,\'遅刻するな！\', true, $takiMemoId,2);",
+    "insert into memo_entry(id,content,checked,ref_topic_id,position) values(10,\'無駄つかい禁止！\', false, $takiMemoId,0);",
 
     "insert into memo_order(`order`,ref_memo_id) values(4,6);",
     "insert into memo_order(`order`,ref_memo_id) values(1,7);",
@@ -115,7 +115,7 @@ val InitialDataSQLs = listOf(
     "insert into memo_order(`order`,ref_memo_id) values(0,10);",
 
     "insert into diary_entry(id,ref_topic_id,time,title,mood,weather,location) " +
-            "values(1,$sampleDiaryId,${1475665800000L.toInt()},\'東京生活3❤\',${DiaryInfoHelper.MOOD_HAPPY}," +
+            "values(1,$sampleDiaryId,${1475665800},\'東京生活3❤\',${DiaryInfoHelper.MOOD_HAPPY}," +
             "${DiaryInfoHelper.WEATHER_RAINY},\'Tokyo\')",
 //    "insert into diary_item(type,position,content,ref_diary_id) values(${})"
 // todo: diary items
