@@ -1,5 +1,6 @@
 package meow.softer.mydiary.ui.dialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,9 +17,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import meow.softer.mydiary.R
 import meow.softer.mydiary.navigation.AboutScreen
+import meow.softer.mydiary.navigation.AddTopicDialog
 import meow.softer.mydiary.navigation.BackupScreen
 import meow.softer.mydiary.navigation.SecurityScreen
 import meow.softer.mydiary.navigation.SettingScreen
+import meow.softer.mydiary.ui.theme.primaryLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,14 +48,16 @@ fun BottomSettingDialog(
 ) {
     Row(
         modifier = Modifier
+            .background(primaryLight)
+            .fillMaxWidth()
             .padding(vertical = 32.dp) // todo:adjust
-            .fillMaxWidth(),
+        ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Icon(
             modifier = Modifier
-                .clickable { onClick("Add") },
+                .clickable { onClick(AddTopicDialog.route) },
             painter = painterResource(R.drawable.ic_add_white_36dp),
             tint = Color.White,
             contentDescription = null

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import meow.softer.mydiary.data.local.db.entity.TopicEntry
 import meow.softer.mydiary.data.repository.FilesRepo
 import meow.softer.mydiary.data.repository.SettingsRepo
 import meow.softer.mydiary.data.repository.TopicRepo
@@ -121,6 +122,16 @@ class HomeViewModel @Inject constructor(
 
     fun addITopic(name: String, type: Int, color: Int) {
         debug("HomeViewModel", "addITopic: $name, $type, $color")
+        viewModelScope.launch {
+            topicRepo.addTopic(TopicEntry(
+                id = 0  ,
+                title = name,
+                subtitle = "",
+                type = type,
+                color = color
+            ))
+            loadData()
+        }
     }
 
     companion object {

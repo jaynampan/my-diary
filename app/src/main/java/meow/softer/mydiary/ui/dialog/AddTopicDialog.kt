@@ -2,9 +2,12 @@ package meow.softer.mydiary.ui.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -32,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import meow.softer.mydiary.navigation.ColorPickerDialog
+import meow.softer.mydiary.navigation.HomeScreen
+import meow.softer.mydiary.navigation.navigateSingleTop
 import meow.softer.mydiary.ui.component.DiaryButton
 import meow.softer.mydiary.ui.models.ITopic
 import meow.softer.mydiary.ui.screen.HomeViewModel
@@ -44,10 +49,10 @@ fun AddTopicDialogWrapper(
 ) {
 
     AddTopicDialog(
-        onDismiss = { navController.popBackStack() },
+        onDismiss = { navController.navigateSingleTop(HomeScreen.route) },
         addTopic = { name, type, color ->
             homeViewModel.addITopic(name, type, color)
-            navController.popBackStack()
+            navController.navigateSingleTop(HomeScreen.route)
         },
         navController = navController,
     )
@@ -63,113 +68,123 @@ fun AddTopicDialog(
 ) {
     Box(
         modifier = modifier
-            .height(250.dp)
+            .height(350.dp)
             .width(300.dp)
             .background(primaryLight, RoundedCornerShape(3.dp))
             .padding(10.dp),
         contentAlignment = Alignment.Center
     ) {
-        var topicName by remember { mutableStateOf("") }
-        TextField(
-            value = topicName,
-            onValueChange = { topicName = it },
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.White,
-                focusedIndicatorColor = Color.White,
-                focusedTextColor = Color.White
-            ),
-            textStyle = TextStyle(
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
-        )
-        //Text color
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-        // Observe the result
-        val returnedColorInt = navBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<Int>("color_key")
-            ?.observeAsState()
-
-        // Use the color
-        val topicColor = returnedColorInt?.value?.let { Color(it) } ?: Color.Gray
-        Row {
-            Text("Text color")
-            Box(
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(100.dp)
-                    .background(topicColor)
-                    .clickable {
-                        navController.navigate(ColorPickerDialog.route)
-                    }
-            )
-        }
-        // --- Dropdown for Topic Type ---
-        val topicTypes = remember {
-            listOf(
-                "Contacts" to ITopic.TYPE_CONTACTS,
-                "Diary" to ITopic.TYPE_DIARY,
-                "Memo" to ITopic.TYPE_MEMO
-            )
-        }
-        var expanded by remember { mutableStateOf(false) }
-        var selectedType by remember { mutableStateOf(topicTypes[1]) } // Default to Diary
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            TextField(
-                value = selectedType.first,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Topic Type", color = Color.White) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
-                modifier = Modifier.menuAnchor()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                topicTypes.forEach { type ->
-                    DropdownMenuItem(
-                        text = { Text(type.first) },
-                        onClick = {
-                            selectedType = type
-                            expanded = false
-                        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            var topicName by remember { mutableStateOf("") }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Topic Name", color = Color.White)
+                TextField(
+                    value = topicName,
+                    onValueChange = { topicName = it },
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.White,
+                        focusedIndicatorColor = Color.White,
+                        focusedTextColor = Color.White
+                    ),
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Center,
+                        color = Color.White
                     )
-                }
+                )
             }
-        }
+            Spacer(Modifier.height(10.dp))
+            //Text color
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-        Spacer(Modifier.height(10.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            DiaryButton(
-                modifier = Modifier,
-                onClick = { onDismiss() }
+            // Observe the result
+            val returnedColorInt = navBackStackEntry
+                ?.savedStateHandle
+                ?.getLiveData<Int>("color_key")
+                ?.observeAsState()
+
+            // Use the color
+            val topicColor = returnedColorInt?.value?.let { Color(it) } ?: Color.Gray
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Cancel")
+                Text("Text color", color = Color.White)
+                Box(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(40.dp)
+                        .background(topicColor)
+                        .clickable {
+                            navController.navigate(ColorPickerDialog.route)
+                        }
+                )
             }
-            Spacer(Modifier.width(30.dp))
-            DiaryButton(
-                modifier = Modifier,
-                onClick = {
-                    addTopic(topicName, selectedType.second, topicColor.toArgb())
-                }
+            Spacer(Modifier.height(10.dp))
+            // --- Dropdown for Topic Type ---
+            val topicTypes = remember {
+                listOf(
+                    "Contacts" to ITopic.TYPE_CONTACTS,
+                    "Diary" to ITopic.TYPE_DIARY,
+                    "Memo" to ITopic.TYPE_MEMO
+                )
+            }
+            var expanded by remember { mutableStateOf(false) }
+            var selectedType by remember { mutableStateOf(topicTypes[1]) } // Default to Diary
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
             ) {
-                Text("Confirm")
+                TextField(
+                    value = selectedType.first,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Topic Type", color = Color.White) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White
+                    ),
+                    modifier = Modifier.menuAnchor()
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    topicTypes.forEach { type ->
+                        DropdownMenuItem(
+                            text = { Text(type.first) },
+                            onClick = {
+                                selectedType = type
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.height(10.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DiaryButton(
+                    modifier = Modifier,
+                    onClick = { onDismiss() }
+                ) {
+                    Text("Cancel")
+                }
+                Spacer(Modifier.width(30.dp))
+                DiaryButton(
+                    modifier = Modifier,
+                    onClick = {
+                        addTopic(topicName, selectedType.second, topicColor.toArgb())
+                    }
+                ) {
+                    Text("Confirm")
+                }
             }
         }
     }

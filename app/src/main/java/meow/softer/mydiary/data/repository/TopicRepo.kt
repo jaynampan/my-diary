@@ -20,6 +20,12 @@ class TopicRepo @Inject constructor(private val topicDao: TopicDao) {
         }
     }
 
+  suspend  fun addTopic(topicEntry: TopicEntry){
+      withContext(Dispatchers.IO){
+          topicDao.insert(topicEntry)
+      }
+    }
+
     private fun parseEntityToModel(entities: List<TopicEntry>): List<ITopic> {
         val topics = mutableListOf<ITopic>()
         entities.forEach { item ->
