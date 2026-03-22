@@ -90,6 +90,8 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.compose.icons.core)
+    implementation(libs.compose.icons.extended)
     implementation(libs.navigation.compose)
 
     androidTestImplementation(libs.ui.test.junit4)
@@ -119,6 +121,7 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
     // desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     //live data

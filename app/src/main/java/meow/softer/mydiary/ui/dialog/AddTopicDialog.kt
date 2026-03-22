@@ -63,7 +63,7 @@ fun AddTopicDialogWrapper(
 fun AddTopicDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
-    addTopic: (String, Int, Int) -> Unit,
+    addTopic: (String, Int, Color) -> Unit,
     navController: NavHostController,
 ) {
     Box(
@@ -180,7 +180,7 @@ fun AddTopicDialog(
                 DiaryButton(
                     modifier = Modifier,
                     onClick = {
-                        addTopic(topicName, selectedType.second, topicColor.toArgb())
+                        addTopic(topicName, selectedType.second, topicColor)
                     }
                 ) {
                     Text("Confirm")

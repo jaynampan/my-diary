@@ -2,9 +2,11 @@ package meow.softer.mydiary.ui.screen
 
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -120,15 +122,15 @@ class HomeViewModel @Inject constructor(
         contactBackgroundPainter.value = painter
     }
 
-    fun addITopic(name: String, type: Int, color: Int) {
-        debug("HomeViewModel", "addITopic: $name, $type, $color")
+    fun addITopic(name: String, type: Int, color: Color) {
+        debug(TAG, "addITopic: $name, $type, $color")
         viewModelScope.launch {
             topicRepo.addTopic(TopicEntry(
                 id = 0  ,
                 title = name,
                 subtitle = "",
                 type = type,
-                color = color
+                color = color.toArgb()
             ))
             loadData()
         }

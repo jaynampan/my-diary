@@ -3,12 +3,15 @@ package meow.softer.mydiary.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import meow.softer.mydiary.ui.dialog.AddTopicDialog
 import meow.softer.mydiary.ui.dialog.AddTopicDialogWrapper
 import meow.softer.mydiary.ui.dialog.BottomSettingSheet
@@ -23,6 +26,7 @@ import meow.softer.mydiary.ui.screen.DiaryScreen
 import meow.softer.mydiary.ui.screen.HomeScreen
 import meow.softer.mydiary.ui.screen.HomeViewModel
 import meow.softer.mydiary.ui.screen.MemoScreen
+import meow.softer.mydiary.ui.screen.MemoViewModel
 import meow.softer.mydiary.ui.screen.SecurityScreen
 import meow.softer.mydiary.ui.screen.SettingScreen
 
@@ -44,7 +48,19 @@ fun DiaryNav(
                 onSettingClick = {
                     navController.navigate(BottomSettingDialog.route)
                 },
-                onTopicClick = { onTopicClick(it) }
+                onTopicClick = { topic ->
+                    when (topic.type) {
+                        ITopic.TYPE_MEMO -> {
+                            navController.navigate("${MemoScreen.route}/${topic.id}/${topic.title}")
+                        }
+                        ITopic.TYPE_DIARY -> {
+                            // navController.navigate("${DiaryScreen.route}/${topic.id}/${topic.title}")
+                        }
+                        ITopic.TYPE_CONTACTS -> {
+                            navController.navigate(ContactScreen.route)
+                        }
+                    }
+                }
             )
         }
         composable(route = AboutScreen.route) {
@@ -59,8 +75,21 @@ fun DiaryNav(
         composable(route = SecurityScreen.route) {
             SecurityScreen()
         }
-        composable(route = MemoScreen.route) {
-            MemoScreen()
+        composable(
+            route = MemoScreen.routeWithArgs,
+            arguments = listOf(
+                navArgument(MemoScreen.topicIdArg) { type = NavType.IntType },
+                navArgument(MemoScreen.topicNameArg) { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val topicId = backStackEntry.arguments?.getInt(MemoScreen.topicIdArg) ?: -1
+            val topicName = backStackEntry.arguments?.getString(MemoScreen.topicNameArg) ?: ""
+            val memoViewModel: MemoViewModel = hiltViewModel()
+            MemoScreen(
+                memoViewModel = memoViewModel,
+                topicId = topicId,
+                topicName = topicName
+            )
         }
         composable(route = DiaryScreen.route) {
             DiaryScreen()

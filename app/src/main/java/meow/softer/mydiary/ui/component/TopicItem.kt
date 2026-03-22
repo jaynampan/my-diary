@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import meow.softer.mydiary.R
 import meow.softer.mydiary.ui.models.ITopic
+import meow.softer.mydiary.util.debug
 
 @Composable
 fun TopicList(
@@ -41,6 +42,7 @@ fun TopicItem(
     topic: ITopic,
     onClick: (ITopic) -> Unit
 ) {
+    debug("TopicItem color","title: ${topic.title} color: ${topic.color}")
     Column(
         Modifier
             .padding(start= 30.dp)
@@ -54,11 +56,11 @@ fun TopicItem(
             Icon(
                 painter = painterResource(topic.icon),
                 contentDescription = null,
-                tint = Color(topic.color)
+                tint = Color(topic.color.toLong() and 0xffffffffL)
             )
             Spacer(Modifier.width(10.dp))
             Text(
-                text = topic.title!!
+                text = topic.title
             )
             Spacer(Modifier.weight(1f))
             Text(

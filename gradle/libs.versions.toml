@@ -22,6 +22,7 @@ runtimeLivedata = "1.10.5"
 splashScreen = "1.2.0"
 datastore = "1.2.1"
 hilt = "2.59.2"
+hiltNavigationCompose = "1.2.0"
 
 [libraries]
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -29,6 +30,8 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 crop-kit = { module = "com.github.tanish-ranjan:crop-kit", version.ref = "cropKit" }
 material3 = { module = "androidx.compose.material3:material3" }
+compose-icons-core = { module = "androidx.compose.material:material-icons-core" }
+compose-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 ui = { module = "androidx.compose.ui:ui" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
@@ -54,6 +57,7 @@ splash-screen = { module = "androidx.core:core-splashscreen", version.ref = "spl
 datastore-preferences = { module = "androidx.datastore:datastore-preferences-android", version.ref = "datastore" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

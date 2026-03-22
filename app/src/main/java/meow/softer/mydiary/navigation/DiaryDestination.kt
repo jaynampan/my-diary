@@ -30,10 +30,16 @@ object BackupScreen : DiaryDestination {
 
 object MemoScreen : DiaryDestination {
     override val route = "MemoScreen"
+    const val routeWithArgs = "MemoScreen/{topicId}/{topicName}"
+    const val topicIdArg = "topicId"
+    const val topicNameArg = "topicName"
 }
 
 object DiaryScreen : DiaryDestination {
     override val route = "DiaryScreen"
+    const val routeWithArgs = "DiaryScreen/{topicId}/{topicName}"
+    const val topicIdArg = "topicId"
+    const val topicNameArg = "topicName"
 }
 
 
