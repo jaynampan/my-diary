@@ -52,6 +52,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -100,7 +102,7 @@ fun DiaryScreen(
             DiaryBottomBar(
                 selectedTab = uiState.selectedTab,
                 onAddClick = { viewModel.createNewDiary() },
-                onPhotoClick = { 
+                onPhotoClick = {
                     pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 },
                 onSaveClick = { viewModel.saveDiary() },
@@ -154,9 +156,21 @@ fun DiaryTopBar(
                 .padding(8.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            TabItem("Entries", selectedTab == 0) { onTabSelected(0) }
-            TabItem("Calendar", selectedTab == 1) { onTabSelected(1) }
-            TabItem("Diary", selectedTab == 2) { onTabSelected(2) }
+            TabItem(
+                text = "Entries",
+                isSelected = selectedTab == 0,
+                shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+            ) { onTabSelected(0) }
+            TabItem(
+                text = "Calendar",
+                isSelected = selectedTab == 1,
+                shape = RectangleShape
+            ) { onTabSelected(1) }
+            TabItem(
+                text = "Diary",
+                isSelected = selectedTab == 2,
+                shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
+            ) { onTabSelected(2) }
         }
         Text(
             text = topicTitle,
@@ -172,30 +186,27 @@ fun DiaryTopBar(
 }
 
 @Composable
-fun TabItem(text: String, isSelected: Boolean, onClick: () -> Unit) {
+fun TabItem(
+    modifier: Modifier = Modifier,
+    text: String,
+    isSelected: Boolean,
+    shape: Shape = RectangleShape,
+    onClick: () -> Unit
+) {
     val backgroundColor = if (isSelected) Color(0xFF5C9EB2) else Color.White
     val textColor = if (isSelected) Color.White else Color(0xFF5C9EB2)
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .width(100.dp)
             .height(32.dp)
-            .border(1.dp, Color(0xFF5C9EB2))
+            .clip(shape)
             .background(backgroundColor)
+            .border(1.dp, Color(0xFF5C9EB2), shape)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(12.dp)
-                    .clip(CircleShape)
-                    .border(1.dp, if (isSelected) Color.White else Color(0xFF5C9EB2))
-                    .background(if (isSelected) Color.Cyan else Color.Transparent)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(text = text, color = textColor, fontSize = 14.sp)
-        }
+        Text(text = text, color = textColor, fontSize = 14.sp)
     }
 }
 
@@ -236,8 +247,18 @@ fun DiaryEntryCard(diary: DiaryEntry, onClick: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = time, fontSize = 12.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.weight(1f))
-                    Icon(painterResource(id = DiaryInfoHelper.getWeatherResourceId(diary.weather ?: 0)), null, modifier = Modifier.size(16.dp))
-                    Icon(painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)), null, modifier = Modifier.size(16.dp))
+                    Icon(
+                        painterResource(
+                            id = DiaryInfoHelper.getWeatherResourceId(
+                                diary.weather ?: 0
+                            )
+                        ), null, modifier = Modifier.size(16.dp)
+                    )
+                    Icon(
+                        painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)),
+                        null,
+                        modifier = Modifier.size(16.dp)
+                    )
                 }
                 Text(text = diary.title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
@@ -300,7 +321,11 @@ fun DiaryPage(
     val dayOfWeek = SimpleDateFormat("EEEE", Locale.getDefault()).format(calendar.time)
     val timeStr = SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.time)
 
-    Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -311,7 +336,11 @@ fun DiaryPage(
             Text(text = month, color = Color.White, fontSize = 14.sp)
             Text(text = day, color = Color.White, fontSize = 48.sp, fontWeight = FontWeight.Bold)
             Text(text = "$dayOfWeek $timeStr", color = Color.White, fontSize = 14.sp)
-            Text(text = "📍 ${diary.location ?: "No Location"}", color = Color.White, fontSize = 12.sp)
+            Text(
+                text = "📍 ${diary.location ?: "No Location"}",
+                color = Color.White,
+                fontSize = 12.sp
+            )
         }
 
         Row(
@@ -331,7 +360,10 @@ fun DiaryPage(
                 )
             )
             IconButton(onClick = { }) {
-                Icon(painterResource(id = DiaryInfoHelper.getWeatherResourceId(diary.weather ?: 0)), null)
+                Icon(
+                    painterResource(id = DiaryInfoHelper.getWeatherResourceId(diary.weather ?: 0)),
+                    null
+                )
             }
             IconButton(onClick = { }) {
                 Icon(painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)), null)
@@ -394,7 +426,7 @@ fun DiaryBottomBar(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             IconButton(onClick = { }) { Icon(Icons.Default.Menu, null) }
-            
+
             if (selectedTab != 2) {
                 IconButton(onClick = onAddClick) { Icon(Icons.Default.Edit, null) }
                 IconButton(onClick = onPhotoClick) { Icon(Icons.Default.Image, null) }
