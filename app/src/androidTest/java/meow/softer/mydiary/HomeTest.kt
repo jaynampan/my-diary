@@ -5,25 +5,24 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.room.Room
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.NoMatchingRootException
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.Root
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.AssertionFailedError
-import meow.softer.mydiary.ui.App
-import meow.softer.mydiary.ui.home.MainViewModel
-import meow.softer.mydiary.ui.navigation.DiaryNav
-import org.hamcrest.Matchers.not
+import meow.softer.mydiary.data.local.db.DiaryDatabase
+import meow.softer.mydiary.data.local.store.SettingStore
+import meow.softer.mydiary.data.repository.FilesRepo
+import meow.softer.mydiary.data.repository.SettingsRepo
+import meow.softer.mydiary.data.repository.TopicRepo
+import meow.softer.mydiary.ui.screen.HomeViewModel
+import meow.softer.mydiary.navigation.DiaryNav
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,15 +33,24 @@ class HomeTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val mainViewModel = MainViewModel()
+    private lateinit var homeViewModel: HomeViewModel
+
     @Before
     fun setup(){
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val db = Room.inMemoryDatabaseBuilder(context, DiaryDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
+        val settingStore = SettingStore(context)
+        val settingsRepo = SettingsRepo(settingStore)
+        val topicRepo = TopicRepo(db.topicDao())
+        val filesRepo = FilesRepo(context)
+        homeViewModel = HomeViewModel(settingsRepo, topicRepo, filesRepo)
+
         composeTestRule.setContent {
             DiaryNav(
-                mainViewModel = mainViewModel,
+                homeViewModel = homeViewModel,
                 onTopicClick = {},
-                onSettingClick = {},
-                onProfileClick = {},
             )
         }
     }

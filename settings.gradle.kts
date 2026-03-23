@@ -17,6 +17,9 @@ pluginManagement {
         mavenCentral()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
 
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
@@ -35,6 +38,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven { url = uri("https://www.jitpack.io") } // for libs published on jitpack
     }
 }
 rootProject.name = "MyDiary"

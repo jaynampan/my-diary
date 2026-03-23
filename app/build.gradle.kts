@@ -1,12 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.devtools.ksp)
-    alias(libs.plugins.dependency.checker) // check for dependency updates
+    alias(libs.plugins.dagger.hilt)//hilt dependency injection
 }
 
 android {
@@ -91,6 +90,8 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.compose.icons.core)
+    implementation(libs.compose.icons.extended)
     implementation(libs.navigation.compose)
 
     androidTestImplementation(libs.ui.test.junit4)
@@ -98,11 +99,8 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
-    //lib
     implementation(libs.activity.ktx)
     implementation(libs.constraintlayout.compose)
-
-
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
@@ -111,39 +109,25 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //libs
-    implementation(libs.commons.io)
-    implementation(libs.material.calendarview)
-    implementation(libs.android.segmented)
-    implementation(libs.fresco)
-    implementation(libs.holocolorpicker)
-    implementation(libs.filepicker)
-    implementation(libs.library)
-    implementation(libs.advrecyclerview)
-    implementation(libs.gson)
-    implementation(libs.ucrop)
-    implementation(libs.circleimageview)
-    implementation(libs.ultimaterecyclerview.library)
-    implementation(libs.recyclerview.animators)
-    implementation(libs.play.services.places)
-    implementation(libs.photodraweeview)
+    // splash screen
+    implementation(libs.splash.screen)
+    // data store preferences
+    implementation(libs.datastore.preferences)
     // room database
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+    // photo cropping
+    implementation(libs.crop.kit)
+    // hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
     // desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-}
-
-// Configure the dependencyUpdates Gradle Plugin to check for stable releases only
-// https://github.com/ben-manes/gradle-versions-plugin
-fun isNonStable(version: String): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
-    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
-    val isStable = stableKeyword || regex.matches(version)
-    return isStable.not()
-}
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        isNonStable(candidate.version) && !isNonStable(currentVersion)
-    }
+    //live data
+    implementation(libs.androidx.runtime.livedata)
+    // coil
+    implementation(libs.coil.compose)
+    // biometric
+    implementation(libs.androidx.biometric)
 }
