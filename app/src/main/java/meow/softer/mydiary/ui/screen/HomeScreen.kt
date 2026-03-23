@@ -1,6 +1,9 @@
 package meow.softer.mydiary.ui.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,6 +49,7 @@ fun HomeScreen(
         ?: painterResource(R.drawable.profile_theme_bg_taki)
     debug("HomeScreen", "bgPainter: $bgPainter, ")
     val topicListData = homeViewModel.topicData.collectAsStateWithLifecycle().value
+    val searchQuery by homeViewModel.searchQuery.collectAsStateWithLifecycle()
 
     var editingTopic by remember { mutableStateOf<ITopic?>(null) }
     var deletingTopic by remember { mutableStateOf<ITopic?>(null) }
@@ -62,6 +66,8 @@ fun HomeScreen(
         bgPainter = bgPainter,
         userName = userName,
         topics = topicListData,
+        searchQuery = searchQuery,
+        onSearchQueryChange = { homeViewModel.onSearchQueryChange(it) },
         onProfileClick = {
             onProfileClick()
         },
@@ -123,6 +129,8 @@ fun HomeScreenContent(
     bgPainter: Painter,
     userName: String,
     topics: List<ITopic>,
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
     onProfileClick: () -> Unit,
     onSettingClick: () -> Unit,
     onTopicClick: (ITopic) -> Unit,
@@ -131,16 +139,25 @@ fun HomeScreenContent(
     onMove: (Int, Int) -> Unit = { _, _ -> },
     onDragEnd: () -> Unit = {}
 ) {
-    Column(modifier = Modifier.statusBarsPadding()) {
-        HomeHeader(
-            profilePic = profilePic,
-            bgPainter = bgPainter,
-            userName = userName,
-            onClick = onProfileClick
-        )
+    Column(
+        modifier = Modifier
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding()
+            .fillMaxSize()
+    ) {
+        if (searchQuery.isEmpty()) {
+            HomeHeader(
+                profilePic = profilePic,
+                bgPainter = bgPainter,
+                userName = userName,
+                onClick = onProfileClick
+            )
+        }
         TopicList(
             modifier = Modifier.weight(1f),
             topicList = topics,
+            searchQuery = searchQuery,
             onClick = { onTopicClick(it) },
             onEditClick = onEditClick,
             onDeleteClick = onDeleteClick,
@@ -148,6 +165,8 @@ fun HomeScreenContent(
             onDragEnd = onDragEnd
         )
         HomeBottomBar(
+            searchQuery = searchQuery,
+            onSearchQueryChange = onSearchQueryChange,
             onSettingClick = { onSettingClick() }
         )
     }
@@ -173,6 +192,8 @@ private fun HomeScreenContentPreview() {
                     color = Color.Red.toArgb()
                 ).apply { count = 8 }
             ),
+            searchQuery = "",
+            onSearchQueryChange = {},
             onProfileClick = {},
             onSettingClick = {},
             onTopicClick = {}

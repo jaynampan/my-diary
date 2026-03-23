@@ -34,6 +34,7 @@ class HomeViewModel @Inject constructor(
     val userPainter = MutableStateFlow<Painter?>(null)
     val headerBgPainter = MutableStateFlow<Painter?>(null)
     val topicData = MutableStateFlow<List<ITopic>>(listOf())
+    val searchQuery = MutableStateFlow("")
     val contactTitle = MutableStateFlow("")
     val importPath = MutableStateFlow("")
     val exportPath = MutableStateFlow("")
@@ -43,13 +44,18 @@ class HomeViewModel @Inject constructor(
     val croppingBitmap = MutableStateFlow<Bitmap?>(null)
 
     private var saveOrderJob: Job? = null
+    private var searchJob: Job? = null
 
     init {
         refresh()
     }
 
     private suspend fun loadData() {
-        topicData.value = topicRepo.getAll()
+        if (searchQuery.value.isEmpty()) {
+            topicData.value = topicRepo.getAll()
+        } else {
+            topicData.value = topicRepo.search(searchQuery.value)
+        }
     }
 
     private fun refresh() {
@@ -77,6 +83,16 @@ class HomeViewModel @Inject constructor(
         userName.value = value
         viewModelScope.launch {
             settingsRepo.updateUsername(value)
+        }
+    }
+
+    fun onSearchQueryChange(query: String) {
+        searchQuery.value = query
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            // Add debounce to avoid frequent DB queries
+            delay(300)
+            loadData()
         }
     }
 

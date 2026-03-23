@@ -12,9 +12,12 @@ import meow.softer.mydiary.data.local.db.entity.TopicEntry
 interface TopicDao {
     @Query("SELECT * FROM topic_entry")
     fun getAll(): List<TopicEntry>
-    // todo: find better solution for null
+
     @Query("SELECT topic_entry.* FROM topic_entry LEFT JOIN topic_order ON topic_entry.id = topic_order.ref_topic_id ORDER BY CASE WHEN topic_order.`order` IS NULL THEN 999 ELSE topic_order.`order` END ASC")
     fun getAllOrdered(): List<TopicEntry>
+
+    @Query("SELECT topic_entry.* FROM topic_entry LEFT JOIN topic_order ON topic_entry.id = topic_order.ref_topic_id WHERE topic_entry.title LIKE :query ORDER BY CASE WHEN topic_order.`order` IS NULL THEN 999 ELSE topic_order.`order` END ASC")
+    fun search(query: String): List<TopicEntry>
 
     @Query("SELECT * FROM topic_entry WHERE id = :id")
     fun getById(id: Int): TopicEntry

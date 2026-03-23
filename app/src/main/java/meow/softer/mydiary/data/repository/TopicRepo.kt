@@ -31,6 +31,13 @@ class TopicRepo @Inject constructor(
         }
     }
 
+    suspend fun search(query: String): List<ITopic> {
+        return withContext(Dispatchers.IO) {
+            val topics = topicDao.search("%$query%")
+            parseEntityToModel(topics)
+        }
+    }
+
     suspend fun addTopic(topicEntry: TopicEntry) {
         withContext(Dispatchers.IO) {
             val id = topicDao.insert(topicEntry)

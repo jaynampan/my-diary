@@ -32,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +60,7 @@ import kotlin.math.roundToInt
 fun TopicList(
     modifier: Modifier = Modifier,
     topicList: List<ITopic>,
+    searchQuery: String = "",
     onClick: (ITopic) -> Unit,
     onEditClick: (ITopic) -> Unit = {},
     onDeleteClick: (ITopic) -> Unit = {},
@@ -72,6 +74,13 @@ fun TopicList(
 
     val currentOnMove by rememberUpdatedState(onMove)
     val currentOnDragEnd by rememberUpdatedState(onDragEnd)
+
+    // Scroll to top when search results change
+    LaunchedEffect(searchQuery, topicList) {
+        if (searchQuery.isNotEmpty() && topicList.isNotEmpty()) {
+            listState.animateScrollToItem(0)
+        }
+    }
 
     LazyColumn(
         modifier = modifier
