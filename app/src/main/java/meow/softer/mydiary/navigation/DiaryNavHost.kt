@@ -1,6 +1,8 @@
 package meow.softer.mydiary.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +28,7 @@ import meow.softer.mydiary.ui.screen.HomeViewModel
 import meow.softer.mydiary.ui.screen.MemoScreen
 import meow.softer.mydiary.ui.screen.MemoViewModel
 import meow.softer.mydiary.ui.screen.SecurityScreen
+import meow.softer.mydiary.ui.screen.SecurityViewModel
 import meow.softer.mydiary.ui.screen.SettingScreen
 
 
@@ -34,6 +37,9 @@ fun DiaryNav() {
     val navController = rememberNavController()
     val homeViewModel: HomeViewModel = hiltViewModel()
     val memoViewModel: MemoViewModel = hiltViewModel()
+    val securityViewModel: SecurityViewModel = hiltViewModel()
+    val settings by securityViewModel.settings.collectAsState()
+
     NavHost(
         navController = navController,
         startDestination = HomeScreen.route
@@ -73,7 +79,7 @@ fun DiaryNav() {
             BackupScreen()
         }
         composable(route = SecurityScreen.route) {
-            SecurityScreen()
+            SecurityScreen(securityViewModel)
         }
         composable(
             route = MemoScreen.routeWithArgs,
@@ -144,6 +150,7 @@ fun DiaryNav() {
         }
         dialog(route = BottomSettingDialog.route) {
             BottomSettingSheet(
+                hasPassword = settings.isSecurityEnabled,
                 onDismiss = {
                     navController.popBackStack()
                 }

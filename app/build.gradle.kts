@@ -128,4 +128,6 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     // coil
     implementation(libs.coil.compose)
+    // biometric
+    implementation(libs.androidx.biometric)
 }

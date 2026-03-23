@@ -8,6 +8,8 @@ import javax.inject.Inject
 class SettingsRepo @Inject constructor(
     private val settingStore: SettingStore
 ) {
+    val settingsFlow = settingStore.settingsFlow
+
     suspend fun getUserSettings(): AppSettings {
         return settingStore.settingsFlow.first()
     }
@@ -16,4 +18,7 @@ class SettingsRepo @Inject constructor(
         settingStore.setUsername(value)
     }
 
+    suspend fun updateSecurityEnabled(enabled: Boolean) {
+        settingStore.setSecurityEnabled(enabled)
+    }
 }
