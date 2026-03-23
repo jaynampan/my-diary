@@ -88,7 +88,6 @@ val InitialDataSQLs = listOf(
     "insert into topic_order(`order`,ref_topic_id) values(1, $mitsuhaMemoId);",
     "insert into topic_order(`order`,ref_topic_id) values(3, $sampleDiaryId);",
 
-
     "insert into memo_entry(id,content,checked,ref_topic_id,position) values(1,\'女子にも触るな！\',false,$mitsuhaMemoId,0);",
     "insert into memo_entry(id,content,checked,ref_topic_id,position) values(2,\'男子に触るな！\',false,$mitsuhaMemoId,2);",
     "insert into memo_entry(id,content,checked,ref_topic_id,position) values(3,\'脚をひらくな！\',true,$mitsuhaMemoId,1);",

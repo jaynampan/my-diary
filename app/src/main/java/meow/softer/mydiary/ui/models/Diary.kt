@@ -9,6 +9,6 @@ class Diary(
     override var isPinned: Boolean = false,
     override var count:Int = 0
 ) : ITopic {
-    override val type = ITopic.Companion.TYPE_DIARY
+    override val type = ITopic.TYPE_DIARY
     override val icon = R.drawable.ic_topic_diary
 }

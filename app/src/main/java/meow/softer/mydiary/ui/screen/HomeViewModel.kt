@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
     val exportPath = MutableStateFlow("")
     val contacts = MutableStateFlow<List<ContactGroup>>(emptyList())
     val contactBackgroundPainter = MutableStateFlow<Painter?>(null)
-    val isCroppingState = MutableStateFlow<Boolean>(false)
+    val isCroppingState = MutableStateFlow(false)
     val croppingBitmap = MutableStateFlow<Bitmap?>(null)
 
     private var saveOrderJob: Job? = null

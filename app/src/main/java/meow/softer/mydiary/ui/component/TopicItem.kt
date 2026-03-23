@@ -1,6 +1,9 @@
 package meow.softer.mydiary.ui.component
 
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
@@ -45,7 +48,8 @@ fun TopicList(
     onDragEnd: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
-    var draggedItemIndex by remember { mutableStateOf<Int?>(null) }
+    // Use key (id) for stable tracking during reordering to avoid "shaking" caused by index shifts
+    var draggedItemKey by remember { mutableStateOf<Any?>(null) }
     var draggingOffset by remember { mutableFloatStateOf(0f) }
 
     val currentOnMove by rememberUpdatedState(onMove)
@@ -62,24 +66,33 @@ fun TopicList(
                                 offset.y.toInt() in item.offset..(item.offset + item.size)
                             }
                             ?.also {
-                                draggedItemIndex = it.index
+                                draggedItemKey = it.key
+                                draggingOffset = 0f
                             }
                     },
                     onDrag = { change, dragAmount ->
                         change.consume()
                         draggingOffset += dragAmount.y
 
-                        draggedItemIndex?.let { currentIndex ->
+                        draggedItemKey?.let { key ->
                             val layoutInfo = listState.layoutInfo
                             val currentItemInfo = layoutInfo.visibleItemsInfo
-                                .find { it.index == currentIndex } ?: return@let
+                                .find { it.key == key } ?: return@let
+                            val currentIndex = currentItemInfo.index
                             
+                            // Current center point of the dragged item in the list's viewport
                             val draggedItemCenter = currentItemInfo.offset + currentItemInfo.size / 2 + draggingOffset
                             
+                            // Detect which item to swap with, using a small hysteresis (buffer) for stability
                             val targetItem = layoutInfo.visibleItemsInfo
                                 .find { item ->
-                                    draggedItemCenter.toInt() in item.offset..(item.offset + item.size) &&
-                                            item.index != currentIndex
+                                    val itemCenter = item.offset + item.size / 2
+                                    val hysteresis = item.size / 8f
+                                    when {
+                                        item.index > currentIndex -> draggedItemCenter > itemCenter + hysteresis
+                                        item.index < currentIndex -> draggedItemCenter < itemCenter - hysteresis
+                                        else -> false
+                                    }
                                 }
 
                             if (targetItem != null) {
@@ -87,18 +100,18 @@ fun TopicList(
                                 val distance = targetItem.offset - currentItemInfo.offset
                                 
                                 currentOnMove(currentIndex, targetIndex)
-                                draggedItemIndex = targetIndex
+                                // Adjust offset so the item stays visually under the user's finger after the list updates
                                 draggingOffset -= distance
                             }
                         }
                     },
                     onDragEnd = {
-                        draggedItemIndex = null
+                        draggedItemKey = null
                         draggingOffset = 0f
                         currentOnDragEnd()
                     },
                     onDragCancel = {
-                        draggedItemIndex = null
+                        draggedItemKey = null
                         draggingOffset = 0f
                         currentOnDragEnd()
                     }
@@ -106,25 +119,46 @@ fun TopicList(
             },
         state = listState
     ) {
-        itemsIndexed(topicList, key = { _, item -> item.id }) { index, it ->
-            val isDragging = index == draggedItemIndex
-            val zIndex = if (isDragging) 1f else 0f
-            val elevation by animateDpAsState(if (isDragging) 8.dp else 0.dp, label = "elevation")
+        itemsIndexed(topicList, key = { _, item -> item.id }) { _, it ->
+            val isDragging = it.id == draggedItemKey
+            
+            // Smoothly animate elevation and scale changes for a "natural" pickup feel
+            val elevation by animateDpAsState(
+                targetValue = if (isDragging) 8.dp else 0.dp,
+                animationSpec = spring(stiffness = Spring.StiffnessLow),
+                label = "elevation"
+            )
+            val scale by animateFloatAsState(
+                targetValue = if (isDragging) 1.04f else 1f,
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                label = "scale"
+            )
 
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .zIndex(zIndex)
+                    // zIndex ensures the dragged item stays on top of others and their shadows
+                    .zIndex(if (isDragging) 10f else 1f)
                     .graphicsLayer {
                         translationY = if (isDragging) draggingOffset else 0f
+                        scaleX = scale
+                        scaleY = scale
                     }
-                    .animateItem(),
+                    .animateItem(
+                        // Crucial: disable placement animation for the dragged item to prevent it from 
+                        // fighting with manual translationY. Use a smooth spring for others.
+                        placementSpec = if (isDragging) null else spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessMediumLow
+                        )
+                    ),
                 tonalElevation = elevation,
-                shadowElevation = elevation
+                shadowElevation = elevation,
+                color = Color.Transparent
             ) {
                 TopicItem(
                     topic = it,
-                    onClick = { if (draggedItemIndex == null) onClick(it) }
+                    onClick = { if (draggedItemKey == null) onClick(it) }
                 )
             }
         }

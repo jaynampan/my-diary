@@ -9,6 +9,6 @@ class Memo(
     override var count: Int = 0,
     override var isPinned: Boolean = false
 ) : ITopic {
-    override val type = ITopic.Companion.TYPE_MEMO
+    override val type = ITopic.TYPE_MEMO
     override val icon = R.drawable.ic_topic_memo
 }

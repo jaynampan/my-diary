@@ -10,6 +10,6 @@ class Contacts(
     override var count: Int = 0
 
 ) : ITopic {
-    override val type: Int = ITopic.Companion.TYPE_CONTACTS
+    override val type: Int = ITopic.TYPE_CONTACTS
     override val icon: Int = R.drawable.ic_topic_contacts
 }

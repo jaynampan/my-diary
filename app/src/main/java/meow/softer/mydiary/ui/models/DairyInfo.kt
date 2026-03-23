@@ -38,7 +38,7 @@ object DiaryInfoHelper {
 
     @JvmStatic
     val weatherArray: Array<Int?>
-        get() = arrayOf<Int>(
+        get() = arrayOf(
             R.drawable.ic_weather_sunny, R.drawable.ic_weather_cloud,
             R.drawable.ic_weather_windy, R.drawable.ic_weather_rainy, R.drawable.ic_weather_snowy,
             R.drawable.ic_weather_foggy

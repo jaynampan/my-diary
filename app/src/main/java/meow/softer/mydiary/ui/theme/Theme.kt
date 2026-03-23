@@ -110,7 +110,7 @@ fun DiaryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     // read settings from datastore and provide it in composition
     val context = LocalContext.current

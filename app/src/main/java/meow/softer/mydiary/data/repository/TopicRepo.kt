@@ -1,7 +1,5 @@
 package meow.softer.mydiary.data.repository
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import meow.softer.mydiary.data.local.db.dao.ContactDao
@@ -28,7 +26,7 @@ class TopicRepo @Inject constructor(
         return withContext(Dispatchers.IO) {
             val topics = topicDao.getAllOrdered()
             // If no orders exist yet, we might get an empty list or unordered list depending on JOIN.
-            val finalTopics = if (topics.isEmpty()) topicDao.getAll() else topics
+            val finalTopics = topics.ifEmpty { topicDao.getAll() }
             parseEntityToModel(finalTopics)
         }
     }
