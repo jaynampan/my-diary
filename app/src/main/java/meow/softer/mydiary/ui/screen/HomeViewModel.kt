@@ -141,6 +141,20 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun updateTopic(topic: ITopic) {
+        viewModelScope.launch {
+            topicRepo.updateTopic(topic)
+            loadData()
+        }
+    }
+
+    fun deleteTopic(topic: ITopic) {
+        viewModelScope.launch {
+            topicRepo.deleteTopic(topic)
+            loadData()
+        }
+    }
+
     fun moveTopic(fromIndex: Int, toIndex: Int) {
         val list = topicData.value.toMutableList()
         if (fromIndex < 0 || fromIndex >= list.size || toIndex < 0 || toIndex >= list.size) return

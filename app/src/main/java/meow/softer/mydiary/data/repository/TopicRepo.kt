@@ -40,6 +40,30 @@ class TopicRepo @Inject constructor(
         }
     }
 
+    suspend fun updateTopic(topic: ITopic) {
+        withContext(Dispatchers.IO) {
+            val entry = TopicEntry(
+                id = topic.id,
+                title = topic.title,
+                subtitle = null, // Assuming subtitle is not used for now or preserved
+                type = topic.type,
+                color = topic.color
+            )
+            topicDao.update(entry)
+        }
+    }
+
+    suspend fun deleteTopic(topic: ITopic) {
+        withContext(Dispatchers.IO) {
+            val entry = topicDao.getById(topic.id)
+            topicDao.delete(entry)
+            val order = topicOrderDao.getByTopicId(topic.id)
+            if (order != null) {
+                topicOrderDao.delete(order)
+            }
+        }
+    }
+
     suspend fun updateTopicOrders(topics: List<ITopic>) {
         withContext(Dispatchers.IO) {
             val orders = topics.mapIndexed { index, iTopic ->

@@ -41,6 +41,7 @@ fun DiaryNav() {
         composable(route = HomeScreen.route) {
             HomeScreen(
                 homeViewModel = homeViewModel,
+                navController = navController,
                 onProfileClick = { navController.navigate(ProfileDialog.route) },
                 onSettingClick = {
                     navController.navigate(BottomSettingDialog.route)

@@ -3,6 +3,11 @@ package meow.softer.mydiary.ui.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -10,18 +15,24 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import meow.softer.mydiary.R
-import meow.softer.mydiary.ui.models.Diary
-import meow.softer.mydiary.ui.models.ITopic
+import meow.softer.mydiary.navigation.ColorPickerDialog
 import meow.softer.mydiary.ui.component.HomeBottomBar
 import meow.softer.mydiary.ui.component.HomeHeader
 import meow.softer.mydiary.ui.component.TopicList
+import meow.softer.mydiary.ui.dialog.DeleteConfirmDialog
+import meow.softer.mydiary.ui.dialog.EditTopicDialog
+import meow.softer.mydiary.ui.models.Diary
+import meow.softer.mydiary.ui.models.ITopic
 import meow.softer.mydiary.ui.theme.DiaryTheme
 import meow.softer.mydiary.util.debug
 
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
+    navController: NavController,
     onProfileClick: () -> Unit = {},
     onSettingClick: () -> Unit = {},
     onTopicClick: (ITopic) -> Unit = {},
@@ -35,6 +46,16 @@ fun HomeScreen(
         ?: painterResource(R.drawable.profile_theme_bg_taki)
     debug("HomeScreen", "bgPainter: $bgPainter, ")
     val topicListData = homeViewModel.topicData.collectAsStateWithLifecycle().value
+
+    var editingTopic by remember { mutableStateOf<ITopic?>(null) }
+    var deletingTopic by remember { mutableStateOf<ITopic?>(null) }
+
+    // Color picker handling
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val returnedColorInt = navBackStackEntry
+        ?.savedStateHandle
+        ?.getLiveData<Int>("color_key")
+        ?.observeAsState()
 
     HomeScreenContent(
         profilePic = profilePic,
@@ -50,6 +71,12 @@ fun HomeScreen(
         onTopicClick = {
             onTopicClick(it)
         },
+        onEditClick = {
+            editingTopic = it
+        },
+        onDeleteClick = {
+            deletingTopic = it
+        },
         onMove = { from, to ->
             homeViewModel.moveTopic(from, to)
         },
@@ -57,6 +84,36 @@ fun HomeScreen(
             homeViewModel.saveTopicOrder()
         }
     )
+
+    editingTopic?.let { topic ->
+        EditTopicDialog(
+            topic = topic,
+            onDismiss = { editingTopic = null },
+            onConfirm = { newTitle, newColor ->
+                topic.title = newTitle
+                topic.color = newColor.toArgb()
+                homeViewModel.updateTopic(topic)
+                editingTopic = null
+                // Clear the saved color so it doesn't affect subsequent edits
+                navBackStackEntry?.savedStateHandle?.remove<Int>("color_key")
+            },
+            onColorPickRequest = {
+                navController.navigate(ColorPickerDialog.route)
+            },
+            selectedColor = returnedColorInt?.value?.let { Color(it) }
+        )
+    }
+
+    deletingTopic?.let { topic ->
+        DeleteConfirmDialog(
+            topicTitle = topic.title,
+            onDismiss = { deletingTopic = null },
+            onConfirm = {
+                homeViewModel.deleteTopic(topic)
+                deletingTopic = null
+            }
+        )
+    }
 
 }
 
@@ -69,6 +126,8 @@ fun HomeScreenContent(
     onProfileClick: () -> Unit,
     onSettingClick: () -> Unit,
     onTopicClick: (ITopic) -> Unit,
+    onEditClick: (ITopic) -> Unit = {},
+    onDeleteClick: (ITopic) -> Unit = {},
     onMove: (Int, Int) -> Unit = { _, _ -> },
     onDragEnd: () -> Unit = {}
 ) {
@@ -83,6 +142,8 @@ fun HomeScreenContent(
             modifier = Modifier.weight(1f),
             topicList = topics,
             onClick = { onTopicClick(it) },
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick,
             onMove = onMove,
             onDragEnd = onDragEnd
         )
