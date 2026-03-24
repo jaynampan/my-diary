@@ -9,14 +9,14 @@ a recreation and enhancement of it with modern architecture and tech stack.
 - Diary Writing
 - Simple Memos
 - Custom Themes
+- Security Lock
 
-![Example Photo 1](screenshot/Screenshot_main.jpg)
-![Example Photo 2](screenshot/Screenshot_diary.jpg)
+![Example Photo](screenshot/diary_sample.png)
 
 ### Progress & Todos
 
 - [x] Migrate codes from Java to Kotlin
-- [ ] Migrate to Compose
+- [x] Migrate to Compose
 - [ ] Implement diary backing up
 
 ### Build Notes
@@ -26,15 +26,6 @@ a recreation and enhancement of it with modern architecture and tech stack.
 - In gradle.properties the maximum RAM is set to 4GB, adjust it if needed. And both gradle
   configuration and build cache are enable to speed up build process
 - Java toolchain version is set to 21, you can adjust to jvm that's >= 11 and compatible with gradle
-- Dependency updates plugin usage:
-  ````bash
-  ./gradlew dependencyUpdates
-  ````
-
-  or find it in Android Studio gradle panel: app > help > dependencyUpdates
-
-  see [ben-manes/gradle-versions-plugin](https://github.com/ben-manes/gradle-versions-plugin) for
-  detailed configuration.
 
 ### Credits
 
