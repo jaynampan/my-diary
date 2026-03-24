@@ -3,6 +3,7 @@ package meow.softer.mydiary.ui.screen
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -55,6 +56,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -67,6 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import meow.softer.mydiary.R
 import meow.softer.mydiary.data.local.db.entity.DiaryEntry
 import meow.softer.mydiary.data.local.db.entity.DiaryItem
 import meow.softer.mydiary.ui.models.DiaryInfoHelper
@@ -139,6 +142,7 @@ fun DiaryScreen(
                     onPreviousMonth = { viewModel.previousMonth() },
                     onNextMonth = { viewModel.nextMonth() }
                 )
+
                 2 -> DiaryPage(
                     diary = uiState.currentDiary,
                     items = uiState.currentDiaryItems,
@@ -225,15 +229,24 @@ fun TabItem(
 
 @Composable
 fun EntriesPage(diaries: List<DiaryEntry>, onDiaryClick: (DiaryEntry) -> Unit) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        itemsIndexed(diaries) { _, diary ->
-            DiaryEntryCard(diary, onClick = { onDiaryClick(diary) })
+    Box {
+        Image(
+            painter = painterResource(R.drawable.theme_bg_taki),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds
+        )
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            itemsIndexed(diaries) { _, diary ->
+                DiaryEntryCard(diary, onClick = { onDiaryClick(diary) })
+            }
         }
     }
+
 }
 
 @Composable
@@ -267,6 +280,7 @@ fun DiaryEntryCard(diary: DiaryEntry, onClick: () -> Unit) {
                             )
                         ), null, modifier = Modifier.size(16.dp)
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)),
                         null,
@@ -292,9 +306,11 @@ fun CalendarPage(
         val diaryCalendar = Calendar.getInstance().apply {
             timeInMillis = diary.time.toLong() * 1000
         }
-        diaryCalendar.get(Calendar.YEAR) * 10000 + diaryCalendar.get(Calendar.MONTH) * 100 + diaryCalendar.get(Calendar.DAY_OF_MONTH)
+        diaryCalendar.get(Calendar.YEAR) * 10000 + diaryCalendar.get(Calendar.MONTH) * 100 + diaryCalendar.get(
+            Calendar.DAY_OF_MONTH
+        )
     }.toSet()
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -305,7 +321,7 @@ fun CalendarPage(
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         )
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -325,7 +341,7 @@ fun CalendarPage(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Week day headers
         Row(modifier = Modifier.fillMaxWidth()) {
             listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun").forEach {
@@ -341,10 +357,10 @@ fun CalendarPage(
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         // Calendar grid
         val calendarGrid = generateCalendarGrid(currentYear, currentMonth, diaryDates)
-        
+
         calendarGrid.forEach { week ->
             Spacer(modifier = Modifier.height(4.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -367,10 +383,10 @@ private fun generateCalendarGrid(
 ): List<List<CalendarDayInfo>> {
     val calendar = Calendar.getInstance()
     calendar.set(year, month, 1)
-    
+
     val weeks = mutableListOf<MutableList<CalendarDayInfo>>()
     var currentWeek = mutableListOf<CalendarDayInfo>()
-    
+
     // Calculate offset
     val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
     val offset = when (firstDayOfWeek) {
@@ -383,33 +399,39 @@ private fun generateCalendarGrid(
         Calendar.SATURDAY -> 5
         else -> 0
     }
-    
+
     repeat(offset) {
         currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
     }
-    
+
     val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-    
+
     for (day in 1..daysInMonth) {
         val dateKey = year * 10000 + month * 100 + day
-        currentWeek.add(CalendarDayInfo(day = day, hasDiary = diaryDates.contains(dateKey), isCurrentMonth = true))
-        
+        currentWeek.add(
+            CalendarDayInfo(
+                day = day,
+                hasDiary = diaryDates.contains(dateKey),
+                isCurrentMonth = true
+            )
+        )
+
         // New line if week is full
         if (currentWeek.size == 7) {
             weeks.add(currentWeek)
             currentWeek = mutableListOf()
         }
     }
-    
+
     // Use space to fill the last week
     while (currentWeek.isNotEmpty() && currentWeek.size < 7) {
         currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
     }
-    
+
     if (currentWeek.isNotEmpty()) {
         weeks.add(currentWeek)
     }
-    
+
     return weeks
 }
 
@@ -517,7 +539,11 @@ fun DiaryPage(
                 var showWeatherDropdown by remember { mutableStateOf(false) }
                 IconButton(onClick = { showWeatherDropdown = true }) {
                     Icon(
-                        painterResource(id = DiaryInfoHelper.getWeatherResourceId(diary.weather ?: 0)),
+                        painterResource(
+                            id = DiaryInfoHelper.getWeatherResourceId(
+                                diary.weather ?: 0
+                            )
+                        ),
                         contentDescription = "Select weather"
                     )
                 }
