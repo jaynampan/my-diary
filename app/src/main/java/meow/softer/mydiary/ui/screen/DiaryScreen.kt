@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +22,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
@@ -127,7 +127,13 @@ fun DiaryScreen(
 
             when (uiState.selectedTab) {
                 0 -> EntriesPage(uiState.diaries) { viewModel.editDiary(it) }
-                1 -> CalendarPage(uiState.diaries)
+                1 -> CalendarPage(
+                    diaries = uiState.diaries,
+                    currentMonth = uiState.calendarMonth,
+                    currentYear = uiState.calendarYear,
+                    onPreviousMonth = { viewModel.previousMonth() },
+                    onNextMonth = { viewModel.nextMonth() }
+                )
                 2 -> DiaryPage(
                     diary = uiState.currentDiary,
                     items = uiState.currentDiaryItems,
@@ -267,26 +273,53 @@ fun DiaryEntryCard(diary: DiaryEntry, onClick: () -> Unit) {
 }
 
 @Composable
-fun CalendarPage(diaries: List<DiaryEntry>) {
+fun CalendarPage(
+    diaries: List<DiaryEntry>,
+    currentMonth: Int,
+    currentYear: Int,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit
+) {
+    // 从 diaries 中提取所有有日记的日期
+    val diaryDates = diaries.map { diary ->
+        val diaryCalendar = Calendar.getInstance().apply {
+            timeInMillis = diary.time.toLong() * 1000
+        }
+        diaryCalendar.get(Calendar.YEAR) * 10000 + diaryCalendar.get(Calendar.MONTH) * 100 + diaryCalendar.get(Calendar.DAY_OF_MONTH)
+    }.toSet()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
             .background(Color.White.copy(alpha = 0.8f))
     ) {
-        val calendar = Calendar.getInstance()
-        val monthName = SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(calendar.time)
-
+        val monthNames = arrayOf(
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        )
+        
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { }) { Icon(Icons.AutoMirrored.Filled.ArrowLeft, null) }
-            Text(text = monthName, fontWeight = FontWeight.Bold)
-            IconButton(onClick = { }) { Icon(Icons.AutoMirrored.Filled.ArrowRight, null) }
+            IconButton(onClick = onPreviousMonth) {
+                Icon(Icons.AutoMirrored.Filled.ArrowLeft, null)
+            }
+            Text(
+                text = "${monthNames[currentMonth]} $currentYear",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+            IconButton(onClick = onNextMonth) {
+                Icon(Icons.AutoMirrored.Filled.ArrowRight, null)
+            }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Week day headers
         Row(modifier = Modifier.fillMaxWidth()) {
             listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun").forEach {
                 Text(
@@ -294,14 +327,134 @@ fun CalendarPage(diaries: List<DiaryEntry>) {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
                     color = Color.Gray
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Calendar Grid placeholder", color = Color.Gray)
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        // Calendar grid
+        val calendarGrid = generateCalendarGrid(currentYear, currentMonth, diaryDates)
+        
+        calendarGrid.forEach { week ->
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                week.forEach { dayInfo ->
+                    CalendarDayCell(
+                        dayInfo = dayInfo,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 生成日历网格数据
+ * @param year 年份
+ * @param month 月份 (0-11)
+ * @param diaryDates 有日记的日期集合 (格式：YYYYMMDD)
+ * @return 二维列表，表示日历的每一周
+ */
+private fun generateCalendarGrid(
+    year: Int,
+    month: Int,
+    diaryDates: Set<Int>
+): List<List<CalendarDayInfo>> {
+    val calendar = Calendar.getInstance()
+    calendar.set(year, month, 1)
+    
+    val weeks = mutableListOf<MutableList<CalendarDayInfo>>()
+    var currentWeek = mutableListOf<CalendarDayInfo>()
+    
+    // 计算月初是星期几 (调整为周一为第一天)
+    val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    val offset = when (firstDayOfWeek) {
+        Calendar.SUNDAY -> 6
+        Calendar.MONDAY -> 0
+        Calendar.TUESDAY -> 1
+        Calendar.WEDNESDAY -> 2
+        Calendar.THURSDAY -> 3
+        Calendar.FRIDAY -> 4
+        Calendar.SATURDAY -> 5
+        else -> 0
+    }
+    
+    // 添加上个月的空白天数
+    repeat(offset) {
+        currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
+    }
+    
+    // 获取当月天数
+    val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+    
+    // 添加当月的所有天数
+    for (day in 1..daysInMonth) {
+        val dateKey = year * 10000 + month * 100 + day
+        currentWeek.add(CalendarDayInfo(day = day, hasDiary = diaryDates.contains(dateKey), isCurrentMonth = true))
+        
+        // 一周满 7 天就换行
+        if (currentWeek.size == 7) {
+            weeks.add(currentWeek)
+            currentWeek = mutableListOf()
+        }
+    }
+    
+    // 如果最后一周不满 7 天，用空白天数填充
+    while (currentWeek.isNotEmpty() && currentWeek.size < 7) {
+        currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
+    }
+    
+    if (currentWeek.isNotEmpty()) {
+        weeks.add(currentWeek)
+    }
+    
+    return weeks
+}
+
+/**
+ * 日历格子信息
+ */
+data class CalendarDayInfo(
+    val day: Int,           // 日期 (0 表示空白)
+    val hasDiary: Boolean,  // 是否有日记
+    val isCurrentMonth: Boolean  // 是否是当前月份的日期
+)
+
+@Composable
+fun CalendarDayCell(
+    dayInfo: CalendarDayInfo,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .aspectRatio(1f)
+            .padding(2.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        if (dayInfo.isCurrentMonth && dayInfo.day > 0) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .then(
+                        if (dayInfo.hasDiary) {
+                            Modifier.background(Color(0xFF5C9EB2), RoundedCornerShape(8.dp))
+                        } else {
+                            Modifier
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = dayInfo.day.toString(),
+                    color = if (dayInfo.hasDiary) Color.White else Color.Black,
+                    fontWeight = if (dayInfo.hasDiary) FontWeight.Bold else FontWeight.Normal,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }

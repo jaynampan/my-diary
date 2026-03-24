@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import meow.softer.mydiary.data.local.db.entity.DiaryEntry
 import meow.softer.mydiary.data.local.db.entity.DiaryItem
 import meow.softer.mydiary.data.repository.DiaryRepo
+import java.util.Calendar
 import javax.inject.Inject
 
 data class DiaryUiState(
@@ -20,7 +21,9 @@ data class DiaryUiState(
     val currentDiary: DiaryEntry? = null,
     val currentDiaryItems: List<DiaryItem> = emptyList(),
     val selectedTab: Int = 0, // 0: Entries, 1: Calendar, 2: Diary
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val calendarMonth: Int = Calendar.getInstance().get(Calendar.MONTH),
+    val calendarYear: Int = Calendar.getInstance().get(Calendar.YEAR)
 )
 
 @HiltViewModel
@@ -129,5 +132,25 @@ class DiaryViewModel @Inject constructor(
 
     fun discardDiary() {
         _uiState.value = _uiState.value.copy(currentDiary = null, currentDiaryItems = emptyList(), selectedTab = 0)
+    }
+
+    fun previousMonth() {
+        val newCalendar = Calendar.getInstance()
+        newCalendar.set(_uiState.value.calendarYear, _uiState.value.calendarMonth, 1)
+        newCalendar.add(Calendar.MONTH, -1)
+        _uiState.value = _uiState.value.copy(
+            calendarMonth = newCalendar.get(Calendar.MONTH),
+            calendarYear = newCalendar.get(Calendar.YEAR)
+        )
+    }
+
+    fun nextMonth() {
+        val newCalendar = Calendar.getInstance()
+        newCalendar.set(_uiState.value.calendarYear, _uiState.value.calendarMonth, 1)
+        newCalendar.add(Calendar.MONTH, 1)
+        _uiState.value = _uiState.value.copy(
+            calendarMonth = newCalendar.get(Calendar.MONTH),
+            calendarYear = newCalendar.get(Calendar.YEAR)
+        )
     }
 }
