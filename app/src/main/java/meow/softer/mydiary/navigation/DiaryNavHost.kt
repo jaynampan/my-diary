@@ -13,10 +13,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.lifecycle.SavedStateHandle
 import meow.softer.mydiary.ui.dialog.NewTopicDialogWrapper
+import meow.softer.mydiary.ui.dialog.AddContactDialog
 import meow.softer.mydiary.ui.dialog.BottomSettingSheet
 import meow.softer.mydiary.ui.dialog.ColorPickerDialog
 import meow.softer.mydiary.ui.dialog.ContactDetailDialog
+import meow.softer.mydiary.ui.dialog.ContactDetailDialogWrapper
 import meow.softer.mydiary.ui.dialog.ProfileDialogWrapper
 import meow.softer.mydiary.ui.models.ITopic
 import meow.softer.mydiary.ui.screen.AboutScreen
@@ -30,6 +33,7 @@ import meow.softer.mydiary.ui.screen.MemoViewModel
 import meow.softer.mydiary.ui.screen.SecurityScreen
 import meow.softer.mydiary.ui.screen.SecurityViewModel
 import meow.softer.mydiary.ui.screen.SettingScreen
+import meow.softer.mydiary.ui.screen.ContactInfo
 
 
 @Composable
@@ -113,16 +117,37 @@ fun DiaryNav() {
             )
         }
         composable(route = ContactScreen.route) {
-            //todo:update
             ContactScreen(
-                headerName = "",
-                data = listOf(),
-                onAddContact = {},
-                onClickContact = {
-
+                headerName = homeViewModel.contactTitle.collectAsState().value,
+                data = homeViewModel.contacts.collectAsState().value,
+                backgroundPainter = homeViewModel.contactBackgroundPainter.collectAsState().value,
+                onAddContact = { 
+                    navController.navigate(AddContactDialog.route)
+                },
+                onClickContact = { contact ->
+                    // Navigate to contact detail dialog with contact info
+                    navController.currentBackStackEntry?.savedStateHandle?.apply {
+                        this["contact_id"] = contact.id
+                        this["contact_name"] = contact.name
+                        this["contact_number"] = contact.number
+                    }
+                    navController.navigate(ContactDetailDialog.route)
+                },
+                onLongPressContact = { contact ->
+                    // Copy phone number to clipboard
+                    android.content.ClipData.newPlainText("phone_number", contact.number).let {
+                        val clipboard = navController.context.getSystemService(
+                            android.content.Context.CLIPBOARD_SERVICE
+                        ) as android.content.ClipboardManager
+                        clipboard.setPrimaryClip(it)
+                        android.widget.Toast.makeText(
+                            navController.context,
+                            "Phone number copied to clipboard",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-
-            ) {}
+            )
         }
         dialog(route = ProfileDialog.route) {
             ProfileDialogWrapper(
@@ -159,7 +184,21 @@ fun DiaryNav() {
             }
         }
         dialog(route = ContactDetailDialog.route) {
-            ContactDetailDialog()
+            ContactDetailDialogWrapper(
+                onDismiss = { navController.popBackStack() },
+                navController = navController,
+                homeViewModel = homeViewModel
+            )
+        }
+        dialog(route = AddContactDialog.route) {
+            AddContactDialog(
+                onDismiss = { navController.popBackStack() },
+                onAddContact = { name, number ->
+                    // Add contact to database
+                    homeViewModel.addContact(name, number)
+                },
+                navController = navController
+            )
         }
         dialog(route = ColorPickerDialog.route) {
             ColorPickerDialog(

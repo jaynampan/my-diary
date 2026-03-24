@@ -2,6 +2,7 @@ package meow.softer.mydiary.ui.dialog
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,78 +29,42 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import meow.softer.mydiary.ui.component.CommonDialog
-import meow.softer.mydiary.ui.screen.ContactInfo
-import meow.softer.mydiary.ui.theme.primaryLight
 
 /**
- * Dialog for viewing and editing contact details
+ * Dialog for adding a new contact
  */
 @Composable
-fun ContactDetailDialogWrapper(
+fun AddContactDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
+    onAddContact: (String, String) -> Unit,
     navController: NavHostController,
-    homeViewModel: meow.softer.mydiary.ui.screen.HomeViewModel,
 ) {
-    // Get contact data from SavedStateHandle
-    val contactId = navController.previousBackStackEntry
-        ?.savedStateHandle
-        ?.get<Long>("contact_id") ?: -1
-    val contactName = navController.previousBackStackEntry
-        ?.savedStateHandle
-        ?.get<String>("contact_name") ?: ""
-    val contactNumber = navController.previousBackStackEntry
-        ?.savedStateHandle
-        ?.get<String>("contact_number") ?: ""
-    
-    val contact = ContactInfo(
-        id = contactId,
-        name = contactName,
-        number = contactNumber
-    )
-    
-    ContactDetailDialog(
+    var name by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+
+    CommonDialog(
         modifier = modifier,
-        contact = contact,
-        onDismiss = onDismiss,
-        onUpdateContact = { name, number ->
-            homeViewModel.updateContact(contactId, name, number)
+        onConfirm = {
+            if (name.isEmpty()) {
+                Toast.makeText(navController.context, "Contact name is empty", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (phoneNumber.isEmpty()) {
+                Toast.makeText(navController.context, "Phone number is empty", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                onAddContact(name, phoneNumber)
+                onDismiss()
+            }
         },
-        onDeleteContact = {
-            homeViewModel.deleteContact(contactId)
-        },
-        navController = navController
-    )
-}
-
-@Composable
-fun ContactDetailDialog(
-    modifier: Modifier = Modifier,
-    contact: ContactInfo,
-    onDismiss: () -> Unit,
-    onUpdateContact: (String, String) -> Unit,
-    onDeleteContact: () -> Unit,
-    navController: NavHostController,
-) {
-    var name by remember { mutableStateOf(contact.name) }
-    var phoneNumber by remember { mutableStateOf(contact.number) }
-    
-    // Update state when contact data changes
-    androidx.compose.runtime.LaunchedEffect(contact) {
-        name = contact.name
-        phoneNumber = contact.number
-    }
-
-    Column(
-        modifier = modifier
-            .background(primaryLight)
-            .padding(16.dp)
+        onCancel = {
+            onDismiss()
+        }
     ) {
-        // Dialog content
         Column(
-            modifier = Modifier
+            modifier = Modifier.padding(16.dp)
         ) {
-            Text("Contact Details", color = Color.White, style = TextStyle(fontSize = 18.sp))
+            Text("Add New Contact", color = Color.White, style = TextStyle(fontSize = 18.sp))
             
             Spacer(Modifier.height(16.dp))
             
@@ -134,7 +99,8 @@ fun ContactDetailDialog(
             // Phone number input field
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Phone", color = Color.White, modifier = Modifier.width(80.dp))
                 TextField(
@@ -155,49 +121,6 @@ fun ContactDetailDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.weight(1f)
                 )
-            }
-        }
-        
-        Spacer(Modifier.height(16.dp))
-        
-        // Buttons row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Delete button
-            androidx.compose.material3.TextButton(
-                onClick = {
-                    onDeleteContact()
-                    onDismiss()
-                }
-            ) {
-                Text("Delete", color = Color.Red)
-            }
-            
-            // Cancel and Confirm buttons
-            Row {
-                androidx.compose.material3.TextButton(
-                    onClick = { onDismiss() }
-                ) {
-                    Text("Cancel", color = Color.White)
-                }
-                Spacer(Modifier.width(8.dp))
-                androidx.compose.material3.TextButton(
-                    onClick = {
-                        if (name.isEmpty()) {
-                            Toast.makeText(navController.context, "Contact name is empty", Toast.LENGTH_SHORT).show()
-                        } else if (phoneNumber.isEmpty()) {
-                            Toast.makeText(navController.context, "Phone number is empty", Toast.LENGTH_SHORT).show()
-                        } else {
-                            onUpdateContact(name, phoneNumber)
-                            onDismiss()
-                        }
-                    }
-                ) {
-                    Text("Save", color = Color.White)
-                }
             }
         }
     }

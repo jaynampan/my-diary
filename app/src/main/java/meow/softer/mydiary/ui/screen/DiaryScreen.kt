@@ -3,6 +3,7 @@ package meow.softer.mydiary.ui.screen
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +23,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
@@ -37,6 +38,8 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,8 +51,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -62,6 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import meow.softer.mydiary.R
 import meow.softer.mydiary.data.local.db.entity.DiaryEntry
 import meow.softer.mydiary.data.local.db.entity.DiaryItem
 import meow.softer.mydiary.ui.models.DiaryInfoHelper
@@ -127,12 +135,21 @@ fun DiaryScreen(
 
             when (uiState.selectedTab) {
                 0 -> EntriesPage(uiState.diaries) { viewModel.editDiary(it) }
-                1 -> CalendarPage(uiState.diaries)
+                1 -> CalendarPage(
+                    diaries = uiState.diaries,
+                    currentMonth = uiState.calendarMonth,
+                    currentYear = uiState.calendarYear,
+                    onPreviousMonth = { viewModel.previousMonth() },
+                    onNextMonth = { viewModel.nextMonth() }
+                )
+
                 2 -> DiaryPage(
                     diary = uiState.currentDiary,
                     items = uiState.currentDiaryItems,
                     onTitleChange = { viewModel.updateDiaryTitle(it) },
-                    onItemChange = { index, content -> viewModel.updateDiaryItem(index, content) }
+                    onItemChange = { index, content -> viewModel.updateDiaryItem(index, content) },
+                    onMoodChange = { viewModel.updateDiaryMood(it) },
+                    onWeatherChange = { viewModel.updateDiaryWeather(it) }
                 )
             }
         }
@@ -212,15 +229,24 @@ fun TabItem(
 
 @Composable
 fun EntriesPage(diaries: List<DiaryEntry>, onDiaryClick: (DiaryEntry) -> Unit) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        itemsIndexed(diaries) { _, diary ->
-            DiaryEntryCard(diary, onClick = { onDiaryClick(diary) })
+    Box {
+        Image(
+            painter = painterResource(R.drawable.theme_bg_taki),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds
+        )
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            itemsIndexed(diaries) { _, diary ->
+                DiaryEntryCard(diary, onClick = { onDiaryClick(diary) })
+            }
         }
     }
+
 }
 
 @Composable
@@ -254,6 +280,7 @@ fun DiaryEntryCard(diary: DiaryEntry, onClick: () -> Unit) {
                             )
                         ), null, modifier = Modifier.size(16.dp)
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)),
                         null,
@@ -267,26 +294,55 @@ fun DiaryEntryCard(diary: DiaryEntry, onClick: () -> Unit) {
 }
 
 @Composable
-fun CalendarPage(diaries: List<DiaryEntry>) {
+fun CalendarPage(
+    diaries: List<DiaryEntry>,
+    currentMonth: Int,
+    currentYear: Int,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit
+) {
+    // Get diary dates for the current month
+    val diaryDates = diaries.map { diary ->
+        val diaryCalendar = Calendar.getInstance().apply {
+            timeInMillis = diary.time.toLong() * 1000
+        }
+        diaryCalendar.get(Calendar.YEAR) * 10000 + diaryCalendar.get(Calendar.MONTH) * 100 + diaryCalendar.get(
+            Calendar.DAY_OF_MONTH
+        )
+    }.toSet()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
             .background(Color.White.copy(alpha = 0.8f))
     ) {
-        val calendar = Calendar.getInstance()
-        val monthName = SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(calendar.time)
+        val monthNames = arrayOf(
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { }) { Icon(Icons.AutoMirrored.Filled.ArrowLeft, null) }
-            Text(text = monthName, fontWeight = FontWeight.Bold)
-            IconButton(onClick = { }) { Icon(Icons.AutoMirrored.Filled.ArrowRight, null) }
+            IconButton(onClick = onPreviousMonth) {
+                Icon(Icons.AutoMirrored.Filled.ArrowLeft, null)
+            }
+            Text(
+                text = "${monthNames[currentMonth]} $currentYear",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+            IconButton(onClick = onNextMonth) {
+                Icon(Icons.AutoMirrored.Filled.ArrowRight, null)
+            }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Week day headers
         Row(modifier = Modifier.fillMaxWidth()) {
             listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun").forEach {
                 Text(
@@ -294,14 +350,131 @@ fun CalendarPage(diaries: List<DiaryEntry>) {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
                     color = Color.Gray
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Calendar Grid placeholder", color = Color.Gray)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Calendar grid
+        val calendarGrid = generateCalendarGrid(currentYear, currentMonth, diaryDates)
+
+        calendarGrid.forEach { week ->
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                week.forEach { dayInfo ->
+                    CalendarDayCell(
+                        dayInfo = dayInfo,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+private fun generateCalendarGrid(
+    year: Int,
+    month: Int,
+    diaryDates: Set<Int>
+): List<List<CalendarDayInfo>> {
+    val calendar = Calendar.getInstance()
+    calendar.set(year, month, 1)
+
+    val weeks = mutableListOf<MutableList<CalendarDayInfo>>()
+    var currentWeek = mutableListOf<CalendarDayInfo>()
+
+    // Calculate offset
+    val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    val offset = when (firstDayOfWeek) {
+        Calendar.SUNDAY -> 6
+        Calendar.MONDAY -> 0
+        Calendar.TUESDAY -> 1
+        Calendar.WEDNESDAY -> 2
+        Calendar.THURSDAY -> 3
+        Calendar.FRIDAY -> 4
+        Calendar.SATURDAY -> 5
+        else -> 0
+    }
+
+    repeat(offset) {
+        currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
+    }
+
+    val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+    for (day in 1..daysInMonth) {
+        val dateKey = year * 10000 + month * 100 + day
+        currentWeek.add(
+            CalendarDayInfo(
+                day = day,
+                hasDiary = diaryDates.contains(dateKey),
+                isCurrentMonth = true
+            )
+        )
+
+        // New line if week is full
+        if (currentWeek.size == 7) {
+            weeks.add(currentWeek)
+            currentWeek = mutableListOf()
+        }
+    }
+
+    // Use space to fill the last week
+    while (currentWeek.isNotEmpty() && currentWeek.size < 7) {
+        currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
+    }
+
+    if (currentWeek.isNotEmpty()) {
+        weeks.add(currentWeek)
+    }
+
+    return weeks
+}
+
+/**
+ * Grid Calender
+ */
+data class CalendarDayInfo(
+    val day: Int,
+    val hasDiary: Boolean,
+    val isCurrentMonth: Boolean
+)
+
+@Composable
+fun CalendarDayCell(
+    dayInfo: CalendarDayInfo,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .aspectRatio(1f)
+            .padding(2.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        if (dayInfo.isCurrentMonth && dayInfo.day > 0) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .then(
+                        if (dayInfo.hasDiary) {
+                            Modifier.background(Color(0xFF5C9EB2), RoundedCornerShape(8.dp))
+                        } else {
+                            Modifier
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = dayInfo.day.toString(),
+                    color = if (dayInfo.hasDiary) Color.White else Color.Black,
+                    fontWeight = if (dayInfo.hasDiary) FontWeight.Bold else FontWeight.Normal,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }
@@ -311,7 +484,9 @@ fun DiaryPage(
     diary: DiaryEntry?,
     items: List<DiaryItem>,
     onTitleChange: (String) -> Unit,
-    onItemChange: (Int, String) -> Unit
+    onItemChange: (Int, String) -> Unit,
+    onMoodChange: (Int) -> Unit,
+    onWeatherChange: (Int) -> Unit
 ) {
     if (diary == null) return
 
@@ -359,14 +534,69 @@ fun DiaryPage(
                     focusedContainerColor = Color.Transparent
                 )
             )
-            IconButton(onClick = { }) {
-                Icon(
-                    painterResource(id = DiaryInfoHelper.getWeatherResourceId(diary.weather ?: 0)),
-                    null
-                )
+            // Weather selector with dropdown
+            Box {
+                var showWeatherDropdown by remember { mutableStateOf(false) }
+                IconButton(onClick = { showWeatherDropdown = true }) {
+                    Icon(
+                        painterResource(
+                            id = DiaryInfoHelper.getWeatherResourceId(
+                                diary.weather ?: 0
+                            )
+                        ),
+                        contentDescription = "Select weather"
+                    )
+                }
+                DropdownMenu(
+                    expanded = showWeatherDropdown,
+                    onDismissRequest = { showWeatherDropdown = false }
+                ) {
+                    DiaryInfoHelper.weatherArray.forEachIndexed { index, drawableResId ->
+                        DropdownMenuItem(
+                            text = {
+                                Icon(
+                                    painterResource(id = drawableResId!!),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            },
+                            onClick = {
+                                onWeatherChange(index)
+                                showWeatherDropdown = false
+                            }
+                        )
+                    }
+                }
             }
-            IconButton(onClick = { }) {
-                Icon(painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)), null)
+            // Mood selector with dropdown
+            Box {
+                var showMoodDropdown by remember { mutableStateOf(false) }
+                IconButton(onClick = { showMoodDropdown = true }) {
+                    Icon(
+                        painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)),
+                        contentDescription = "Select mood"
+                    )
+                }
+                DropdownMenu(
+                    expanded = showMoodDropdown,
+                    onDismissRequest = { showMoodDropdown = false }
+                ) {
+                    DiaryInfoHelper.moodArray.forEachIndexed { index, drawableResId ->
+                        DropdownMenuItem(
+                            text = {
+                                Icon(
+                                    painterResource(id = drawableResId!!),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            },
+                            onClick = {
+                                onMoodChange(index)
+                                showMoodDropdown = false
+                            }
+                        )
+                    }
+                }
             }
         }
 
