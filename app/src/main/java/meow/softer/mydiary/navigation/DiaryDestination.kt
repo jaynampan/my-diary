@@ -55,6 +55,10 @@ object ContactDetailDialog : DiaryDestination {
     override val route = "ContactDetailDialog"
 }
 
+object AddContactDialog : DiaryDestination {
+    override val route = "AddContactDialog"
+}
+
 object ColorPickerDialog : DiaryDestination {
     override val route = "ColorPickerDialog"
 }
