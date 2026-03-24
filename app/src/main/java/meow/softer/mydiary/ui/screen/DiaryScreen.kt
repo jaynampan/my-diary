@@ -37,6 +37,8 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +50,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -138,7 +143,9 @@ fun DiaryScreen(
                     diary = uiState.currentDiary,
                     items = uiState.currentDiaryItems,
                     onTitleChange = { viewModel.updateDiaryTitle(it) },
-                    onItemChange = { index, content -> viewModel.updateDiaryItem(index, content) }
+                    onItemChange = { index, content -> viewModel.updateDiaryItem(index, content) },
+                    onMoodChange = { viewModel.updateDiaryMood(it) },
+                    onWeatherChange = { viewModel.updateDiaryWeather(it) }
                 )
             }
         }
@@ -280,7 +287,7 @@ fun CalendarPage(
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit
 ) {
-    // 从 diaries 中提取所有有日记的日期
+    // Get diary dates for the current month
     val diaryDates = diaries.map { diary ->
         val diaryCalendar = Calendar.getInstance().apply {
             timeInMillis = diary.time.toLong() * 1000
@@ -352,13 +359,7 @@ fun CalendarPage(
     }
 }
 
-/**
- * 生成日历网格数据
- * @param year 年份
- * @param month 月份 (0-11)
- * @param diaryDates 有日记的日期集合 (格式：YYYYMMDD)
- * @return 二维列表，表示日历的每一周
- */
+
 private fun generateCalendarGrid(
     year: Int,
     month: Int,
@@ -370,7 +371,7 @@ private fun generateCalendarGrid(
     val weeks = mutableListOf<MutableList<CalendarDayInfo>>()
     var currentWeek = mutableListOf<CalendarDayInfo>()
     
-    // 计算月初是星期几 (调整为周一为第一天)
+    // Calculate offset
     val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
     val offset = when (firstDayOfWeek) {
         Calendar.SUNDAY -> 6
@@ -383,27 +384,24 @@ private fun generateCalendarGrid(
         else -> 0
     }
     
-    // 添加上个月的空白天数
     repeat(offset) {
         currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
     }
     
-    // 获取当月天数
     val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
     
-    // 添加当月的所有天数
     for (day in 1..daysInMonth) {
         val dateKey = year * 10000 + month * 100 + day
         currentWeek.add(CalendarDayInfo(day = day, hasDiary = diaryDates.contains(dateKey), isCurrentMonth = true))
         
-        // 一周满 7 天就换行
+        // New line if week is full
         if (currentWeek.size == 7) {
             weeks.add(currentWeek)
             currentWeek = mutableListOf()
         }
     }
     
-    // 如果最后一周不满 7 天，用空白天数填充
+    // Use space to fill the last week
     while (currentWeek.isNotEmpty() && currentWeek.size < 7) {
         currentWeek.add(CalendarDayInfo(day = 0, hasDiary = false, isCurrentMonth = false))
     }
@@ -416,12 +414,12 @@ private fun generateCalendarGrid(
 }
 
 /**
- * 日历格子信息
+ * Grid Calender
  */
 data class CalendarDayInfo(
-    val day: Int,           // 日期 (0 表示空白)
-    val hasDiary: Boolean,  // 是否有日记
-    val isCurrentMonth: Boolean  // 是否是当前月份的日期
+    val day: Int,
+    val hasDiary: Boolean,
+    val isCurrentMonth: Boolean
 )
 
 @Composable
@@ -464,7 +462,9 @@ fun DiaryPage(
     diary: DiaryEntry?,
     items: List<DiaryItem>,
     onTitleChange: (String) -> Unit,
-    onItemChange: (Int, String) -> Unit
+    onItemChange: (Int, String) -> Unit,
+    onMoodChange: (Int) -> Unit,
+    onWeatherChange: (Int) -> Unit
 ) {
     if (diary == null) return
 
@@ -512,14 +512,65 @@ fun DiaryPage(
                     focusedContainerColor = Color.Transparent
                 )
             )
-            IconButton(onClick = { }) {
-                Icon(
-                    painterResource(id = DiaryInfoHelper.getWeatherResourceId(diary.weather ?: 0)),
-                    null
-                )
+            // Weather selector with dropdown
+            Box {
+                var showWeatherDropdown by remember { mutableStateOf(false) }
+                IconButton(onClick = { showWeatherDropdown = true }) {
+                    Icon(
+                        painterResource(id = DiaryInfoHelper.getWeatherResourceId(diary.weather ?: 0)),
+                        contentDescription = "Select weather"
+                    )
+                }
+                DropdownMenu(
+                    expanded = showWeatherDropdown,
+                    onDismissRequest = { showWeatherDropdown = false }
+                ) {
+                    DiaryInfoHelper.weatherArray.forEachIndexed { index, drawableResId ->
+                        DropdownMenuItem(
+                            text = {
+                                Icon(
+                                    painterResource(id = drawableResId!!),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            },
+                            onClick = {
+                                onWeatherChange(index)
+                                showWeatherDropdown = false
+                            }
+                        )
+                    }
+                }
             }
-            IconButton(onClick = { }) {
-                Icon(painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)), null)
+            // Mood selector with dropdown
+            Box {
+                var showMoodDropdown by remember { mutableStateOf(false) }
+                IconButton(onClick = { showMoodDropdown = true }) {
+                    Icon(
+                        painterResource(id = DiaryInfoHelper.getMoodResourceId(diary.mood ?: 0)),
+                        contentDescription = "Select mood"
+                    )
+                }
+                DropdownMenu(
+                    expanded = showMoodDropdown,
+                    onDismissRequest = { showMoodDropdown = false }
+                ) {
+                    DiaryInfoHelper.moodArray.forEachIndexed { index, drawableResId ->
+                        DropdownMenuItem(
+                            text = {
+                                Icon(
+                                    painterResource(id = drawableResId!!),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            },
+                            onClick = {
+                                onMoodChange(index)
+                                showMoodDropdown = false
+                            }
+                        )
+                    }
+                }
             }
         }
 
